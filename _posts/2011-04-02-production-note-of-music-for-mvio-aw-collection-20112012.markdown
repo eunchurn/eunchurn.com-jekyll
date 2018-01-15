@@ -68,12 +68,12 @@ Additional strings 는 초반 인트로에 사용되고 어택이 거의 없는 
 
 #### Signal Decomposition 기법을 수식으로 전개해서 설명하려 했지만, LaTeX를 쓰고 이미지로 넣고 그러기 번거로워서 말로만 풀어씀. 관심있는 분들은 문헌을 찾아보기 바람. 키워드는 'Hankel matrix','singular value decomposition','stochastic subspace identification','eigensystem realization algorithm'
 
-![](http://www.eunchurn.com/wp-content/uploads/2011/03/Poster-front.jpg)
+![]({{ site.baseurl }}/public/images/2011/03/Poster-front.jpg)
 
 
 
 
-![](http://www.eunchurn.com/wp-content/uploads/2011/03/Poster-back.jpg)
+![]({{ site.baseurl }}/public/images/2011/03/Poster-back.jpg)
 
 
 
