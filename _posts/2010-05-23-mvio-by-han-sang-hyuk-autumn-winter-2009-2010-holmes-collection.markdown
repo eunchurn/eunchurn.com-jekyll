@@ -29,7 +29,7 @@ AUTUMN WINTER 2009-2010
 pm 12:00, Thursday 26th March 2009
 SETEC S14 Daechidong Gangnamgu Seoul Korea
 
-[![](http://www.eunchurn.com/wp-content/uploads/2010/05/god_1_niji1002-625x1024.jpg)](http://www.eunchurn.com/wp-content/uploads/2010/05/god_1_niji1002.jpg)
+[![]({{ site.baseurl }}/public/images/2010/05/god_1_niji1002-625x1024.jpg)]({{ site.baseurl }}/public/images/2010/05/god_1_niji1002.jpg)
 
 SYNOPSIS
 

@@ -20,7 +20,7 @@ tags:
  
 
 
-[![](http://www.eunchurn.com/wp-content/uploads/2010/12/1890154611_bdLNxQ2H_80kidz_weekend_warrior_page1_510.jpg)](http://locksmithmusic.com/bbs/board.php?bo_table=news&wr_id=157)
+[![]({{ site.baseurl }}/public/images/2010/12/1890154611_bdLNxQ2H_80kidz_weekend_warrior_page1_510.jpg)]({{ site.baseurl }}/public/images/2010/12/1890154611_bdLNxQ2H_80kidz_weekend_warrior_page1_510.jpg)
 
 
  

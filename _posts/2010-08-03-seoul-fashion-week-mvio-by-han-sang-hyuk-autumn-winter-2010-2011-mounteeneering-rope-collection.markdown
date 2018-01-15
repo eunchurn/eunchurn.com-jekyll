@@ -27,7 +27,7 @@ tags:
 - yourboyhood
 ---
 
-![](http://www.eunchurn.com/wp-content/uploads/2010/08/MOUNTAINEERING_ROPE_COLLECTION.jpg)
+![]({{ site.baseurl }}/public/images/2010/08/MOUNTAINEERING_ROPE_COLLECTION.jpg)
 SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2010-2011 AW Rope Collection ‘MOUNTAINNEERING’
 
 **LUCID FALL x EUNCHURN - LET'S WALK

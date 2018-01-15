@@ -23,7 +23,7 @@ tags:
 - vuelvo al sur
 ---
 
-![](http://www.eunchurn.com/wp-content/uploads/2010/05/RECHARGING_TATTO_COLLECTION_.jpg)
+![]({{ site.baseurl }}/public/images/2010/05/RECHARGING_TATTO_COLLECTION_.jpg)
 01__ `지난 3계절이 바뀌는 동안 벌써 나의 저택과 별장에서 일하던 젊은 남자가 넷이나 실종이 되었다네. 그들은 모두 17살에서 22살 사이의 청년들이었고, 모두들 건장한 사내들이었네. 자세한 것은 헨리 베스커빌씨가 도와줄 것이네` 27. JUL
 
 02_내가 폰디체리 경의 아름다운 별장에 도착한 시간은 오후5시가 넘는 시간이었다.

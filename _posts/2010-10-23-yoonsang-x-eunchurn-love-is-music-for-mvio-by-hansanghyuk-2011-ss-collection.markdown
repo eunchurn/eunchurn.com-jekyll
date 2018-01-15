@@ -36,7 +36,7 @@ tags:
 - yoonsang
 ---
 
-![](http://www.eunchurn.com/wp-content/uploads/2010/10/main.jpg)
+![]({{ site.baseurl }}/public/images/2010/10/main.jpg)
 MVIO
 _
 SEOUL FASHION WEEK
