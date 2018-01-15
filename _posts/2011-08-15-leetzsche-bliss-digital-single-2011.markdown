@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2011-08-15 18:40:02+00:00
 layout: post
-link: http://www.eunchurn.com/2011/08/15/leetzsche-bliss-digital-single-2011/
 slug: leetzsche-bliss-digital-single-2011
 title: 이상은(Leetzsche) - Bliss [Digital Single, 2011]
 wordpress_id: 5674
@@ -12,7 +11,7 @@ categories:
 - news
 ---
 
-[![](http://www.eunchurn.com/wp-content/uploads/2011/08/bliss_cover_s-300x300.jpg)](http://www.eunchurn.com/wp-content/uploads/2011/08/bliss_cover_s.jpg)
+![bliss_cover_s-300x300.jpg]({{ site.baseurl }}/public/images/2011/08/bliss_cover_s.jpg)
 
 01. **Bliss (Emerald Castle Remix)**
 _preview_

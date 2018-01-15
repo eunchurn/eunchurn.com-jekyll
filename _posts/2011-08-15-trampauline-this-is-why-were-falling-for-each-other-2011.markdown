@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2011-08-15 18:00:47+00:00
 layout: post
-link: http://www.eunchurn.com/2011/08/15/trampauline-this-is-why-were-falling-for-each-other-2011/
 slug: trampauline-this-is-why-were-falling-for-each-other-2011
 title: Trampauline - This Is Why We're Falling For Each Other (2011)
 wordpress_id: 5671
@@ -12,7 +11,7 @@ categories:
 - news
 ---
 
-[![](http://www.eunchurn.com/wp-content/uploads/2011/08/cover-300x297.png)](http://www.eunchurn.com/wp-content/uploads/2011/08/cover.png)
+![cover-300x297.png]({{ site.baseurl }}/public/images/2011/08/cover.png)
 
     
     01. LITTLE ANIMAL

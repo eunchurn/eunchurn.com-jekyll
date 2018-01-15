@@ -14,7 +14,7 @@ categories:
 - _mvio collection
 ---
 
-[![](http://www.eunchurn.com/wp-content/uploads/2011/10/MVIO_PLASTICMAN_SS2011_Collectiion-500x713.jpg)](http://www.eunchurn.com/wp-content/uploads/2011/10/MVIO_PLASTICMAN_SS2011_Collectiion.jpg)
+![MVIO_PLASTICMAN_SS2011_Collectiion.jpg]({{ site.baseurl }}/public/images/2011/10/MVIO_PLASTICMAN_SS2011_Collectiion.jpg)
 
 MVIO_HAAN SANG HYUK_ 'P L A S T I C M A N'
 SPRING SUMMER 2012

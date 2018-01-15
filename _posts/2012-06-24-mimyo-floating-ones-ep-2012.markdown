@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2012-06-24 00:41:52+00:00
 layout: post
-link: http://www.eunchurn.com/2012/06/24/mimyo-floating-ones-ep-2012/
 slug: mimyo-floating-ones-ep-2012
 title: Mimyo - Floating Ones EP (2012)
 wordpress_id: 5772
@@ -11,7 +10,7 @@ categories:
 - blog
 ---
 
-### [![](http://www.eunchurn.com/wp-content/uploads/2012/06/cover500.jpg)](http://www.eunchurn.com/wp-content/uploads/2012/06/cover500.jpg)
+![cover500]({{ site.baseurl }}/public/images/2012/06/cover500.jpg)
 
 
 
