@@ -3,7 +3,6 @@ author: admin
 comments: true
 date: 2014-01-23 17:21:10+00:00
 layout: post
-link: http://www.eunchurn.com/2014/01/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release/
 slug: saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release
 title: SARAM12SARAM - Raindrop Cloud Typhoon and the Sun (2013) EP Release
 wordpress_id: 5924
@@ -13,7 +12,7 @@ categories:
 - news
 ---
 
-![COVER2_600x600](http://www.eunchurn.com/wp-content/uploads/2012/12/COVER2_600x600.png)
+![COVER2_600x600]({{ site.baseurl }}/public/images/2012/12/COVER2_600x600.png)
 Out on YOUNG,GIFTED&WACK Records, 12 December 2013
 <p class="message">
 시간을 소리로 채우는 일은 어쩌면 과거보다 쉬운 일이 되어버렸는지도 모른다. 그러나 ‘무엇으로 얼마나 잘 채우는가’와는 여전히 별개의 이야기이고 여전한 과제이기도 하다. 사람12사람의 EP는 근래 보기 드물게 ’잘 채워진’ 앨범이다. 음울함과 수수께끼같은 온기가 차갑고 영민한 프로그래밍과 빈틈없이 공명한다.</p> -**이준오 (캐스커Casker)**
