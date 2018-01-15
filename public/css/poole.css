@@ -45,6 +45,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  line-height: 2.0;
 }
 
 html {
@@ -83,7 +84,7 @@ a:focus {
 h1, h2, h3, h4, h5, h6 {
   margin-bottom: .5rem;
   font-weight: bold;
-  line-height: 1.25;
+  line-height: 1.6;
   color: #313131;
   text-rendering: optimizeLegibility;
 }
@@ -389,7 +390,7 @@ tbody tr:nth-child(odd) th {
   overflow: hidden; /* clearfix */
   margin-left: -1rem;
   margin-right: -1rem;
-  font-family: "PT Sans", Helvetica, Arial, sans-serif;
+  font-family: "NanumSquare", "PT Sans", Helvetica, Arial, sans-serif;
   color: #ccc;
   text-align: center;
 }

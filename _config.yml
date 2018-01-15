@@ -1,16 +1,15 @@
 # Permalinks
 #
 # Use of `relative_permalinks` ensures post links from the index work properly.
-#permalink:           pretty
-#relative_permalinks: true
+permalink:           pretty
 
 # Setup
 title:               eunchurn
 tagline:             'Blog'
 description:         'work.'
-url:                 https://eunchurn.com
+url:                 https://eunchurn.com/
 baseurl:             ''
-paginate:            5
+
 
 # About/contact
 author:
@@ -20,3 +19,8 @@ author:
 
 # Custom vars
 version:             1.0.0
+
+# Plugins
+plugins: [jekyll-paginate]
+paginate: 5
+paginate_path: "page:num" 

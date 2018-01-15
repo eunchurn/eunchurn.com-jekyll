@@ -20,66 +20,37 @@ categories:
 
 
 2012.06.13, Curly Sol Records (CS-003)
-
-
-
 	
   1. The Way I Like to Picture You 4:14
-
 	
   2. Left Words (feat. Big Baby Driver) 4:40
-
 	
   3. Snapshots 4:26
-
 	
   4. Idealized Memories 4:04
-
 	
   5. Inavouable 1:58
-
 	
   6. Synth Pop (feat. Kkobbi Kim) 5:54
-
 	
   7. Left Words [Byul.org Remix] 4:09
-
 	
   8. Synth Pop [Eunchurn Remix] 6:43
 
-
-
-	
   * All music and words by Mimyo
-
-	
   * Guitars on _The Way I Like to Picture You_ by Mookou
-
-	
   * Vocals on _Left Words_ by Big Baby Driver, recorded by Mingyu Kim at Electric Muse Studio
-
-	
   * Voices on _Synth Pop_ by Kkobbi Kim
-
-	
   * _Left Words [Byul.org Remix]_ remixed by Byul.org
-
-	
   * _Synth Pop [Eunchurn Remix]_ remixed by Eunchurn
-
-	
   * Mastered by LOBOTOMY at Càmera di Silenci
-
-	
   * Artwork and design by Jinhee Cho
 
 
+* 라이너노트
 
-
-*라이너노트
-
-
-<blockquote>**어딘가에 부유하는 기억과 소리.**
+**어딘가에 부유하는 기억과 소리.**
+<p class="message">
 
 미묘의 새 EP “Floating Ones”은 총 6 개의 트랙과 두 개의 리믹스 트랙으로 구성된 앨범입니다. 미묘 는 아티스트 김미주와 함께 작업한 “Le Devenir”, 여러 국제영화제에서 상영한 바 있는 Lu Sheng 의 “Here, There”의 사운드트랙, 2011 년 보아BoA 의 트리뷰트 프로젝트, 그리고 트램폴린Trampauline의 앨범에 리믹스로 참여하는 등 일렉트로닉 팬들에게는 낯설지 않은 이름이긴 하지만, 개인 작업으로서는 이번 앨범이 첫 결과물이 되는 셈입니다. 그렇기에 이 앨범에 이르러서야 미묘는 본격적으로 아티스트로서의 자기 자신을 드러내고 있다고 할 수 있지요.
 
@@ -91,8 +62,8 @@ categories:
 
 EP 라고 하기에는 조금 길고 정규 앨범이라고 하기에는 조금 짧은 이 결과물은 미묘가 계속해서 기계를 조작하다가 특별한 어느 순간 멈춰버린 것입니다. 그 순간의 기준이 아티스트의 내밀한 기억이더라도, 그가 더 이상 옮기지 못한 소리와 기억은 아마 이 앨범을 듣게 될 리스너들의 도서관에서 천천히 부유하게 될 것입니다. 아스라한 기억에 대한 편안한 자유 연상을 가능하게 하면서, 미묘라는 아티스트가 현재 파리에서 접하고 있는 순간의 기억을 부드럽게 공유하는, 섬세하고 사려깊은 앨범입니다.
 
-글 **함영준**</blockquote>
-
+글 **함영준**
+</p>
 
 
 
@@ -123,21 +94,10 @@ Mimyo feat. Big Baby Driver - Left Words
 
 
 
-<blockquote>특별히 제작된 Left Words 영상은 블로그([http://mimyo.fr/?p=153](http://mimyo.fr/?p=153)) 참여를 통해 이루어졌습니다. 저도 참여를 할껄 하는 아쉬움이 있네요. 그래도 음악이 너무 좋아서 저의 삼킨말들은 어느 도서관에 보관되어 있을것 같은 믿음이 생깁니다.</blockquote>
-
-
-
-
-
+특별히 제작된 Left Words 영상은 블로그([http://mimyo.fr/?p=153](http://mimyo.fr/?p=153)) 참여를 통해 이루어졌습니다. 저도 참여를 할껄 하는 아쉬움이 있네요. 그래도 음악이 너무 좋아서 저의 삼킨말들은 어느 도서관에 보관되어 있을것 같은 믿음이 생깁니다.
 
 [Mimyo - Left Words (feat. Big Baby Driver)](http://vimeo.com/43223298) from [mimyo](http://vimeo.com/mimyo) on [Vimeo](http://vimeo.com).
 
 Mimyo feat. Kkobbi Kim - Synth Pop (eunchurn remix)
 
-
-
-<blockquote>제가 참여한 Synth Pop 리믹스는 너무 순식간에 작업을 한것이라 약간 민망스럽기도 한 트랙입니다. 좋아하는 아티스트님의 EP수록이 되어서 영광일 뿐만 아니라 좋아하는 BBD(Big Baby Driver), 모임별, 그리고 김꽃비님이 참여한 음반이라서 더 의의가 있네요. 그리고 미묘, 꽃비, 은천은 서로 친합니다.</blockquote>
-
-
-
-  
+제가 참여한 Synth Pop 리믹스는 너무 순식간에 작업을 한것이라 약간 민망스럽기도 한 트랙입니다. 좋아하는 아티스트님의 EP수록이 되어서 영광일 뿐만 아니라 좋아하는 BBD(Big Baby Driver), 모임별, 그리고 김꽃비님이 참여한 음반이라서 더 의의가 있네요. 그리고 미묘, 꽃비, 은천은 서로 친합니다.

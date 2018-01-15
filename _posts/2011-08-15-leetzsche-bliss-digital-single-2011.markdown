@@ -24,7 +24,7 @@ _preview_
 06. 비밀의 화원
 
 
-<blockquote>이 세상 모든 자유로운 영혼들을 위한 이상은의 스페셜 앨범 `Bliss`
+<div class='message'>이 세상 모든 자유로운 영혼들을 위한 이상은의 스페셜 앨범 `Bliss`
 
 다시 한 번 날개를 움직이다, 이상은의 첫 디지털 앨범 [ Bliss ]
 
@@ -47,15 +47,15 @@ Secret Garden (eunchurn Toy Garden Remix)
 
 Bliss (박과장) -(Azian P Remix)
 순수 어쿠스틱의 정점이라 할 수 있는 현악기가 메인에 드러난 버전이다. 정반대의 성질을 가진 재료들이 얽혀 있지만 느껴지는 건 이질감이 아닌 수려한 무늬의 기교. 가사와 함께 꽃으로 피어난 것 마냥 비트의 몸부림에 향기가 폼폼 솟아난다. 공통점이라고 해야 할지도 모르겠다. 거꾸로 들고 털어보면 음표가 아니라 반짝이는 유리알을 닮은 무언가가 깨끗한 소리로 떨어질 것 같은 넘버들이다. 멜로디와 노랫말, 그리고 목소리를 따로 떼어두고 볼 필요 없도록 이상은은 스스로 악기가 되었다. 쏟아져 내리는 디지털 물빛 오로라 속을 유영해보자.
-
-==============================================================================================
-
+</div>
+---
+<div class="message">
 모든 음악계의 아티스트들은 특정 장르를 통해 대중들에게 소개가 된다.
 록(Rock) 음악으로 시작한 아티스트는 록 스타일로, 소울(Soul)로 시작한 아티스트는 소울 스타일로 그리고 댄스(Dance) 음악으로 시작한 아티스트는 댄스 스타일이 그 아티스트를 대표하는 음악적 이미지로 대중들에게 각인된다.
 그러나 가끔 세상에는 이런 일반적인 분류 기준에서 벗어나는 아티스트들도 존재한다.
 매 앨범 마다 수많은 변신을 추구하는 이상은은 바로 이런 일반적인 분류에서 벗어난 가수일 것이다. 1988년 강변가요제를 통해 데뷔한 이후 이상은이 보여준 변신은 일반적인 아티스트들의 음악 여정과는 분명하게 다른 자신만의 독특한 행보를 보여줘 왔다.
 음악과 미술 그리고 작가로 변신하며 다양한 예술가적 삶을 살아온 이상은이 엠비오 컬렉션에서 윤상의`사랑이란`곡을 리믹스하면서 새롭게 가요계에서 주목 받고 있는 DJ 은천과 영화 천하장사 마돈나 엔딩곡 및 한빛 소프트와 SEGA의 합작게임 `모크(Moak)`주제곡을 작곡한 박과장과 손잡고 자신의 14집 앨범에 수록된 `블리스(Bliss)`와 11집 앨범에 수록된 `비밀의 화원(Secret Garden)`을 새롭게 리믹스하여 화제가 되고 있다.
-일렉트로니카 사운드풍의 연주와 북유럽의 서정성이 물씬 풍기는 `블리스(Bliss)`와 80년대 컴퓨터 게임 사운드를 연상 시키는 연주가 매력적인 `비밀의 화원(Secret Garden)`을 담은 이상은의 스페셜 앨범은 2011년 8월 16일 발매 된다.</blockquote>
+일렉트로니카 사운드풍의 연주와 북유럽의 서정성이 물씬 풍기는 `블리스(Bliss)`와 80년대 컴퓨터 게임 사운드를 연상 시키는 연주가 매력적인 `비밀의 화원(Secret Garden)`을 담은 이상은의 스페셜 앨범은 2011년 8월 16일 발매 된다.</div>
 
 
 **[Music Video] from 영화** **[평범한 날들]**
@@ -66,23 +66,21 @@ Lee Sang Eun [leesangeunmusic.com]/
 BREEZE MUSIC / SONY MUSIC  
 
 
-[Audio]  
+### Audio  
 
-Original Track written by Lee Sang Eun  
+- Original Track written by Lee Sang Eun  
+- Lyrics written by Lee Sang Eun  
+- Remix produced by eunchurn  
+- Electric bass by Chi Jung-hoon [sultan of the disco]
 
-Lyrics written by Lee Sang Eun  
+### Video] 
 
-Remix produced by eunchurn [eunchurn.com]/  
+#### A Film "Ordinary Days", 2010  
 
-Electric bass by Chi Jung-hoon [sultan of the disco]/  
+#### Director & Editor : INAN/  
 
-[Video]  
+<iframe src="https://player.vimeo.com/video/28105689" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
-A Film "Ordinary Days", 2010  
-
-Director & Editor : INAN/  
-
-[vimeo clip_id="28105689" width="640" height="480"]
 
 **네이버뮤직**
 

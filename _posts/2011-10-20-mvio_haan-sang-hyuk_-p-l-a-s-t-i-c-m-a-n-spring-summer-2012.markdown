@@ -21,12 +21,12 @@ SPRING SUMMER 2012
 MVIO INSTITUTE OF MEDICINE AND SCIENCE
 11am, Fri, October 21, 2011 at SETEC
 
-original track by deli spice
-all track arrangement & remix produced by eunchurn
-additional synth by cha hyosun (trampauline)
-guitar by kim naeun (trampauline)
-piano arrangement by cho!ong
-soundscape recorded by oh yujin at KyungHee University Medical Center
-executively produced by haan sang hyuk
+- original track by deli spice
+- all track arrangement & remix produced by eunchurn
+- additional synth by cha hyosun (trampauline)
+- guitar by kim naeun (trampauline)
+- piano arrangement by cho!ong
+- soundscape recorded by oh yujin at KyungHee University Medical Center
+- executively produced by haan sang hyuk
 
-[vimeo clip_id="34571119" width="640" height="480"]
+<iframe src="https://player.vimeo.com/video/34571119" width="640" height="361" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
