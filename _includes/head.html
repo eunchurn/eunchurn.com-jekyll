@@ -1,7 +1,8 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
@@ -12,7 +13,27 @@
       {{ page.title }} &middot; {{ site.title }}
     {% endif %}
   </title>
-
+  <meta name="description" content="{{ page_description | strip }}">
+  <link rel="canonical" href="{{ site.home_url}}{{ page.url }}">
+  
+  <!-- OpenGraph meta tags -->
+  <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}EUNCHURN{% endif %}">
+  <meta property="og:url" content="{{ site.home_url }}{{ page.url }}">
+  <meta property="og:site_name" content="EUNCHURN">
+  <meta property="og:description" content="{{ page_description | strip }}"> {% if page.url contains 'jobs' %}
+  <meta property="og:type" content="blog"> {% elsif page.title %}
+  <meta property="og:type" content="article"> {% else %}
+  <meta property="og:type" content="blog"> {% endif %} {% if page.representing_image %}
+  <meta property="og:image" content="{{ site.home_url }}{{ page.representing_image }}"> {% else %}
+  <meta property="og:image" content="{{ site.home_url }}{{ site.representing_image }}"> {% endif %}
+  
+  <!-- Twitter card meta tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@eunchurn">
+  <meta name="twitter:title" content="{% if page.title %}{{page.title}}{% else %}EUNCHURN{% endif %}">
+  <meta name="twitter:description" content="{{ page_description | strip }}"> {% if page.representing_image %}
+  <meta name="twitter:image" content="{{ site.home_url }}{{ page.representing_image }}"> {% else %}
+  <meta name="twitter:image" content="{{ site.home_url }}{{ site.twitter_image }}"> {% endif %}
   <!-- CSS -->
   <link rel="stylesheet" href="{{ site.baseurl }}/public/css/poole.css">
   <link rel="stylesheet" href="{{ site.baseurl }}/public/css/syntax.css">

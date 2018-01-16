@@ -3,12 +3,15 @@ author: admin
 comments: true
 date: 2011-08-15 18:00:47+00:00
 layout: post
-slug: trampauline-this-is-why-were-falling-for-each-other-2011
-title: Trampauline - This Is Why We're Falling For Each Other (2011)
-wordpress_id: 5671
+title: This Is Why We're Falling For Each Other (2011)
+description: Trampauline - This Is Why We're Falling For Each Other (2011) Released.
+tag: music
+publish: true
+featured: /public/images/2011/08/cover.png
 categories:
 - blog
 - news
+- music
 ---
 
 ![cover-300x297.png]({{ site.baseurl }}/public/images/2011/08/cover.png)

@@ -6,7 +6,7 @@ permalink:           pretty
 # Setup
 title:               eunchurn
 tagline:             'log'
-description:         'works archieving'
+description:         'works archive'
 url:                 https://eunchurn.com/
 baseurl:             ''
 
@@ -19,6 +19,9 @@ author:
 
 # Custom vars
 version:             1.0.0
+github:
+  repo: https://github.com/eunchurn
+saram12saram: https://saram12saram.kr
 
 # Plugins
 plugins: [jekyll-paginate]

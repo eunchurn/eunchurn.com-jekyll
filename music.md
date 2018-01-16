@@ -1,11 +1,12 @@
 ---
-layout: default
-title: Home
+layout: page
+title: Music
 ---
 
 <div class="posts">
-  {% for post in paginator.posts %}
+  {% for post in site.posts %}
    {% if post.publish != false %}
+   {% if post.tag == 'music' %}
   <div class="post">
     <h1 class="post-title">
       <a href="{{ site.baseurl }}{{ post.url }}">
@@ -22,6 +23,7 @@ title: Home
     
   </div>
  <div class="sep"></div>
+  {% endif %}
   {% endif %}
   {% endfor %}
 </div>
@@ -42,4 +44,3 @@ title: Home
     <span class="pagination-item newer">Newer</span>
   {% endif %}
 </div>
-

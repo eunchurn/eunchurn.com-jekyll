@@ -320,6 +320,7 @@ a.sidebar-nav-item:focus {
 }
 .page-title,
 .post-title {
+  font-size: 36px;
   margin-top: 0;
 }
 
@@ -560,4 +561,45 @@ a.pagination-item:hover {
 /* Only one tweak for a reverse layout */
 .layout-reverse.sidebar-overlay #sidebar-checkbox:checked ~ .sidebar {
   box-shadow: -.25rem 0 .5rem rgba(0,0,0,.1);
+}
+
+
+.posts .portrait {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  vertical-align: middle;
+  border-radius: 50%;
+  float: right;
+  margin-left: 56px;
+  object-fit: cover;
+}
+
+.post-description {
+  margin: 18px 100px 6px 0;
+  padding: 0;
+  color: #717171;
+  /* background-color: #f9f9f9; */
+}
+
+.sep {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.back-btn {
+  margin: 80px auto;
+  text-align: center;
+}
+.back-btn a {
+  padding: 20px 80px;
+  display: inline-block;
+  border: 1px solid $btn-border-color;
+  border-radius: 3px;
+  color: $text-color;
+}
+.back-btn a:hover {
+  background-color: $btn-default-active-bg-color;
+  border-color: $btn-border-color;
 }

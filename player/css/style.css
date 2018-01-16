@@ -42,7 +42,8 @@ ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input{margin
 	height:190px; 
 	display: block;
   margin-left: auto;
-  margin-right: auto;}
+  margin-right: auto;
+}
 .vinyl_100 { 
 	width:100px; 
 	height:100px; 
@@ -63,20 +64,21 @@ ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input{margin
 #backvinyl_250 { width:200px;
 	               height:100px;
 	               background-repeat:no-repeat;
-	               background-position:center top;
+				   background-position:center top;
 }
 .playon   { background-image:url("../images/background_100_on.png");
 }
 .playoff  { background-image:url("../images/background_100.png");
 }
-	.vinyl_250 { 
+.vinyl_250 { 
 	width:100px; 
 	height:100px; 
 	display: block;
-  margin-left: auto;
-  margin-right: auto;}
-  #vinyl1 {	background-image:url("../images/vinyls12s_100.png");
+	margin-left: auto;
+	margin-right: auto;
+	float: center;}
+#vinyl1 {	background-image:url("../images/vinyls12s_100.png");
 		     background-repeat:no-repeat;
-	     background-position:center top;
+		 background-position:center top;
 }
 }

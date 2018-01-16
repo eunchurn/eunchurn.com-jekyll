@@ -4,8 +4,11 @@ comments: true
 date: 2014-01-23 17:21:10+00:00
 layout: post
 slug: saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release
-title: SARAM12SARAM - Raindrop Cloud Typhoon and the Sun (2013) EP Release
-wordpress_id: 5924
+title: 빗물구름태풍태양 (2013) EP
+tag: music
+publish: true
+description: SARAM12SARAM - Raindrop Cloud Typhoon and the Sun (2013) EP Release
+featured: /public/images/2012/12/COVER2_600x600.png
 categories:
 - blog
 - eunchurn

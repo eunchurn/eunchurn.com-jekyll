@@ -6,7 +6,9 @@ layout: post
 link: http://www.eunchurn.com/2010/12/02/dusty-kid-america-2009/
 slug: dusty-kid-america-2009
 title: Dusty Kid - America (2009)
-wordpress_id: 314
+publish: true
+featured: /public/images/2010/12/333.jpg
+description: 지난 블로그(DB백업문제로 모두 날라간)에서 포스팅했던 음악입니다. mvio 오늘의 음악(?)으로 로드무비스러움을 연출이 어떨까해서 추천음악으로 다시 올립니다.
 categories:
 - blog
 ---

@@ -5,8 +5,10 @@ date: 2010-12-01 03:16:17+00:00
 layout: post
 link: http://www.eunchurn.com/2010/12/01/80kidz-weekend-warrior-dropping-out/
 slug: 80kidz-weekend-warrior-dropping-out
-title: 80KIDZ [WEEKEND WARRIOR] DROPPING OUT!
-wordpress_id: 305
+title: 80KIDZ - WEEKEND WARRIOR (2010)
+publish: true
+featured: /public/images/2010/12/1890154611_bdLNxQ2H_80kidz_weekend_warrior_page1_510.jpg
+description: 80KIDZ [WEEKEND WARRIOR] DROPPING OUT! 리믹스 참여
 categories:
 - blog
 tags:

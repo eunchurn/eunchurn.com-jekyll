@@ -5,9 +5,11 @@ date: 2011-10-20 05:51:39+00:00
 layout: post
 link: http://www.eunchurn.com/2011/10/20/mvio_haan-sang-hyuk_-p-l-a-s-t-i-c-m-a-n-spring-summer-2012/
 slug: mvio_haan-sang-hyuk_-p-l-a-s-t-i-c-m-a-n-spring-summer-2012
-title: SEOUL FASHION WEEK _MVIO _HAAN SANG HYUK _SUMMER SPRING _2012 _P L A S T I
+title: _P L A S T I C M A N (2012 SS)
+description: SEOUL FASHION WEEK _MVIO _HAAN SANG HYUK _SUMMER SPRING _2012 _P L A S T I
   C M A N _MVIO INSTITUTE OF MEDICINE AND SCIENCE
-wordpress_id: 5719
+publish: true
+featured: /public/images/2011/10/MVIO_PLASTICMAN_SS2011_Collectiion.jpg
 categories:
 - blog
 - news

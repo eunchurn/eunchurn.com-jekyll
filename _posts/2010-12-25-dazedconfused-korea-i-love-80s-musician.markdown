@@ -6,7 +6,9 @@ layout: post
 link: http://www.eunchurn.com/2010/12/25/dazedconfused-korea-i-love-80s-musician/
 slug: dazedconfused-korea-i-love-80s-musician
 title: 'DAZED&CONFUSED KOREA : I LOVE 80''s (MUSICIAN)'
-wordpress_id: 341
+publish: true
+featured: /public/images/2010/12/54.jpg
+description: 80년대를 사랑하는 뮤지션들을 한 공간에 모았다. 너무 비좁아 선 채로 대화를 하는 지경이었으나 이 멋쟁이들에게 80년대의 패션 아이템 하나 들게 하지 못할 정도는 아니었다. <데이즈드>가 아크릴판에 패션 아이템을 그리기 시작했다.
 categories:
 - press
 ---

@@ -4,8 +4,10 @@ comments: true
 date: 2011-08-15 18:40:02+00:00
 layout: post
 slug: leetzsche-bliss-digital-single-2011
-title: 이상은(Leetzsche) - Bliss [Digital Single, 2011]
-wordpress_id: 5674
+title: Bliss (Digital Single, 2011)
+description: 이상은(Leetzsche) - Bliss [Digital Single, 2011] 리믹스 발매
+publish: true
+featured: /public/images/2011/08/bliss_cover_s.jpg
 categories:
 - blog
 - news
@@ -72,7 +74,7 @@ BREEZE MUSIC / SONY MUSIC
 - Remix produced by eunchurn  
 - Electric bass by Chi Jung-hoon [sultan of the disco]
 
-### Video] 
+### Video
 
 #### A Film "Ordinary Days", 2010  
 
