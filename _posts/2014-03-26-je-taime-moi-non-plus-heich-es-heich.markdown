@@ -36,4 +36,6 @@ RELEASE EDITION
 - additional arrangement and pluck synthesizer by *cha hyosun* [TRAMPAULINE](https://trampauline.wordpress.com/)
 - sound sampled from the album **'Jane Birkin/Serge Gainsbourg'** (1969) , **'Histoire de Melody Nelson'** (1971) and **'Symphony of The Planets'** (1992)
 
+<div class="videoWrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/MF40OFD6PGQ?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>

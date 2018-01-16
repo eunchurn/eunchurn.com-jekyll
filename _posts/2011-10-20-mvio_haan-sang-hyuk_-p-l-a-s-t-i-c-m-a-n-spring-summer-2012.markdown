@@ -32,4 +32,6 @@ MVIO INSTITUTE OF MEDICINE AND SCIENCE
 - soundscape recorded by oh yujin at KyungHee University Medical Center
 - executively produced by haan sang hyuk
 
+<div class="videoWrapper">
 <iframe src="https://player.vimeo.com/video/34571119" width="640" height="361" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</div>

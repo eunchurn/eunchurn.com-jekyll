@@ -6,7 +6,7 @@ permalink:           pretty
 # Setup
 title:               eunchurn
 tagline:             'log'
-description:         'works archive'
+description:         'works archive $$ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\phi_{i}}(x,y)\right)^{1/\left|B_{w,l}\right|} $$'
 url:                 https://eunchurn.com/
 baseurl:             ''
 
@@ -21,6 +21,8 @@ author:
 version:             1.0.0
 github:
   repo: https://github.com/eunchurn
+disqus:
+  id: "eunchurn"
 saram12saram: https://saram12saram.kr
 
 # Plugins
