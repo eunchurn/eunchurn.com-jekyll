@@ -75,4 +75,5 @@ category: production
 [피터팬 콤플렉스(Peterpan Complex)]:http://peterpancomplex.com/
 [부스트놉(BoostKnob)]:https://www.boostknob.com/
 [영기획(YOUNG,GIFTED&WACK)]:http://younggiftedwack.com/
+[YOUNG,GIFTED&WACK Records]:http://younggiftedwack.com/
 [빗물구름태풍태양(Remixes)]:{{ site.baseurl }}/production/2015/12/12/saram12saram-raindrop-cloud-typhoon-and-the-sun-remixes/

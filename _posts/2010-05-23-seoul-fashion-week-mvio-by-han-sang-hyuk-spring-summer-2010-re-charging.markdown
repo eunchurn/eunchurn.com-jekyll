@@ -44,8 +44,10 @@ SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2010 SS TATTOO Collection 'RE CHARGING'
 - SETEC 514, Daechidong, Gangnamgu, Seoul, Korea','SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2010 SS Collection 'RE CHARGING
 
 ### FULL VIDEO
+<div class="videoWrapper">
 <iframe src="https://player.vimeo.com/video/10650004" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-
+</div>
 ### m.net 'TREND REPOR TFEEL' by youweresleeping.com
-
+<div class="videoWrapper">
 <iframe src="https://player.vimeo.com/video/11520075" width="640" height="424" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</div>

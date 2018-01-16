@@ -72,9 +72,10 @@ SANULLIM - MOREMOREMORE (DJ EUNCHURN REMIX)
 </p>
 
 ### FULL VIDEO
-
+<div class="videoWrapper">
 <iframe src="https://player.vimeo.com/video/10495868" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-
+</div>
 ### m.net 'TREND REPOR TFEEL' by youweresleeping.com
-
+<div class="videoWrapper">
 <iframe src="https://player.vimeo.com/video/11460314" width="640" height="424" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</div>

@@ -52,9 +52,9 @@ DARE TO RIDE _ ON MY WAY TO YOU
 - remix produced by : *EUNCHURN*
 
 
-
+<div class="videoWrapper">
 <iframe src="https://player.vimeo.com/video/34570776" width="640" height="483" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-
+</div>
 
 
 
