@@ -3,8 +3,7 @@ author: admin
 comments: true
 date: 2014-03-26 17:21:10+00:00
 layout: post
-slug: saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release
-title: _ JE T'AIME MOI NON PLUS (2014-2015 AW)
+title: _JE T'AIME MOI NON PLUS (2014-2015 AW)
 publish: true
 description: HEICH ES HEICH _ AUTUMN WINTER 2014 - 2015 SEOUL FASHION WEEK 2014.03.26 13:30PM at DDP
 featured: /public/images/2014/03/artworks-000074662449-g07n65-t500x500.jpg
