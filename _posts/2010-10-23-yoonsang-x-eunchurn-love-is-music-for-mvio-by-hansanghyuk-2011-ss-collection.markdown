@@ -8,17 +8,15 @@ link: http://www.eunchurn.com/2010/10/23/yoonsang-x-eunchurn-love-is-music-for-m
 slug: yoonsang-x-eunchurn-love-is-music-for-mvio-by-hansanghyuk-2011-ss-collection
 title: _ r i d i n g (2011 SS)
 featured: /public/images/2010/10/main.jpg
-categories:
-- blog
-- news
-- _mvio collection
-tags:
+category: runway
+tag:
 - hansanghyuk
 - hong sukwoo
 - m.v.r.c seoul
 - mvio
+- music
 - riding
-- runway music
+- runway
 - seoul fashion week
 - symmetry collection
 - yoonsang

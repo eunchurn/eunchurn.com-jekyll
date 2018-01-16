@@ -9,9 +9,8 @@ title: _ r e c h a r g i n g (2010 SS)
 publish: true
 featured: /public/images/2010/05/RECHARGING_TATTO_COLLECTION_.jpg
 description: 트리치노폴리 잎담배의 냄새와 민트잎 향이 교묘하게 섞인 향취가 났으며, 머리 위 선반의 촛불을 찾는 손끝은 매우 섬세했으며, 손을 뻗었을때 팔목까지 또렸하게 새겨져 있던 밧줄모양의 문신이 그의 정갈한 잿빛수트와 묘하게 어울렸다. 그는 마치 주기적으로 젊은사람의 에너지를 충전한것처럼 느껴졌고 우리와는 다른 사람 같았다.
-categories:
-- _mvio collection
-tags:
+category: runway
+tag:
 - astor piazzola
 - han sang hyuk
 - hansanghyuk
@@ -23,6 +22,8 @@ tags:
 - tattoo
 - tattoo collection
 - vuelvo al sur
+- runway
+- music
 ---
 <iframe width="100%" height="300" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1260248&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>
 

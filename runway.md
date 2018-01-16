@@ -1,12 +1,12 @@
 ---
 layout: page
-title: Music
+title: Runway Music
 ---
 
 <div class="posts">
   {% for post in site.posts %}
    {% if post.publish != false %}
-   {% if post.tag == 'music' %}
+   {% if post.category == 'runway' %}
   <div class="post">
     <h1 class="post-title">
       <a href="{{ site.baseurl }}{{ post.url }}">

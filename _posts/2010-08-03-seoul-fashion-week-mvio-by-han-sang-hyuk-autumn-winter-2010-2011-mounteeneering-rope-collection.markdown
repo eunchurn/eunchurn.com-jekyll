@@ -9,13 +9,8 @@ title: _ m o u n t a i n e e r i n g (2010-2011 AW)
 description: SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2010-2011 AW Rope Collection ‘MOUNTAINNEERING’
 publish: true
 featured: /public/images/2010/08/MOUNTAINEERING_ROPE_COLLECTION.jpg
-categories:
-- _mvio collection
-tags:
-- '2010'
-- '2011'
-- autumn
-- eunchurn
+category: runway
+tag:
 - han sanghyuk
 - hansanghyuk
 - hong sukwoo
@@ -25,7 +20,8 @@ tags:
 - rope collection
 - seoul fashion week
 - winter
-- yourboyhood
+- runway
+- music
 ---
 
 <iframe width="100%" height="300" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2157588&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>

@@ -9,8 +9,7 @@ title: 80KIDZ - WEEKEND WARRIOR (2010)
 publish: true
 featured: /public/images/2010/12/1890154611_bdLNxQ2H_80kidz_weekend_warrior_page1_510.jpg
 description: 80KIDZ [WEEKEND WARRIOR] DROPPING OUT! 리믹스 참여
-categories:
-- blog
+category: production
 tags:
 - 80KIDZ
 - dj silent

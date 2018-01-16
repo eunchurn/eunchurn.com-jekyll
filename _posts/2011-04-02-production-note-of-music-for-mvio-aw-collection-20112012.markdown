@@ -7,8 +7,11 @@ description: production note of music for mvio A/W collection 2011/2012
 title: MOT x EUNCHURN - 매일 그대와 작업일기
 publish: true
 featured: /public/images/2011/03/Poster-front.jpg
-categories:
-- blog
+category: runway
+tag:
+- runway
+- mvio
+- note
 ---
 
 ## 'MOT x EUNCHURN - 매일 그대와' 작업일기

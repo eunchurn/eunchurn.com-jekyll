@@ -8,10 +8,7 @@ description: Trampauline - This Is Why We're Falling For Each Other (2011) Relea
 tag: music
 publish: true
 featured: /public/images/2011/08/cover.png
-categories:
-- blog
-- news
-- music
+category: production
 ---
 
 ![cover-300x297.png]({{ site.baseurl }}/public/images/2011/08/cover.png)

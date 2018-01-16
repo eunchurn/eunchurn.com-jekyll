@@ -8,8 +8,7 @@ title: Mimyo - Floating Ones EP (2012)
 description: Mimyo - Floating Ones EP (2012) 발매, 리믹스 참여
 publish: true
 featured: /public/images/2012/06/cover500.jpg
-categories:
-- blog
+category: production
 ---
 
 ![cover500]({{ site.baseurl }}/public/images/2012/06/cover500.jpg)

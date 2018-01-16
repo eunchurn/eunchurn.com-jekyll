@@ -9,10 +9,10 @@ title: _ g r a d a t i o n (2009-2010 AW)
 publish: true
 featured: /public/images/2010/05/god_1_niji1002-625x1024.jpg
 description: 헨리 베스커빌 경은 아침에 일어나보니 자신의 얼굴이 없어졌음을 알게 되었습니다. 그는 급박하게 홈즈를 만나 어젯밤 도난당한 자신의 얼굴에 대해 단호하지만 흥분된 어투로 이야기하기 시작했습니다. 홈즈는 마차를 타고 베스커빌 경의 저택으로 가서 그가 잠들었던 침실, 옷장, 계단, 그리고 창문 등에 남겨진 흔적을 돋보기로 천천히 살펴보기 시작합니다.
-categories:
-- _mvio collection
-tags:
-- runwaymusic
+category: runway
+tag:
+- runway
+- music
 - gradation
 - han sang hyuk
 - hansanghyuk

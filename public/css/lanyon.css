@@ -567,7 +567,6 @@ a.pagination-item:hover {
 .portrait {
   width: 100px;
   height: 100px;
-  overflow: hidden;
   vertical-align: middle;
   border-radius: 50%;
   float: right;

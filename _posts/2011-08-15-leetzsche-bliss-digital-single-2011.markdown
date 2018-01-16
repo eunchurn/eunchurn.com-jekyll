@@ -8,9 +8,7 @@ title: Bliss (Digital Single, 2011)
 description: 이상은(Leetzsche) - Bliss [Digital Single, 2011] 리믹스 발매
 publish: true
 featured: /public/images/2011/08/bliss_cover_s.jpg
-categories:
-- blog
-- news
+category: production
 ---
 
 ![bliss_cover_s-300x300.jpg]({{ site.baseurl }}/public/images/2011/08/bliss_cover_s.jpg)

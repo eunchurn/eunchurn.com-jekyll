@@ -10,10 +10,11 @@ description: SEOUL FASHION WEEK _MVIO _HAAN SANG HYUK _SUMMER SPRING _2012 _P L 
   C M A N _MVIO INSTITUTE OF MEDICINE AND SCIENCE
 publish: true
 featured: /public/images/2011/10/MVIO_PLASTICMAN_SS2011_Collectiion.jpg
-categories:
-- blog
-- news
-- _mvio collection
+category: runway
+tag:
+- runway
+- music
+- mvio
 ---
 
 ![MVIO_PLASTICMAN_SS2011_Collectiion.jpg]({{ site.baseurl }}/public/images/2011/10/MVIO_PLASTICMAN_SS2011_Collectiion.jpg)

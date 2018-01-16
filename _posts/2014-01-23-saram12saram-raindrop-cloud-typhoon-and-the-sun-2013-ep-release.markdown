@@ -9,10 +9,7 @@ tag: music
 publish: true
 description: SARAM12SARAM - Raindrop Cloud Typhoon and the Sun (2013) EP Release
 featured: /public/images/2012/12/COVER2_600x600.png
-categories:
-- blog
-- eunchurn
-- news
+category: production
 ---
 
 ![COVER2_600x600]({{ site.baseurl }}/public/images/2012/12/COVER2_600x600.png)

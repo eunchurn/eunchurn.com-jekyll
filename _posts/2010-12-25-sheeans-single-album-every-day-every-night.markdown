@@ -9,9 +9,7 @@ title: Every Day Every Night (2010)
 description: 시언 SHEEAN'S SINGLE ALBUM [EVERY DAY EVERY NIGHT] 발매, 리믹스 작업
 publish: true
 featured: /public/images/2010/12/1890154611_V9OeaG2R_SHEEAN+COVER-3.jpg
-categories:
-- blog
-- locksmithmusic
+category: production
 ---
 
 [![]({{ site.baseurl }}/public/images/2010/12/1890154611_V9OeaG2R_SHEEAN+COVER-3-300x300.jpg)]({{ site.baseurl }}/public/images/2010/12/1890154611_V9OeaG2R_SHEEAN+COVER-3.jpg)
