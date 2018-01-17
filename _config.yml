@@ -29,6 +29,7 @@ saram12saram: https://saram12saram.kr
 plugins:
  - jekyll-paginate
  - jekyll-seo-tag
+ - jekyll-feed
 paginate: 5
 paginate_path: "page:num" 
 markdown:    kramdown
