@@ -63,7 +63,7 @@ B-COSFIRE 필터의 구조, 즉 우리가 DoG 응답을 고려하는 위치는 �
 B_{w,l,\phi} = \left[ (0,0),(\lambda,\phi),(\lambda, 2\pi-\phi)\right] \cup \left[ (\rho_{i},\phi) \right] \cup \left[ (\rho_{i},2\pi-\phi) \right]
 \end{equation}
 
-여기서 $\lambda = \left[ (l-1)/2 \right]$ 와 $\rho_{i} = \eta i$ with $i=1,...,\left[(\lambda-1)/\eta \right] -1$. $\phi$ 은 선의 기본 방향이다. $B_{w,l,\phi}$ 집합에서 두개의 튜플은 B-COSFIRE 필터 지원 센터에 대한 위치 (거리 및 극각)를 나타내며 center-on Gaussians (DoG) 필터의 응답을 나타낸다. 파라미터 $\eta \left(\textrm{with } 1\leq \eta \leq \lambda \right)$는 고려 된 DoG 응답 사이의 픽셀 간격을 나타낸다. $\eta=1$일때 우리는 원하는 너비 $w$, 길이 $l$, 그리고 방향 $\phi$, 그리고 $\eta=\left[(l-1)/2\right]$일때 (가능한 최대 값) 결과 필터는 세 개의 튜플로만 구성된다: 중앙에서 DoG 응답을 참조하는 튜플 $ (0,0 $ 및 두 개의 튜플 $\left(\left[(l-1)/2\right],\phi \right)$ 및 $\left(\left[(l-1)/2\right],2\pi-\phi\right)$는 B-COSFIRE 필터의 선택도는 지지체의 양쪽면에서 가장 먼 거리를 가리키는 값이다.
+여기서 $\lambda = \left[ (l-1)/2 \right]$ 와 $\rho_{i} = \eta i$ with $i=1,...,\left[(\lambda-1)/\eta \right] -1$. $\phi$ 은 선의 기본 방향이다. $B_{w,l,\phi}$ 집합에서 두개의 튜플은 B-COSFIRE 필터의 지지점에 대한 위치 (거리 및 극각)를 나타내며 center-on Gaussians (DoG) 필터의 응답을 나타낸다. 파라미터 $\eta \left(\textrm{with } 1\leq \eta \leq \lambda \right)$는 고려 된 DoG 응답 사이의 픽셀 간격을 나타낸다. $\eta=1$일때 우리는 원하는 너비 $w$, 길이 $l$, 그리고 방향 $\phi$, 그리고 $\eta=\left[(l-1)/2\right]$일때 (가능한 최대 값) 결과 필터는 세 개의 튜플로만 구성된다: 중앙에서 DoG 응답을 참조하는 튜플 $ (0,0 $ 및 두 개의 튜플 $\left(\left[(l-1)/2\right],\phi \right)$ 및 $\left(\left[(l-1)/2\right],2\pi-\phi\right)$는 B-COSFIRE 필터의 선택도는 지지체의 양쪽면에서 가장 먼 거리를 가리키는 값이다.
 
 ### Response of a B-COSFIRE filter
 
