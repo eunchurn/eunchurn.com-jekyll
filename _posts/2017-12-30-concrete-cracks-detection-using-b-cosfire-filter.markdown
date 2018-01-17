@@ -84,7 +84,7 @@ C(x,y)=\left| \sum_{x'=-3\sigma}^{3\sigma} \sum_{y'=-3\sigma}^{3\sigma} I(x,y)Do
 [^bibiloni2016survey]: Bibiloni, P.; González-Hidalgo, M.; Massanet, S. A survey on curvilinear object segmentation in multiple applications. *Pattern Recognition* **2016**, 60, 949–970
 [^chai2013recovering]: Chai, D.; Forstner, W.; Lafarge, F. Recovering line-networks in images by junction-point processes. *Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition*, **2013**, pp. 1894–1901.
 
-그후 선호하는 위치와 관련하여 약간의 tolerance를 허용하기 위해 가중치가 최대인 비선형 blurring 연산으로 DoG 응답을 *blur* 처리한다. 가중치는 표준 편차 $\sigma_{i}$' 가 B-COSFIRE 필터의 지원 센터로부터의 거리가 증가함에 따라 선형 적으로 증가하는 가우시안 함수에 의해 주어진다 : $\sigma_{i}$'$=\sigma_{0}$'$+\alpha\rho_{i}$. $\sigma_{0}$' 와 $\alpha$ 값은 파라미터이며, 프로토타입 형태에서 변형에 대한 tolerance를 정규화한다.
+그후 선호하는 위치와 관련하여 약간의 tolerance를 허용하기 위해 가중치가 최대인 비선형 blurring 연산으로 DoG 응답을 *blur* 처리한다. 가중치는 표준 편차 $\sigma_{i}$' 가 B-COSFIRE 필터의 지원 센터로부터의 거리가 증가함에 따라 선형적으로 증가하는 가우시안 함수에 의해 주어진다 : $\sigma_{i}$'$=\sigma_{0}$'$+\alpha\rho_{i}$. $\sigma_{0}$' 와 $\alpha$ 값은 파라미터이며, 프로토타입 형태에서 변형에 대한 tolerance를 정규화한다.
 
 
 세 번째 단계에서는 벡터 $(\rho_{i}, 2\pi-\phi_{i})$에 의해 $i$번째 *blur* 처리한 DoG 응답을 *shift* 변환한다. 이러한 방식으로 모든 관련 DoG 응답은 관련 위치, 즉 관련 B-COSFIRE 필터의 지지점에서 연결된다. $i$ 번째 튜플의 $(x, y)$ 위치에서 *blur*처리되고 *shift* 된 DoG 응답 $s_{\rho_{i},\phi_{i}}(x,y)$ 은:
