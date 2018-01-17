@@ -5,49 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-
-  <title>
-    {% if page.title == "Home" %}
-      {{ site.title }} &middot; {{ site.tagline }}
-    {% else %}
-      {{ page.title }} &middot; {{ site.title }}
-    {% endif %}
-  </title>
-  <meta name="description" content="{{ page_description | strip }}">
+   {%- seo -%}
   <link rel="canonical" href="{{ site.home_url}}{{ page.url }}">
-  
   <!-- OpenGraph meta tags -->
-  <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}EUNCHURN{% endif %}">
-  <meta property="og:url" content="{{ site.home_url }}{{ page.url }}">
-  <meta property="og:site_name" content="EUNCHURN">
-  <meta property="og:description" content="{{ page_description | strip }}"> {% if page.url contains 'jobs' %}
-  <meta property="og:type" content="blog"> {% elsif page.title %}
-  <meta property="og:type" content="article"> {% else %}
-  <meta property="og:type" content="blog"> {% endif %} {% if page.representing_image %}
-  <meta property="og:image" content="{{ site.home_url }}{{ page.representing_image }}"> {% else %}
-  <meta property="og:image" content="{{ site.home_url }}{{ site.representing_image }}"> {% endif %}
-  
+  {%- if page.url contains 'jobs' -%}
+  <meta property="og:type" content="blog"> {%- elsif page.title -%}
+  <meta property="og:type" content="article"> {%- else -%}
+  <meta property="og:type" content="blog"> {%- endif -%} {%- if page.representing_image -%}
+  <meta property="og:image" content="{{ site.home_url }}{{ page.representing_image }}"> {%- else -%}
+  <meta property="og:image" content="{{ site.home_url }}{{ site.representing_image }}"> {%- endif -%}
   <!-- Twitter card meta tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@eunchurn">
   <meta name="twitter:title" content="{% if page.title %}{{page.title}}{% else %}EUNCHURN{% endif %}">
-  <meta name="twitter:description" content="{{ page_description | strip }}"> {% if page.representing_image %}
-  <meta name="twitter:image" content="{{ site.home_url }}{{ page.representing_image }}"> {% else %}
-  <meta name="twitter:image" content="{{ site.home_url }}{{ site.twitter_image }}"> {% endif %}
+  <meta name="twitter:description" content="{{ page_description | strip }}"> {%- if page.representing_image -%}
+  <meta name="twitter:image" content="{{ site.home_url }}{{ page.representing_image }}"> {%- else -%}
+  <meta name="twitter:image" content="{{ site.home_url }}{{ site.twitter_image }}"> {%- endif -%}
   <!-- CSS -->
   <link rel="stylesheet" href="{{ site.baseurl }}/public/css/poole.css">
   <link rel="stylesheet" href="{{ site.baseurl }}/public/css/syntax.css">
   <link rel="stylesheet" href="{{ site.baseurl }}/public/css/lanyon.css">
   <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400"> -->
   <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/moonspam/NanumSquare/master/nanumsquare.css">
-
   <!-- Icons -->
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ site.baseurl }}/public/apple-touch-icon-precomposed.png">
   <link rel="shortcut icon" href="{{ site.baseurl }}/public/favicon.ico">
-
   <!-- RSS -->
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
-
   <!-- S12S PLAYER -->
   <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/player/css/style.css" />
   <link rel="stylesheet" href="{{ site.baseurl }}/player/css/sc-player-minimal.css" type="text/css">

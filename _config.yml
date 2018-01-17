@@ -9,7 +9,7 @@ tagline:             ''
 description:         'works archive $$ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\phi_{i}}(x,y)\right)^{1/\left|B_{w,l}\right|} $$'
 url:                 https://eunchurn.com/
 baseurl:             ''
-
+representing_image: /public/images/7800413.jpeg
 
 # About/contact
 author:
@@ -26,7 +26,9 @@ disqus:
 saram12saram: https://saram12saram.kr
 
 # Plugins
-plugins: [jekyll-paginate]
+plugins:
+ - jekyll-paginate
+ - jekyll-seo-tag
 paginate: 5
 paginate_path: "page:num" 
 markdown:    kramdown

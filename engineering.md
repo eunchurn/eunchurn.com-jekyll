@@ -4,16 +4,16 @@ title: engineering
 ---
 
 <div class="posts">
-  {% for post in site.posts %}
-   {% if post.publish != false %}
-   {% if post.category == 'engineering' %}
+  {%- for post in site.posts -%}
+   {%- if post.publish != false -%}
+   {%- if post.category == 'engineering' -%}
   <div class="post">
     <h1 class="post-title">
       <a href="{{ site.baseurl }}{{ post.url }}">
         {{ post.title }}
-        {% if post.featured %}
+        {%- if post.featured -%}
         <img class="portrait" src="{{ site.baseurl}}{{post.featured}}" />
-        {% endif %}
+        {%- endif -%}
       </a>
     </h1>
 
@@ -23,24 +23,24 @@ title: engineering
     
   </div>
  <div class="sep"></div>
-  {% endif %}
-  {% endif %}
-  {% endfor %}
+  {%- endif -%}
+  {%- endif -%}
+  {%- endfor -%}
 </div>
 
 <div class="pagination">
-  {% if paginator.next_page %}
+  {%- if paginator.next_page -%}
     <a class="pagination-item older" href="{{ site.baseurl }}/page{{paginator.next_page}}">Older</a>
-  {% else %}
+  {%- else -%}
     <span class="pagination-item older">Older</span>
-  {% endif %}
-  {% if paginator.previous_page %}
-    {% if paginator.page == 2 %}
+  {%- endif -%}
+  {%- if paginator.previous_page -%}
+    {%- if paginator.page == 2 -%}
       <a class="pagination-item newer" href="{{ site.baseurl }}/">Newer</a>
-    {% else %}
+    {%- else -%}
       <a class="pagination-item newer" href="{{ site.baseurl }}/page{{paginator.previous_page}}">Newer</a>
-    {% endif %}
-  {% else %}
+    {%- endif -%}
+  {%- else -%}
     <span class="pagination-item newer">Newer</span>
-  {% endif %}
+  {%- endif -%}
 </div>
