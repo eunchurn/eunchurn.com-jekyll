@@ -34,3 +34,5 @@ paginate: 5
 paginate_path: "page:num" 
 markdown:    kramdown
 g-analytics: UA-112690812-1
+feed:
+  path: atom.xml
