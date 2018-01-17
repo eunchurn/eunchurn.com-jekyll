@@ -100,7 +100,7 @@ s_{\rho_{i},\phi_{i}}(x,y) = \max_{x',y'} \left[ C(x-x'-\Delta x,y-y'-\Delta y) 
 r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\phi_{i}}(x,y)\right)^{1/\left|B_{w,l}\right|}
 \end{equation}
 
-논문에서 방법론 제시 이후의 작업은 타 알고리즘과 비교하기 위한 벤치마크를 수행하는 결과를 나타낸다. 나는 조금 다른 방식으로 이진화(binarization)을 수행했으며, 균열을 분류하기 위한 MER(Minimum enclosing rectangle)작업을 수행하였다. 이 방법은 직관적인 방법론이라서 이미지 프로세싱에 관심이 있다면, DoG 응답을 가지고 충분히 추출해낼 수 있다.
+논문에서 방법론 제시 이후의 작업은 타 알고리즘과 비교하기 위한 벤치마크를 수행하는 결과를 나타낸다. 나는 조금 다른 방식으로 이진화(binarization)을 수행했으며, 균열을 분류하기 위한 MER(Minimum enclosing rectangle)작업을 수행하였다. 이 방법은 직관적인 방법론이라서 이미지 프로세싱에 관심이 있다면, DoG 응답을 가지고 충분히 다른 여러방법으로도 추출해 낼 수 있다.
 
 ### Binarization
 이진화 방법은 1차적으로 `binarize()`함수로 수행되며 2차적으로 pixel 연결성을 찾아 쓰레숄딩 한다. 이것은 MATLAB *Image Processing Toolbox*에 있는 `bwconncomp()` 함수를 사용한다. `binarize()`함수는 아래와 같다.
