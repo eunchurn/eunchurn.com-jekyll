@@ -50,10 +50,4 @@ layout: null
          <changefreq>weekly</changefreq>
          <priority>0.5</priority>
   </url>
-  <url>
-      <loc>https://saram12saram.kr</loc>
-         <lastmod>2017-12-30T17:21:10+09:00</lastmod>
-         <changefreq>weekly</changefreq>
-         <priority>0.5</priority>
-  </url>
 </urlset>
