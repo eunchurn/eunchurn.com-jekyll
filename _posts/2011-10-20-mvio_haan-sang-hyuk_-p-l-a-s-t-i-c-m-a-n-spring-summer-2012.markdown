@@ -17,12 +17,15 @@ tag:
 - mvio
 ---
 
+<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/26025120&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>
+
+MVIO_HAAN SANG HYUK_ 'P L A S T I C M A N'<br>
+SPRING SUMMER 2012<br>
+MVIO INSTITUTE OF MEDICINE AND SCIENCE<br>
+11am, Fri, October 21, 2011 at SETEC<br>
+
 ![MVIO_PLASTICMAN_SS2011_Collectiion.jpg]({{ site.baseurl }}/public/images/2011/10/MVIO_PLASTICMAN_SS2011_Collectiion.jpg)
 
-MVIO_HAAN SANG HYUK_ 'P L A S T I C M A N'
-SPRING SUMMER 2012
-MVIO INSTITUTE OF MEDICINE AND SCIENCE
-11am, Fri, October 21, 2011 at SETEC
 
 - original track by deli spice
 - all track arrangement & remix produced by eunchurn
