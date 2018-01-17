@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Runway Music
+title: runway music
 ---
 
 <div class="posts">

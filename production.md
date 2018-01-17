@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Music production
+title: music production
 ---
 
 <div class="posts">

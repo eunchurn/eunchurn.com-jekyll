@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Engineering Log
+title: engineering log
 ---
 
 <div class="posts">
