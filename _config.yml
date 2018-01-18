@@ -53,3 +53,4 @@ feed:
 scholar:
   source: ./_bibliography
   bibliography: bibliography.bib
+  bibliography_template: <abbr>[{{key}}]</abbr>{{reference}}

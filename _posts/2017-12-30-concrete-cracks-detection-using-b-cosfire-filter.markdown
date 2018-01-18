@@ -44,7 +44,7 @@ _Azzopardi, G. Petkov, N. "Detection of Curved Lines with B-COSFIRE Filters: A C
  3. ~~hysteresis thresholding~~ (최적화 및 벤치마크를 위함)
  4. minimum enclosing rectangle
  5. making ground truth
-
+<br><br>
 ### Configure of a B-COSFIRE filter
 B-COSFIRE 필터는 Gaussian 함수의 그룹 $DoG_{\sigma}$로부터 입력을 받으며 외부 Gaussian 함수는 표준 편차 $\sigma $를 가진다.
 
@@ -56,15 +56,15 @@ Petkov와 Vosser[^petkov2005modifications]에서, 위의 함수에 대해 0.96 $
 <br>
 B-COSFIRE 필터의 구조, 즉 우리가 DoG 응답을 고려하는 위치는 주어진 프로토타입 패턴에 대한 자동 구성 프로세스에서 결정된다. 구성에 대한 자세한 내용은 Azzopardi et al.의 논문[^azzopardi2015trainable]을 참조바람. 우리는 너비 $w$, 길이 $l$ 및 방향 $\phi$의 프로토타입 선 구조에 B-COSFIRE 필터를 구성한다. 구성 결과는 다음과 같이 설정된다. $B_{w, l, \phi}$ :
 
-[^petkov2005modifications]: Petkov, N.; Visser, W.T. Modifications of center-surround, spot detection and dot-pattern selective operators. _Institute of Mathematics and Computing Science, University of Groningen, The Netherlands (CS 2005-9-01) 2005_, pp. 1–4..
-[^azzopardi2015trainable]: Azzopardi, G.; Strisciuglio, N.; Vento, M.; Petkov, N. Trainable COSFIRE filters for vessel delineation with application to retinal images. Medical image analysis 2015, 19, 46–57.
+[^petkov2005modifications]: {% reference petkov2005modifications %}
+[^azzopardi2015trainable]: {% reference azzopardi2015trainable %}
 
 \begin{equation}
 B_{w,l,\phi} = \left[ (0,0),(\lambda,\phi),(\lambda, 2\pi-\phi)\right] \cup \left[ (\rho_{i},\phi) \right] \cup \left[ (\rho_{i},2\pi-\phi) \right]
 \end{equation}
 
 여기서 $\lambda = \left[ (l-1)/2 \right]$ 와 $\rho_{i} = \eta i$ with $i=1,...,\left[(\lambda-1)/\eta \right] -1$. $\phi$ 은 선의 기본 방향이다. $B_{w,l,\phi}$ 집합에서 두개의 튜플은 B-COSFIRE 필터의 지지점에 대한 위치 (거리 및 극각)를 나타내며 center-on Gaussians (DoG) 필터의 응답을 나타낸다. 파라미터 $\eta \left(\textrm{with } 1\leq \eta \leq \lambda \right)$는 고려 된 DoG 응답 사이의 픽셀 간격을 나타낸다. $\eta=1$일때 우리는 원하는 너비 $w$, 길이 $l$, 그리고 방향 $\phi$, 그리고 $\eta=\left[(l-1)/2\right]$일때 (가능한 최대 값) 결과 필터는 세 개의 튜플로만 구성된다: 중앙에서 DoG 응답을 참조하는 튜플 $ (0,0 $ 및 두 개의 튜플 $\left(\left[(l-1)/2\right],\phi \right)$ 및 $\left(\left[(l-1)/2\right],2\pi-\phi\right)$는 B-COSFIRE 필터의 선택도는 지지체의 양쪽면에서 가장 먼 거리를 가리키는 값이다.
-
+<br><br>
 ### Response of a B-COSFIRE filter
 
 B-COSFIRE 필터 $B_{w,l,\phi}(x,y)$의 응답은 *filter-blur-shift-combine*의 네 단계로 계산된다.
@@ -76,13 +76,13 @@ C(x,y)=\left| \sum_{x'=-3\sigma}^{3\sigma} \sum_{y'=-3\sigma}^{3\sigma} I(x,y)Do
 
 여기서 연산자 $\left\|.\right\|^{+}$는 반파 정류를 나타내며 최근 정류 선형 유닛 (ReLU)으로 알려져 있다. 
 
-인공 신경망의 맥락에서, 정류기는 인수의 양의 부분으로 정의된 활성화 함수이다. $\left\|x\right\|^{+} = \max(0,x)$ 여기서 $x$는 뉴런에 대한 입력이다. 이 함수는 램프(ramp) 기능으로도 알려져 있으며 전기 공학의 반 파장 정류와 유사하다. 이 활성화 함수는 처음 {% cite hahnloser2000digital %}에 의해 강한 생물학적 동기와 수학적 정당성을 지닌 저널 Nature지의 2000년 논문[^hahnlose2000]에서 소개되었다.  이 함수는 널리 사용되는 로지스틱 시그모이드(확률론에 의해 영감을 얻은 것; 로지스틱 회귀분석 참조)보다 효과적으로 Convolution 네트워크[^azzopardi2013trainable]에 사용되게 되었다. 또한 [^azzopardi2015trainable] 대응안인 쌍곡선 탄젠트(hyperbolic tangent) 보다 실용적이다. 2017년에 들어서 현재 이 정류기는 딥 뉴럴 네트워크에서 가장 널리 알려진 활성화 함수이다. [^bibiloni2016survey] [^chai2013recovering]
+인공 신경망의 맥락에서, 정류기는 인수의 양의 부분으로 정의된 활성화 함수이다. $\left\|x\right\|^{+} = \max(0,x)$ 여기서 $x$는 뉴런에 대한 입력이다. 이 함수는 램프(ramp) 기능으로도 알려져 있으며 전기 공학의 반 파장 정류와 유사하다. 이 활성화 함수는 처음 Hahnloser R. H. et al.에 의해 강한 생물학적 동기와 수학적 정당성을 지닌 저널 Nature지의 2000년 논문[^hahnlose2000]에서 소개되었다.  이 함수는 널리 사용되는 로지스틱 시그모이드(확률론에 의해 영감을 얻은 것; 로지스틱 회귀분석 참조)보다 효과적으로 Convolution 네트워크[^azzopardi2013trainable]에 사용되게 되었다. 또한 [^azzopardi2015trainable] 대응안인 쌍곡선 탄젠트(hyperbolic tangent) 보다 실용적이다. 2017년에 들어서 현재 이 정류기는 딥 뉴럴 네트워크에서 가장 널리 알려진 활성화 함수이다. [^bibiloni2016survey] [^chai2013recovering]
 
-[^hahnlose2000]: Hahnloser R. H., Sarpeshkar R., Mahowald M. A., Douglas R. J., Seung H. S., Digital selection and analogue amplification coexist in a cortex-inspired silicon circuit, *Nature* **2000** Jun 22;405(6789):947-51.
-[^azzopardi2013trainable]: Azzopardi, G.; Petkov, N. A CORF computational model of a simple cell that relies on LGN input outperforms the Gabor function model. *Biological cybernetics* **2012**, pp. 1–13.
-[^azzopardi2015trainable]: Azzopardi, G.; Strisciuglio, N.; Vento, M.; Petkov, N. Trainable COSFIRE filters for vessel delineation with application to retinal images. *Medical image analysis* **2015**, 19, 46–57.
-[^bibiloni2016survey]: Bibiloni, P.; González-Hidalgo, M.; Massanet, S. A survey on curvilinear object segmentation in multiple applications. *Pattern Recognition* **2016**, 60, 949–970
-[^chai2013recovering]: Chai, D.; Forstner, W.; Lafarge, F. Recovering line-networks in images by junction-point processes. *Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition*, **2013**, pp. 1894–1901.
+[^hahnlose2000]: {% reference hahnloser2000digital %}
+[^azzopardi2013trainable]: {% reference azzopardi2013trainable %}
+[^azzopardi2015trainable]: {% reference azzopardi2015trainable %}
+[^bibiloni2016survey]: {% reference bibiloni2016survey %}
+[^chai2013recovering]: {% reference chai2013recovering %}
 
 그후 선호하는 위치와 관련하여 약간의 tolerance를 허용하기 위해 가중치가 최대인 비선형 blurring 연산으로 DoG 응답을 *blur* 처리한다. 가중치는 표준 편차 $\sigma_{i}$' 가 B-COSFIRE 필터의 지원 센터로부터의 거리가 증가함에 따라 선형적으로 증가하는 가우시안 함수에 의해 주어진다 : $\sigma_{i}$'$=\sigma_{0}$'$+\alpha\rho_{i}$. $\sigma_{0}$' 와 $\alpha$ 값은 파라미터이며, 프로토타입 형태에서 변형에 대한 tolerance를 정규화한다.
 
@@ -101,7 +101,7 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 \end{equation}
 
 논문에서 방법론 제시 이후의 작업은 타 알고리즘과 비교하기 위한 벤치마크를 수행하는 결과를 나타낸다. 나는 조금 다른 방식으로 이진화(binarization)을 수행했으며, 균열을 분류하기 위한 MER(Minimum enclosing rectangle)작업을 수행하였다. 이 방법은 직관적인 방법론이라서 이미지 프로세싱에 관심이 있다면, DoG 응답을 가지고 충분히 다른 여러방법으로도 추출해 낼 수 있다.
-
+<br><br>
 ### Binarization
 이진화 방법은 1차적으로 `binarize()`함수로 수행되며 2차적으로 pixel 연결성을 찾아 쓰레숄딩 한다. 이것은 MATLAB *Image Processing Toolbox*에 있는 `bwconncomp()` 함수를 사용한다. `binarize()`함수는 아래와 같다.
 ``` matlab
@@ -122,7 +122,7 @@ nograin=cellfun('length',cc.PixelIdxList);
 [val,id]=sort(nograin,'descend');    
 ite = find(val>ccthreshold,1,'last'); % thresholding cc
 ```
-
+<br><br>
 ### Minimum Enclosing Rectangle
 MER 알고리즘은 [`minBoundingBox()`](https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/31126/versions/2/previews/minBoundingBox.m/index.html?access_key=)을 응용하였다.
 ``` matlab
@@ -148,10 +148,10 @@ bb(:,1) = bmin(1)*Rf(:,1) + bmin(2)*Rf(:,2);
 bb(:,2) = bmin(1)*Rf(:,1) + bmax(2)*Rf(:,2);
 bb(:,3) = bmax(1)*Rf(:,1) + bmax(2)*Rf(:,2);
 ```
-
+<br><br>
 ## 프로그램 UI
  ![screnshot]({{ site.baseurl }}/public/images/2017/12/readme/screenshot.png)
-
+<br><br>
 ### Usages
  - 실행화면
 ![intro]({{ site.baseurl }}/public/images/2017/12/readme/intro.png)
@@ -194,7 +194,7 @@ bb(:,3) = bmax(1)*Rf(:,1) + bmax(2)*Rf(:,2);
 |  ![crack 7]({{ site.baseurl }}/public/images/2017/12/readme/crack07.png)  |  ![crack 8]({{ site.baseurl }}/public/images/2017/12/readme/crack08.png)  |
 
  - 결과 저장 : 균열의 ground truth 결과는 csv(comma separated value)파일로 저장할 수 있다. 또한 DoG 응답 결과와 ground truth에서 균열만 탐색한 결과를 이미지 파일로 저장할 수 있다.
-
+<br><br>
 ### Ground Truth Result (example)
  - 테스트 이미지로 분석한 콘크리트 균열의 실측자료
  - Ground truth (binary image 결과) : 추후 CNN을 위한 실측자료로 활용
@@ -203,15 +203,19 @@ bb(:,3) = bmax(1)*Rf(:,1) + bmax(2)*Rf(:,2);
 | :--------------------------------: | :----------------------------------------------: | 
 |  ![original]({{ site.baseurl }}/public/images/2017/12/readme/original.png)  |  ![ground truth]({{ site.baseurl }}/public/images/2017/12/readme/ground_truth_cracks.png) |
 
+<br><br>
 ### Version History
 - __v1.0__ 한 개의 이미지를 분석함
 - __v1.0.1__ Parameter 오류 수정
 - __v1.0.1__ 균열 결과 default로 노이즈 선택 (효율적인 ground truth를 위함)
-
+<br><br>
 ### 추후 개발 사항
 - [ ] 배치 프로세스 : ground truth 하기전에 분석시간이 조금 걸리기 때문에 배치 분석을 하고 결과 파일을 로딩하여 GT를 수행할 수 있도록 개선 필요
 - [ ] GT결과를 바탕으로 crack, structure, noise를 blob을 다른 색상으로 표시할 수 있도록 개선
 - [ ] 분석결과 서버 DB에 결과를 저장할 수 있도록 개선
 - [ ] 다양한 UI 개선 등
+<br><br>
+
+### References
 
 {% bibliography --cited %}
