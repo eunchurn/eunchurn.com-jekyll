@@ -104,7 +104,7 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 
 ### Binarization
 이진화 방법은 1차적으로 `binarize()`함수로 수행되며 2차적으로 pixel 연결성을 찾아 쓰레숄딩 한다. 이것은 MATLAB *Image Processing Toolbox*에 있는 `bwconncomp()` 함수를 사용한다. `binarize()`함수는 아래와 같다.
-```
+``` matlab
 function [binarymap] = binarize(rotoutput1, highthresh)
     orienslist = 0:pi/12:pi-pi/12;
     [viewResult, oriensMatrix] = calc_viewimage(rotoutput1,1:numel(orienslist), orienslist);
@@ -114,17 +114,17 @@ end
 ```
 2차 연결픽셀의 쓰레숄딩하는 방법은 아래와 같다. 연결 픽셀 수 `ccthreshold`값을 지정해 주어야 한다.
 
-<pre><code class="matlab">
+``` matlab
     cc = bwconncomp(binImg, 4);
     nograin=cellfun('length',cc.PixelIdxList);
     [val,id]=sort(nograin,'descend');
     
     ite = find(val>ccthreshold,1,'last'); % thresholding cc
-</code></pre>
+```
 
 ### Minimum Enclosing Rectangle
 MER 알고리즘은 [`minBoundingBox()`](https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/31126/versions/2/previews/minBoundingBox.m/index.html?access_key=)을 응용하였다.
-<pre><code class="matlab">
+``` matlab
 function bb = minEnclosingRectangle(X)
 
 k = convhull(X(1,:),X(2,:));
@@ -154,7 +154,7 @@ bb(:,4) = bmax(1)*Rf(:,1) + bmin(2)*Rf(:,2);
 bb(:,1) = bmin(1)*Rf(:,1) + bmin(2)*Rf(:,2);
 bb(:,2) = bmin(1)*Rf(:,1) + bmax(2)*Rf(:,2);
 bb(:,3) = bmax(1)*Rf(:,1) + bmax(2)*Rf(:,2);
-</code></pre>
+```
 
 ## 프로그램 UI
  ![screnshot]({{ site.baseurl }}/public/images/2017/12/readme/screenshot.png)
