@@ -8,14 +8,14 @@ description: all of works archive of Eunchurn Park, Ph. D (works diary, music, s
   {%- for post in paginator.posts -%}
    {%- if post.publish != false -%}
   <div class="post">
-    <h1 class="post-title">
+    <h2 class="post-title">
       <a href="{{ site.baseurl }}{{ post.url }}">
         {{ post.title }}
         {%- if post.featured -%}
         <img class="portrait" src="{{ site.baseurl}}{{post.featured}}" />
         {%- endif -%}
       </a>
-    </h1>
+    </h2>
     <span class="post-date">{{ post.date | date_to_string }}</span>
     <p class="post-description">{{ post.description }}</p>
   </div>
