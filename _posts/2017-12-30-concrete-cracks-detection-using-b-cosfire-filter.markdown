@@ -107,48 +107,41 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 ``` matlab
 function [binarymap] = binarize(rotoutput1, highthresh)
     orienslist = 0:pi/12:pi-pi/12;
-    [viewResult, oriensMatrix] = calc_viewimage(rotoutput1,1:numel(orienslist), orienslist);
+    [viewResult, oriensMatrix] = calc_viewimage(rotoutput1,...
+       1:numel(orienslist), orienslist);
     thinning = calc_thinning(viewResult, oriensMatrix, 1);
-    binarymap = calc_hysteresis(thinning, 1, 0.5*highthresh*max(thinning(:)), highthresh*max(thinning(:)));
+    binarymap = calc_hysteresis(thinning, 1,...
+       0.5*highthresh*max(thinning(:)), highthresh*max(thinning(:)));
 end
 ```
 2차 연결픽셀의 쓰레숄딩하는 방법은 아래와 같다. 연결 픽셀 수 `ccthreshold`값을 지정해 주어야 한다.
 
 ``` matlab
-    cc = bwconncomp(binImg, 4);
-    nograin=cellfun('length',cc.PixelIdxList);
-    [val,id]=sort(nograin,'descend');
-    
-    ite = find(val>ccthreshold,1,'last'); % thresholding cc
+cc = bwconncomp(binImg, 4);
+nograin=cellfun('length',cc.PixelIdxList);
+[val,id]=sort(nograin,'descend');    
+ite = find(val>ccthreshold,1,'last'); % thresholding cc
 ```
 
 ### Minimum Enclosing Rectangle
 MER 알고리즘은 [`minBoundingBox()`](https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/31126/versions/2/previews/minBoundingBox.m/index.html?access_key=)을 응용하였다.
 ``` matlab
 function bb = minEnclosingRectangle(X)
-
 k = convhull(X(1,:),X(2,:));
 CH = X(:,k);
-
 E = diff(CH,1,2);
 T = atan2(E(2,:),E(1,:));
 T = unique(mod(T,pi/2));
-
 R = cos( reshape(repmat(T,2,2),2*length(T),2) ...
-    + repmat([0 -pi ; pi 0]/2,length(T),1));
-
+ + repmat([0 -pi ; pi 0]/2,length(T),1));
 RCH = R*CH;
-
 bsize = max(RCH,[],2) - min(RCH,[],2);
 area  = prod(reshape(bsize,2,length(bsize)/2));
-
 [a,i] = min(area);
-
 Rf    = R(2*i+[-1 0],:);
 bound = Rf * CH;
 bmin  = min(bound,[],2);
 bmax  = max(bound,[],2);
-
 Rf = Rf';
 bb(:,4) = bmax(1)*Rf(:,1) + bmin(2)*Rf(:,2);
 bb(:,1) = bmin(1)*Rf(:,1) + bmin(2)*Rf(:,2);
