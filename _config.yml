@@ -6,7 +6,7 @@ permalink:           pretty
 # Setup
 title:               eunchurn
 tagline:             ''
-description:         'works archive'
+description:         <center>eunchurn works archive<br> <img src="/public/eclogo.png" width=80></center>
 url:                 https://eunchurn.com/
 baseurl:             ''
 representing_image: /public/images/7800413.jpeg
