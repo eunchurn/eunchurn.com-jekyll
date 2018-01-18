@@ -76,7 +76,7 @@ C(x,y)=\left| \sum_{x'=-3\sigma}^{3\sigma} \sum_{y'=-3\sigma}^{3\sigma} I(x,y)Do
 
 여기서 연산자 $\left\|.\right\|^{+}$는 반파 정류를 나타내며 최근 정류 선형 유닛 (ReLU)으로 알려져 있다. 
 
-인공 신경망의 맥락에서, 정류기는 인수의 양의 부분으로 정의된 활성화 함수이다. $\left\|x\right\|^{+} = \max(0,x)$ 여기서 $x$는 뉴런에 대한 입력이다. 이 함수는 램프(ramp) 기능으로도 알려져 있으며 전기 공학의 반 파장 정류와 유사하다. 이 활성화 함수는 처음 Hahnloser et al.[^hahnlose2000]에 의해 강한 생물학적 동기와 수학적 정당성을 지닌 저널 Nature지의 2000년 논문[^hahnlose2000]에서 소개되었다.  이 함수는 널리 사용되는 로지스틱 시그모이드(확률론에 의해 영감을 얻은 것; 로지스틱 회귀분석 참조)보다 효과적으로 Convolution 네트워크[^azzopardi2013trainable]에 사용되게 되었다. 또한 [^azzopardi2015trainable] 대응안인 쌍곡선 탄젠트(hyperbolic tangent) 보다 실용적이다. 2017년에 들어서 현재 이 정류기는 딥 뉴럴 네트워크에서 가장 널리 알려진 활성화 함수이다. [^bibiloni2016survey] [^chai2013recovering]
+인공 신경망의 맥락에서, 정류기는 인수의 양의 부분으로 정의된 활성화 함수이다. $\left\|x\right\|^{+} = \max(0,x)$ 여기서 $x$는 뉴런에 대한 입력이다. 이 함수는 램프(ramp) 기능으로도 알려져 있으며 전기 공학의 반 파장 정류와 유사하다. 이 활성화 함수는 처음 {% cite hahnloser2000digital %}에 의해 강한 생물학적 동기와 수학적 정당성을 지닌 저널 Nature지의 2000년 논문[^hahnlose2000]에서 소개되었다.  이 함수는 널리 사용되는 로지스틱 시그모이드(확률론에 의해 영감을 얻은 것; 로지스틱 회귀분석 참조)보다 효과적으로 Convolution 네트워크[^azzopardi2013trainable]에 사용되게 되었다. 또한 [^azzopardi2015trainable] 대응안인 쌍곡선 탄젠트(hyperbolic tangent) 보다 실용적이다. 2017년에 들어서 현재 이 정류기는 딥 뉴럴 네트워크에서 가장 널리 알려진 활성화 함수이다. [^bibiloni2016survey] [^chai2013recovering]
 
 [^hahnlose2000]: Hahnloser R. H., Sarpeshkar R., Mahowald M. A., Douglas R. J., Seung H. S., Digital selection and analogue amplification coexist in a cortex-inspired silicon circuit, *Nature* **2000** Jun 22;405(6789):947-51.
 [^azzopardi2013trainable]: Azzopardi, G.; Petkov, N. A CORF computational model of a simple cell that relies on LGN input outperforms the Gabor function model. *Biological cybernetics* **2012**, pp. 1–13.
@@ -213,3 +213,5 @@ bb(:,3) = bmax(1)*Rf(:,1) + bmax(2)*Rf(:,2);
 - [ ] GT결과를 바탕으로 crack, structure, noise를 blob을 다른 색상으로 표시할 수 있도록 개선
 - [ ] 분석결과 서버 DB에 결과를 저장할 수 있도록 개선
 - [ ] 다양한 UI 개선 등
+
+{% bibliography --cited %}

@@ -33,6 +33,7 @@ plugins:
  - jekyll-paginate
  - jekyll-seo-tag
  - jekyll-feed
+ - jekyll-scholar
 paginate: 5
 paginate_path: "page:num" 
 markdown:    kramdown
@@ -49,3 +50,6 @@ kramdown:
 g-analytics: UA-112690812-1
 feed:
   path: atom.xml
+scholar:
+  source: ./_bibliography
+  bibliography: bibliography.bib
