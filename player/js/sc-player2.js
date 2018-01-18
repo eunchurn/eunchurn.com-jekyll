@@ -444,8 +444,7 @@
       
       .bind('scPlayer:onMediaPlay', function(event) {
       	var angle = 0;
-      	// $('.backvinyl_250').css("background-image","url(http://saram12saram.com/player/images/background_250_on.png)");
-      	$('.backvinyl_100').css("background-image","url(http://saram12saram.com/player/images/background_100_on.png)");
+      	$('.backvinyl_100').css("background-image","url(https://eunchurn.com/player/images/background_100_on.png)");
       	try{
       	var saram = document.getElementById('backvinyl_250');
       	saram.className = "playon";
@@ -488,8 +487,7 @@
       } catch (exception) {
 
 	}
-        // $('.backvinyl_250').css("background-image","url(http://saram12saram.com/player/images/background_250.png)");
-        $('.backvinyl_100').css("background-image","url(http://saram12saram.com/player/images/background_100.png)");
+        $('.backvinyl_100').css("background-image","url(https://eunchurn.com/player/images/background_100.png)");
         $("#vinyl1").rotate(angle);
         $("#vinyl2").rotate(angle);
 
