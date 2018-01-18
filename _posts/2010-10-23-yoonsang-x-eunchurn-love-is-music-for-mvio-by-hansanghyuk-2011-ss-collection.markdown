@@ -31,7 +31,7 @@ ___
 
 SPRING SUMMER _ 2011
 
-![]({{ site.baseurl }}/public/images/2010/10/main.jpg)
+![seoul fashion week]({{ site.baseurl }}/public/images/2010/10/main.jpg)
 
 ### M.V.R.C SEOUL _
 엠비오 라이딩 클럽 서울은

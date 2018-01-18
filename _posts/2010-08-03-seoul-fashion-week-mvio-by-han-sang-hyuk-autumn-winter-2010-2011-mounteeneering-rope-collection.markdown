@@ -28,7 +28,7 @@ tag:
 
 SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2010-2011 AW Rope Collection ‘MOUNTAINEERING’
 
-![]({{ site.baseurl }}/public/images/2010/08/MOUNTAINEERING_ROPE_COLLECTION.jpg)
+![seoul fashion week]({{ site.baseurl }}/public/images/2010/08/MOUNTAINEERING_ROPE_COLLECTION.jpg)
 
 - autumn winter 2010 _ 2011 '_ MOUNTAINEERING' collection
 - friday _ 26th March _ 2010 _ 12pm _ SETEC

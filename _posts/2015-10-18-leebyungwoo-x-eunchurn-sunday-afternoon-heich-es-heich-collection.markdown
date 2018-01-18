@@ -37,7 +37,7 @@ tag:
 04_	10월18일 오후 4시 DDP S2에서 시작합니다.
 <br><br>
 
-![]({{ site.baseurl}}/public/images/2015/10/artworks-000133177271-fc6nvv-t500x500.jpg)
+![featured image]({{ site.baseurl}}/public/images/2015/10/artworks-000133177271-fc6nvv-t500x500.jpg)
 
 ### HEICH ES HEICH _ SPRING SUMMER 2016
 - SEOUL FASHION WEEK

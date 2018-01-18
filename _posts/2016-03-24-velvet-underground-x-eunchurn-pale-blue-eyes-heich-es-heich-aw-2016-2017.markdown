@@ -53,7 +53,7 @@ tag:
 - music rework produced by eunchurn
 - executive producer by Haan Sang Hyuk
 
-![]({{ site.baseurl}}/public/images/2016/03/artworks-000153758231-23cqq0-t500x500.jpg)
+![featured image]({{ site.baseurl}}/public/images/2016/03/artworks-000153758231-23cqq0-t500x500.jpg)
 
 
 <div class="videoWrapper">

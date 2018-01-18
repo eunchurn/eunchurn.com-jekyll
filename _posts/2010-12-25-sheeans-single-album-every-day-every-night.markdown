@@ -12,7 +12,7 @@ featured: /public/images/2010/12/1890154611_V9OeaG2R_SHEEAN+COVER-3.jpg
 category: production
 ---
 
-[![]({{ site.baseurl }}/public/images/2010/12/1890154611_V9OeaG2R_SHEEAN+COVER-3-300x300.jpg)]({{ site.baseurl }}/public/images/2010/12/1890154611_V9OeaG2R_SHEEAN+COVER-3.jpg)
+[SHEEAN+COVER-3-300x300.jpg]({{ site.baseurl }}/public/images/2010/12/1890154611_V9OeaG2R_SHEEAN+COVER-3.jpg)
 
 
 * 발매일 | 2010년 12월 24일 금요일

@@ -13,7 +13,7 @@ description: Fashion show runway music production.
       <a href="{{ site.baseurl }}{{ post.url }}">
         {{ post.title }}
         {%- if post.featured -%}
-        <img class="portrait" src="{{ site.baseurl}}{{post.featured}}" />
+        <img class="portrait" src="{{ site.baseurl}}{{post.featured}}" alt="featured image"/>
         {%- endif -%}
       </a>
     </h1>

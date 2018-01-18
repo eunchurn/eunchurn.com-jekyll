@@ -80,12 +80,12 @@ Additional strings 는 초반 인트로에 사용되고 어택이 거의 없는 
 <br><br>
 #### 참고문헌 [`Similarity of signal processing effect between Hankel matrix-based SVD and wavelet transform and its mechanism analysis`]({{ site.baseurl}}/data/Similarity of signal processing effect between Hankel matrix-based SVD and wavelet transform and its mechanism analysis.pdf) 키워드로 문헌을 더 찾아보자 `SVD`, `Wavelet transform`, `Hankel matrix`, `Orthonormal basis`, `Projection`, `Similarity`
 <br><br>
-![]({{ site.baseurl }}/public/images/2011/03/Poster-front.jpg)
+![1]({{ site.baseurl }}/public/images/2011/03/Poster-front.jpg)
 
 
 
 
-![]({{ site.baseurl }}/public/images/2011/03/Poster-back.jpg)
+![2]({{ site.baseurl }}/public/images/2011/03/Poster-back.jpg)
 
 	
   * 01 _SEASON autumn winter 2011 _ 2012

@@ -33,7 +33,7 @@ AUTUMN WINTER 2009-2010
 pm 12:00, Thursday 26th March 2009
 SETEC S14 Daechidong Gangnamgu Seoul Korea
 
-[![]({{ site.baseurl }}/public/images/2010/05/god_1_niji1002-625x1024.jpg)]({{ site.baseurl }}/public/images/2010/05/god_1_niji1002.jpg)
+![seoul fashion week]({{ site.baseurl }}/public/images/2010/05/god_1_niji1002.jpg)
 
 ### SYNOPSIS
 
@@ -59,7 +59,6 @@ Upon relating this bewildering tale, Holmes whisks away to the scene of the crim
 ### ‘HOLMES COLLECTION’ _ MVIO by HAN SANG HYUK, AUTUMN WINTER 2009-2010 colletion
 
 SANULLIM - MOREMOREMORE (DJ EUNCHURN REMIX)
-[download](http://www.eunchurn.com/music_mp3/SANULLIM_-_MOREMOREMORE_(eunchurn_REMIX).mp3)
 
 ### CREDIT
 <p class="message">

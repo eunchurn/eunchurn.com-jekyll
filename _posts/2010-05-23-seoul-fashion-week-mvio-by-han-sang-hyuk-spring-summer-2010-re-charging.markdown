@@ -35,7 +35,7 @@ tag:
 
 03_ 트리치노폴리 잎담배의 냄새와 민트잎 향이 교묘하게 섞인 향취가 났으며, 머리 위 선반의 촛불을 찾는 손끝은 매우 섬세했으며, 손을 뻗었을때 팔목까지 또렸하게 새겨져 있던 밧줄모양의 문신이 그의 정갈한 잿빛수트와 묘하게 어울렸다. 그는 마치 주기적으로 젊은사람의 에너지를 충전한것처럼 느껴졌고 우리와는 다른 사람 같았다. 11. AUG
 
-![]({{ site.baseurl }}/public/images/2010/05/RECHARGING_TATTO_COLLECTION_.jpg)
+![seoul fashion week]({{ site.baseurl }}/public/images/2010/05/RECHARGING_TATTO_COLLECTION_.jpg)
 
 SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2010 SS TATTOO Collection 'RE CHARGING'
 

@@ -11,7 +11,7 @@ featured: /public/images/2015/12/ftl.jpg
 category: production
 ---
 
-![]({{ site.baseurl }}/public/images/2015/12/ftl.jpg)
+![featured image]({{ site.baseurl }}/public/images/2015/12/ftl.jpg)
 
 ## 음반 소개
 사람을 홀리듯 신비롭고 아름다운 목소리. 주변으로 흐르는 정교하게 설계된 사운드. 사람12사람은 이런 목소리를 가진 지음과 이런 사운드를 만드는 은천의 일렉트로 팝 혼성 듀오다. 지음이 만드는 멜로디는 좋은 팝의 범주 아래 있으나 전형적이지 않다. 은천이 만드는 사운드 역시 기성 일렉트로 팝의 어법을 따르기보다 잘 만든 디자인 제품을 보듯 세밀하게 짜여있다.

@@ -18,7 +18,7 @@ tag:
 - original song written by Ju Yoonha _당신의 평화는 연약하다
 - re-worked by eunchurn
 - music for HEICH ES HEICH A/W 2015/2016 Collection **_INVALID TAILORING** and music for [#REMEMBER0416](https://soundcloud.com/search?q=REMEMBER0416)
-![]({{ site.baseurl }}/public/images/2015/04/artworks-000113567028-0cz9p9-t500x500.jpg)
+![featured image]({{ site.baseurl }}/public/images/2015/04/artworks-000113567028-0cz9p9-t500x500.jpg)
 
 
 

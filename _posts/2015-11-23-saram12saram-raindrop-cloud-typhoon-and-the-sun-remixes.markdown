@@ -10,7 +10,7 @@ description: SARAM12SARAM - Raindrop Cloud Typhoon and the Sun (Remixes) (2015)
 featured: /public/images/2015/12/rcts-remixes.jpg
 category: production
 ---
-![]({{ site.baseurl }}/public/images/2015/12/rcts-remixes.jpg)
+![featured image]({{ site.baseurl }}/public/images/2015/12/rcts-remixes.jpg)
 
 - 빗물구름태풍태양 (Bacty Remix)
 - Wind Blow (Kim Kate Rework)
