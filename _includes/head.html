@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Enable responsiveness on mobile devices-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-  <title>Home | eunchurn</title>
+  <title>eunchurn - {{ page.title }}</title>
+  <meta name="Description" content="{{ page.description }}">
   <meta name="generator" content="Jekyll v3.5.2" />
-  <meta property="og:title" content="Home" />
+  <meta property="og:title" content="eunchurn" />
   <meta name="author" content="eunchurn" />
   <meta property="og:locale" content="en_US" />
   <meta name="description" content="eunchurn works archive &lt;img src=&quot;/public/eclogo.png&quot; width=80&gt;" />
@@ -61,4 +62,7 @@
     MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
   </script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+  <!-- Highliht -->
+  <link rel="stylesheet" href="{{ site.baserul }}/public/highlight/styles/dark.css">
+  <script src="{{ site.baseurl}}/public/highlight/highlight.pack.js"></script>
 </head>

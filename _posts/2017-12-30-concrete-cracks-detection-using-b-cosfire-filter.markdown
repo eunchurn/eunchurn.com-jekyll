@@ -114,17 +114,17 @@ end
 ```
 2차 연결픽셀의 쓰레숄딩하는 방법은 아래와 같다. 연결 픽셀 수 `ccthreshold`값을 지정해 주어야 한다.
 
-```
+<pre><code class="matlab">
     cc = bwconncomp(binImg, 4);
     nograin=cellfun('length',cc.PixelIdxList);
     [val,id]=sort(nograin,'descend');
     
     ite = find(val>ccthreshold,1,'last'); % thresholding cc
-```
+</code></pre>
 
 ### Minimum Enclosing Rectangle
 MER 알고리즘은 [`minBoundingBox()`](https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/31126/versions/2/previews/minBoundingBox.m/index.html?access_key=)을 응용하였다.
-```
+<pre><code class="matlab">
 function bb = minEnclosingRectangle(X)
 
 k = convhull(X(1,:),X(2,:));
@@ -154,7 +154,7 @@ bb(:,4) = bmax(1)*Rf(:,1) + bmin(2)*Rf(:,2);
 bb(:,1) = bmin(1)*Rf(:,1) + bmin(2)*Rf(:,2);
 bb(:,2) = bmin(1)*Rf(:,1) + bmax(2)*Rf(:,2);
 bb(:,3) = bmax(1)*Rf(:,1) + bmax(2)*Rf(:,2);
-```
+</code></pre>
 
 ## 프로그램 UI
  ![screnshot]({{ site.baseurl }}/public/images/2017/12/readme/screenshot.png)

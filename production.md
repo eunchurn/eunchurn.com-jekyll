@@ -1,6 +1,7 @@
 ---
 layout: page
 title: music production
+description: Produced EP, Remixes, Reworks and full length recordings.
 ---
 
 <div class="posts">

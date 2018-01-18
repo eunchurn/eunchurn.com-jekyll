@@ -1,6 +1,7 @@
 ---
 layout: page
 title: about
+description: Introduction page of Eunchurn
 ---
 
 <p class="message">
