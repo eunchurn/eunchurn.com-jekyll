@@ -22,7 +22,7 @@ tag:
 
 <iframe width="100%" height="300" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/12767324&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>
 
-## Construction of Beats
+## Construction of Beats(#beats)
 ### Signal Decomposition
 비트작업은 꽤 복잡한 작업으로 이루어졌다. 깔끔하고 메탈릭한 텍스쳐를 가지는 그런 킥과 스네어 그리고 하이햇이 필요했다. 오래전부터 생각해오던 아이디어중에 음원을 N개의 소리로 분리해서 다시 합쳤을때 원음원의 소리가 나오게 할 수 없을까라는 고민에서 시작되었다. 여기서 부터는 공학적인 접근이 필요하다.
 <br><br>

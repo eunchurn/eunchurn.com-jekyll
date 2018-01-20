@@ -61,14 +61,14 @@ Upon relating this bewildering tale, Holmes whisks away to the scene of the crim
 SANULLIM - MOREMOREMORE (DJ EUNCHURN REMIX)
 
 ### CREDIT
-<p class="message">
-- original sound track by SANULLIM
-- original composed by CHANG WAN KIM
-- lyrics by CHANG WAN KIM
-- remix produced by EUNCHURN PARK (DJ EUNCHURN)
-- mastered by EUNCHURN PARK
-- music for MVIO by HAN SANG HYUK / AUTUMN WINTER 2009-2010 'HOLMES COLLECTION' theme of _ g r a d a t i o n
-</p>
+>
+> - original sound track by SANULLIM
+> - original composed by CHANG WAN KIM
+> - lyrics by CHANG WAN KIM
+> - remix produced by EUNCHURN PARK (DJ EUNCHURN)
+> - mastered by EUNCHURN PARK
+> - music for MVIO by HAN SANG HYUK / AUTUMN WINTER 2009-2010 'HOLMES COLLECTION' theme of _ g r a d a t i o n
+
 
 ### FULL VIDEO
 <div class="videoWrapper">

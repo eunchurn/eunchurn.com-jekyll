@@ -64,8 +64,15 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   width: 100%;
 }
+.wrap p { 
+  margin: 15px 0; 
+  border: none; 
+}
 
-
+.wrap ul, li {
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
 /*
  * Container
  *
