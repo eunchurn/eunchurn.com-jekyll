@@ -13,6 +13,9 @@ tag:
 - hankel matrix
 - python
 ---
+
+![result]({{ site.baseurl}}/public/images/2018/01/hmbsvd.png)
+
 [MOT x EUNCHURN - 매일 그대와 작업일기]({{ site.baseurl}}/runway/2011/04/02/production-note-of-music-for-mvio-aw-collection-20112012/#beats)에서 언급했던 비트 빌드업(그다지 좋은 결과는 아니었지만)에 대해 여기서 이론적으로 설명하고 다음 포스트에 프로그램에 대하여 설명하고 공유하려고 한다. 보통 이러한 신호처리기법은 기계 진동 가속도나 전기신호의 신호처리에 쓰이겠지만, 여기 블로그에서는 음원에서 신호를 분리해보고 스테레오라이징 그리고 그 의미를 고찰해보려고 한다.
 
 특이치분해(singular value decomposition, SVD)의 정의는 다음과 같은 $\mathrm{A} \in \mathrm{R}^{m\times x}$인 행렬을 2개의 직교행렬 $\mathrm{U} = \left[ \mathrm{u}_ {1}, \mathrm{u}_ {2}, ..., \mathrm{u}_ {m}\right] \in \mathrm{R}^{m \times m}$과 $\mathrm{V} = \left[ \mathrm{v}_ {1}, \mathrm{v}_ {2}, ..., \mathrm{v}_ {n}\right] \in \mathrm{R}^{n \times n}$로 아래의 조건식을 만족하면서 분리한다.[^golub2012matrix]
@@ -36,6 +39,7 @@ SVD와 웨이브렛 변환은 같은 호흡에서 결코 언급 될 수 없는 �
 이론 분석에 기초하여, 이 두 방법의 신호 처리의 실제적으로 유사한 효과는 몇 가지 예에 의해 입증되며, Hankel 행렬 자체의 구조 특성에 대해 첫 번째 SVD 구성 요소 신호는 근사 신호와 일치 할 수 있다고 지적한다. 다른 SVD 성분 신호는 웨이브렛 변환에서 상세 신호에 대응할 수 있다.
 
 한편, SVD의 분해 결과에는 위상 변화가 없고, 웨이브렛 변환에는 위상 지연이 존재한다는 점에서 두 방법의 차이점에 대해서도 연구되었다. 그리고 특이점 검출에 관해서는, 일단 웨이브렛이 선택되면 각 종류의 웨이브렛의 모멘트의 소멸 차수가 고정되어 있기 때문에 웨이브렛 변환에 의해 검출 될 수 있는 특이 인덱스도 고정되고, 또한, 임펄스의 폭 단일 지점의 위치를 ​​나타내는 것은 스케일의 증가와 함께 더욱 넓어지게 될 것이다. 이에 비해 SVD는 이런 현상에 비해 많이 다르다, 즉, SVD 성분의 모멘트 소멸 차수가 점진적으로 증가하고 $n$ 번째 SVD 성분 신호 중 하나가 '$$n-1$$'이므로 서로 다른 singular index를 갖는 singular point가 다른 SVD 구성 요소와 더불어 singular point의 위치를 ​​나타내는 임펄스의 폭은 모든 SVD 구성 요소에서 항상 동일하게 유지되며 이 폭은 Hankel 행렬의 열 수에 의해 결정되므로 이러한 측면에서 SVD는 웨이블릿 변환에 비해 장점을 가진다.
+
 
 [^golub2012matrix]: {% reference golub2012matrix -f svd %}
 [^bangyan2007processing]: {% reference bangyan2007processing -f svd %}
