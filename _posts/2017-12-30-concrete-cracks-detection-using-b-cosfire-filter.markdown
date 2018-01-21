@@ -24,27 +24,25 @@ _Azzopardi, G. Petkov, N. "Detection of Curved Lines with B-COSFIRE Filters: A C
 이 코드는 종이에 사용 된 INRIA 데이터의 이미지에 대한 벤치 마크 결과를 제공한다
 
 저자는 소스를 공개하며 다음과 같이 소개하였다.
-<br><br>
 
 > B-COSFIRE filters are non-linear trainable filters for detection of elongated patterns in images.
 > This is the code of the trainable non-linear B-COSFIRE filters for delineation of elongated patterns in images.
 
-<br><br>
 하지만 학습이라기 보다는 파라미터 최적화를 통해 특정 도로에 적합하도록 개선하는 정도이다. 또한 미세균열을 찾기 위한 작업에서 고해상도 이미지를 한번에 처리하기엔 성능면에서 큰 효과를 거두지 못할 것 같다.
-<br><br>
+
 그러나 추후 딥러닝을 위한 ground truth 자료를 충분히 확보하기 위해 본 알고리즘을 써보는 것은 나쁘지 않을 것 같다. 딥러닝에서는 실측자료를 얼마나 많이 얻었냐에 따라 그 성능이 많이 달라지기 때문에 GT작업이 매우 중요하다. 모두 사람의 노동력을 빌릴 수 없기 때문에 최초로 걸러내는 작업에서 B-COSFIRE 알고리즘을 사용하는 방법은 나쁘지 않을 것 같다. 따라서 GT작업을 위한 프로그램을 개발해보았다. MATLAB이지만 MATLAB이 없어도 GUI로 빌드하여 MCR(MATLAB Runtime Compiler)를 통해 배포가 가능하다.
-<br><br>
+
 개발자의 논문에 서술된 B-COSFIRE 방법론에 대하여 간략히 소개하고 프로그램 사용법을 기술하였다. 근무하던 회사와 연관되어 있어 소스는 공개가 불가능하다. 하지만 위의 [Gitlab Repository](https://gitlab.com/nicstrisc/B-COSFIRE-MATLAB)에서 응용하여 관심있는 사람이라면 쉽게 개발이 가능할 것이다.
-<br><br>
+
 ## B-COSFIRE 방법론
 논문에서는 다른 균열 분석 알고리즘과 벤치마크를 수행하였다. 그러나 앞서 이야기한 것처럼 딥러닝을 위한 중간과정으로 채택하였기 때문에 알고리즘의 워크플로는 다음과 같다.
 
  1. B-COSFIRE filtering
- 2. binarization with non-maximum suppression
+ 2. binarization with nonmaximum suppression
  3. hysteresis thresholding (최적화 및 벤치마크를 위함)
  4. minimum enclosing rectangle
  5. making ground truth
-<br><br>
+
 ### Configure of a B-COSFIRE filter
 B-COSFIRE 필터는 Gaussian 함수의 그룹 $DoG_{\sigma}$로부터 입력을 받으며 외부 Gaussian 함수는 표준 편차 $\sigma $를 가진다.
 
