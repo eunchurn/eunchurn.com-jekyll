@@ -28,5 +28,8 @@ SARAM12SARAM, Ph.D in Architectural Engineering
 <a href="https://vimeo.com/eunchurn" target="_blank"><img src="{{ site.baseurl }}/public/images/icons/vimeo.png" width="30" alt="vimeo"></a>
 </div>
 <div class="social_img">
+<a href="https://plus.google.com/u/1/+EunchurnPark" target="_blank"><img src="{{ site.baseurl }}/public/images/icons/googleplus.png" width="30" alt="googleplus"></a>
+</div>
+<div class="social_img">
 <a href="https://github.com/eunchurn" target="_blank"><img src="{{ site.baseurl }}/public/images/icons/github.png" width="30" alt="github"></a>
 </div>
