@@ -41,7 +41,7 @@ _Azzopardi, G. Petkov, N. "Detection of Curved Lines with B-COSFIRE Filters: A C
 
  1. B-COSFIRE filtering
  2. binarization with non-maximum suppression
- 3. ~~hysteresis thresholding~~ (최적화 및 벤치마크를 위함)
+ 3. hysteresis thresholding (최적화 및 벤치마크를 위함)
  4. minimum enclosing rectangle
  5. making ground truth
 <br><br>
