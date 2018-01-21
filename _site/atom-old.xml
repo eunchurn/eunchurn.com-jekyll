@@ -1,0 +1,1768 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>eunchurn</title>
+ <link href="http://localhost:4000/atom.xml" rel="self"/>
+ <link href="http://localhost:4000/"/>
+ <updated>2018-01-22T05:52:30+09:00</updated>
+ <id>http://localhost:4000</id>
+ <author>
+   <name>eunchurn</name>
+   <email>eunchurn.park@gmail.com</email>
+ </author><entry>
+   <title>헹켈행렬(Hankel matrix) 기반 신호분리 이론 고찰-1</title>
+   <link href="http://localhost:4000/engineering/2018/01/20/signal-decomposition-hmbsvd/"/>
+   <updated>2018-01-20T17:21:10+09:00</updated>
+   <id>http://localhost:4000/engineering/2018/01/20/signal-decomposition-hmbsvd</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2018/01/hmbsvd.png&quot; alt=&quot;result&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/runway/2011/04/02/production-note-of-music-for-mvio-aw-collection-20112012/#beats&quot;&gt;MOT x EUNCHURN - 매일 그대와 작업일기&lt;/a&gt;에서 언급했던 비트 빌드업(그다지 좋은 결과는 아니었지만)에 대해 여기서 이론적으로 설명하고 다음 포스트에 프로그램에 대하여 설명하고 공유하려고 한다. 보통 이러한 신호처리기법은 기계 진동 가속도나 전기신호의 신호처리에 쓰이겠지만, 여기 블로그에서는 음원에서 신호를 분리해보고 스테레오라이징 그리고 그 의미를 고찰해보려고 한다.&lt;/p&gt;
+
+&lt;p&gt;특이치분해(singular value decomposition, SVD)의 정의는 다음과 같은 $\mathrm{A} \in \mathrm{R}^{m\times x}$인 행렬을 2개의 직교행렬 $\mathrm{U} = \left[ \mathrm{u}_ {1}, \mathrm{u}_ {2}, …, \mathrm{u}_ {m}\right] \in \mathrm{R}^{m \times m}$과 $\mathrm{V} = \left[ \mathrm{v}_ {1}, \mathrm{v}_ {2}, …, \mathrm{v}_ {n}\right] \in \mathrm{R}^{n \times n}$로 아래의 조건식을 만족하면서 분리한다.&lt;sup id=&quot;fnref:golub2012matrix&quot;&gt;&lt;a href=&quot;#fn:golub2012matrix&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation}
+\mathrm{A} = \mathrm{USV}^{\top}
+\end{equation}
+\label{eq:1}
+\tag{1}&lt;/script&gt;
+
+&lt;p&gt;여기서, $\mathrm{S}=\left[diag\left( \sigma_ {1}, \sigma_ {2}, …, \sigma_ {q} \right), \mathrm{O}\right]$이거나, $m$과 $n$의 크기에 의해 전치된 행렬이 된다. 여기서 $\mathrm{S}\in\mathrm{R}^{m \times n}$이고, $\mathrm{O}$는 영행렬이다. $q=\min(m,n)$이고 $\sigma_ {1} \geq \sigma_ {2} \geq … \sigma_ {q} &amp;gt; 0$이다. 여기서 $\sigma_ {i} (i=1,2,…,q)$를 행렬 $A$의 특이값이라고 한다.&lt;/p&gt;
+
+&lt;p&gt;SVD와 웨이브렛 변환은 같은 호흡에서 결코 언급 될 수 없는 두 가지 이론이며, 그들의 수학적 기초는 서로 완전히 다르다. 그러나 적절한 행렬 $A$가 적용되면 SVD는 신호 처리에서 웨이블릿 변환과 매우 놀랍도록 유사한 효과를 나타낼 것이라는 것을 발견했다. Toeplitz 행렬, 사이클 행렬 및 Hankel 행렬과 같은 1차원 신호로 많은 종류의 행렬을 만들 거나 신호를 연속적으로 잘라내고 채워서 만들 수 있다. 차이점은 매트릭스의 생성 방식이며, 결과는 SVD의 신호처리의 효과일 것이다&lt;sup id=&quot;fnref:bangyan2007processing&quot;&gt;&lt;a href=&quot;#fn:bangyan2007processing&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+
+&lt;p&gt;놀랍게도, SVD는 $A$ 행렬이 Hankel행렬 일 때 웨이블릿 변환에 대한 신호 처리와 매우 유사한 효과를 얻을 수 있다. 예를 들어 원본 신호는 두 가지 방법으로 일련의 세부 신호와 근사 신호의 조합으로 분해 될 수 있다. 두 가지 방법 모두 신호의 특이점을 검출 할 수 있다. 또한, 몇가지 면에서, SVD의 분해 결과들은 웨이브렛변환이 가진 특별한 이점을 갖는다. 이 두 가지 완전히 다른 이론의 신호 처리 효과가 서로 너무 비슷한 이유는 무엇일까? 이 질문은 충분히 연구할 가치가 있다.&lt;/p&gt;
+
+&lt;p&gt;이 현상을 합리적으로 설명하기 위해 이 두 가지 방법의 신호 분해의 본질을 확인해야한다. 잘 알려진 바와 같이 실제로 웨이블릿 변환의 본질은 신호를 여러 주파수 대역에있는 일련의 컴포넌트 신호로 분해하기 위해 2개의 HPF와 LPF를 사용하는 것이고 SVD의 경우는 신호처리에 있어 직접적인 설명이 없다. 문헌에서 SVD의 신호 처리에 대한 대부분의 언급은 항상 실용성에 중점을두고 있으며 SVD는 피쳐 추출&lt;sup id=&quot;fnref:cempel2003multidimensional&quot;&gt;&lt;a href=&quot;#fn:cempel2003multidimensional&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt; &lt;sup id=&quot;fnref:brenner2003non&quot;&gt;&lt;a href=&quot;#fn:brenner2003non&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt;, 데이터 압축&lt;sup id=&quot;fnref:wei2001ecg&quot;&gt;&lt;a href=&quot;#fn:wei2001ecg&quot; class=&quot;footnote&quot;&gt;5&lt;/a&gt;&lt;/sup&gt; , 노이즈 감소&lt;sup id=&quot;fnref:shin1999iterative&quot;&gt;&lt;a href=&quot;#fn:shin1999iterative&quot; class=&quot;footnote&quot;&gt;6&lt;/a&gt;&lt;/sup&gt;와 같은 특정 신호 처리 문제를 해결하는 도구로만 사용된다. SVD의 신호 분해의 본질에 관한 연구는 거의 없지만, 이 논문&lt;sup id=&quot;fnref:zhao2009similarity&quot;&gt;&lt;a href=&quot;#fn:zhao2009similarity&quot; class=&quot;footnote&quot;&gt;7&lt;/a&gt;&lt;/sup&gt;에서는이 본질이 확인되었고, 이를 바탕으로 SVD와 웨이블릿 변환사이의 신호 처리의 유사성 메커니즘이 밝혀졌다. 웨이블릿 변환은 벡터 공간의 기저(basis)의 각도로부터 설명된다. 또한, 이 논문&lt;sup id=&quot;fnref:zhao2009similarity:1&quot;&gt;&lt;a href=&quot;#fn:zhao2009similarity&quot; class=&quot;footnote&quot;&gt;7&lt;/a&gt;&lt;/sup&gt;은 이 두 가지 방법으로 얻은 성분 신호의 직교성에 대해서도 연구하고 이론적으로 비교한다.&lt;/p&gt;
+
+&lt;p&gt;이론 분석에 기초하여, 이 두 방법의 신호 처리의 실제적으로 유사한 효과는 몇 가지 예에 의해 입증되며, Hankel 행렬 자체의 구조 특성에 대해 첫 번째 SVD 구성 요소 신호는 근사 신호와 일치 할 수 있다고 지적한다. 다른 SVD 성분 신호는 웨이브렛 변환에서 상세 신호에 대응할 수 있다.&lt;/p&gt;
+
+&lt;p&gt;한편, SVD의 분해 결과에는 위상 변화가 없고, 웨이브렛 변환에는 위상 지연이 존재한다는 점에서 두 방법의 차이점에 대해서도 연구되었다. 그리고 특이점 검출에 관해서는, 일단 웨이브렛이 선택되면 각 종류의 웨이브렛의 모멘트의 소멸 차수가 고정되어 있기 때문에 웨이브렛 변환에 의해 검출 될 수 있는 특이 인덱스도 고정되고, 또한, 임펄스의 폭 단일 지점의 위치를 ​​나타내는 것은 스케일의 증가와 함께 더욱 넓어지게 될 것이다. 이에 비해 SVD는 이런 현상에 비해 많이 다르다, 즉, SVD 성분의 모멘트 소멸 차수가 점진적으로 증가하고 $n$ 번째 SVD 성분 신호 중 하나가 ‘&lt;script type=&quot;math/tex&quot;&gt;n-1&lt;/script&gt;‘이므로 서로 다른 singular index를 갖는 singular point가 다른 SVD 구성 요소와 더불어 singular point의 위치를 ​​나타내는 임펄스의 폭은 모든 SVD 구성 요소에서 항상 동일하게 유지되며 이 폭은 Hankel 행렬의 열 수에 의해 결정되므로 이러한 측면에서 SVD는 웨이블릿 변환에 비해 장점을 가진다.&lt;/p&gt;
+
+&lt;h2 id=&quot;hankel-행렬-svd-기반-신호-분해-기법&quot;&gt;Hankel 행렬 SVD 기반 신호 분해 기법&lt;/h2&gt;
+
+&lt;p&gt;이산 신호(discrete signal) $\mathrm{X} = \left[ x(1), x(2),\cdots,x(N)\right]$에 대해, Hankel 행렬은 다음과 같이 전개할 수 있다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{equation}
+\mathrm{A} = \begin{bmatrix} x(1) &amp; x(2) &amp; \cdots &amp; x(n) \\ x(2) &amp; x(3) &amp; \cdots &amp; x(n+1) \\ \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\ x(N-n+1) &amp; x(N-n+2) &amp; \cdots &amp; x(N)\end{bmatrix}
+\end{equation} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;여기서, &lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+1&lt;n&lt;N %]]&gt;&lt;/script&gt; 이고, &lt;script type=&quot;math/tex&quot;&gt;m=N-n+1&lt;/script&gt;이라고 하자 단, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A} \in \mathrm{R}^{m \times n}&lt;/script&gt;.
+SVD를 사용하여 신호를 격리시키는 과정을 이해하기 위하여 식\eqref{eq:1}을 열벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{u}_{i}&lt;/script&gt;와 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{v}_{i}&lt;/script&gt;로 변환한다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{A} = \sigma_{1}\mathrm{u}_{1}\mathrm{v}_{1}^{\top} + \sigma_{2}\mathrm{u}_{2}\mathrm{v}_{2}^{\top} + \cdots + \sigma_{q}\mathrm{u}_{q}\mathrm{v}_{q}^{\top}
+\label{eq:2}
+\tag{2}&lt;/script&gt;
+
+&lt;p&gt;여기서, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{u}_{i}\in\mathrm{R}^{m\times 1}&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{v}_{i}\in\mathrm{R}^{n\times 1}&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;i=1,2,\cdots,q&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;q=\min(m,n)&lt;/script&gt;이다. 특이치분해의 이론에 따라서 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{u}_{i}&lt;/script&gt;는 다른 성분과 정확히 직교성을 띈다. 즉, &lt;script type=&quot;math/tex&quot;&gt;m&lt;/script&gt;차원 공간에서의 직교기저(orthonormal basis)의 역할을 하게 된다. &lt;script type=&quot;math/tex&quot;&gt;\mathrm{v}_{i}&lt;/script&gt;도 마찬가지로 다른 성분과 &lt;script type=&quot;math/tex&quot;&gt;n&lt;/script&gt;차원의 공간에서 직교기저를 형성하게 된다.&lt;sup id=&quot;fnref:golub2012matrix:1&quot;&gt;&lt;a href=&quot;#fn:golub2012matrix&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}=\sigma_{i}\mathrm{u}_{i}\mathrm{v}_{i}^{\top}&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}\in\mathrm{R}^{m\times n}&lt;/script&gt;라고 하면, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i,1}&lt;/script&gt;를 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;의 첫번째 행벡터로, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{H}_{i,n}&lt;/script&gt;는 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;d의 마지막 열벡터로 가정하면, Hankel 행렬의 특징에 따라서 다음식으로 분리된 신호 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}&lt;/script&gt;를 생성할 수 있다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{align}
+\mathrm{P}_{i}=\left( \mathrm{P}_{i,1}, \mathrm{H}_{i,n}^{\top} \right). &amp; ~~~~ \mathrm{P}_{i,1}\in\mathrm{R}^{1\times n}, \mathrm{H}_{i,n}\in\mathrm{R}^{(m-1)\times 1}
+\label{eq:3}
+\tag{3}
+\end{align} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i} (i, 1, 2, \cdots , q)&lt;/script&gt;에 의해 형성된 모든 성분 신호는 원 신호 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{X}&lt;/script&gt;에 대해 한 종류의 분해를 구성한다.
+그러나 이 성분 신호는 근본적으로 무엇을 반영하는가? 이 질문을 확인하기 위해, 성분 신호 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i}&lt;/script&gt;를 2개의 세그먼트로 분할 할 수 있는데, 전면 세그먼트는 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;의 제1 행벡터인 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i,1}&lt;/script&gt;이고, 후면 세그먼트 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{L}_{i, n}&lt;/script&gt;의 전치이다. 여기서 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{L}_{i, n}&lt;/script&gt;은 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;의 마지막 열벡터이다.&lt;/p&gt;
+
+&lt;p&gt;원 신호에 의해 생성된 Hankel 행렬 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}&lt;/script&gt;가 행 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{X}_{1}, \mathrm{X}_{2}, \cdots, \mathrm{X}_{m}, \mathrm{X}_{m}\in\mathrm{R}^{1\times n}&lt;/script&gt;에 의해 표현된다고 가정하자. &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}&lt;/script&gt;의 생성으로부터 알려진 바와 같이, 제1벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{X}_{1}&lt;/script&gt;은 원신호의 프론트 세그먼트이고, &lt;script type=&quot;math/tex&quot;&gt;n&lt;/script&gt; 차원의 기저 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{v}_{i}&lt;/script&gt;에 대한 식\eqref{eq:1}의 투영 계수는 다음식과 계산할 수 있다:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{X}_{1}\mathrm{v}_{i}=\sigma_{i}u_{i1}
+\label{eq:4}
+\tag{4}&lt;/script&gt;
+
+&lt;p&gt;여기서, &lt;script type=&quot;math/tex&quot;&gt;u_{i1}&lt;/script&gt;은 기저 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{u}_{i}&lt;/script&gt;의 첫번째 좌표이다.&lt;/p&gt;
+
+&lt;p&gt;성분 신호 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i}&lt;/script&gt;의 프론트 세그먼트인 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i,1}&lt;/script&gt;이고 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;의 제1행 벡터이기 때문에, 이는 다음과 같이 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;의 정의에 따라 계산 될 수 있다:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{P}_{i,1}=\sigma_{i}u_{i1}\mathrm{v}_{i}^{\top}
+\label{eq:5}
+\tag{5}&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i,1}&lt;/script&gt;은 기본 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{v}_{i}&lt;/script&gt;와 이 기저 벡터에 있는 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{X}_{1}&lt;/script&gt;의 투영 계수의 곱으로, 투영 계수 &lt;script type=&quot;math/tex&quot;&gt;\sigma_{i}u_{i1}&lt;/script&gt;이 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i}&lt;/script&gt;의 크기를 결정하고 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{v}_{i}&lt;/script&gt;가 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i,1}&lt;/script&gt;의 방향을 결정한다는 것을 쉽게 알 수 있다. &lt;script type=&quot;math/tex&quot;&gt;\mathrm{X}_{1}&lt;/script&gt;은 원 신호의 앞부분 세그먼트이지만, 분명히 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i,1}&lt;/script&gt;은 &lt;script type=&quot;math/tex&quot;&gt;n&lt;/script&gt;차원 공간의 &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt;번째 기저 벡터인 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{v}_{i}&lt;/script&gt;에 대한 원래 신호의 앞부분 부분의 투영이다.&lt;/p&gt;
+
+&lt;p&gt;원래 신호에 의해 생성된 Hankel 행렬 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}&lt;/script&gt;가 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}&lt;/script&gt;의 생성으로부터 알려진 바와 같이 열 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{Y}_{1}, \mathrm{Y}_{2}, \cdots, \mathrm{Y}_{n}, \mathrm{Y}_{n}\in\mathrm{R}^{m\times 1}&lt;/script&gt;에 의해 표현된다고 가정하면, 마지막 열 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{Y}_{n}&lt;/script&gt;은 원 신호의 뒤쪽 세그먼트이고 &lt;script type=&quot;math/tex&quot;&gt;m&lt;/script&gt;차원의 기저 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{u}_{i}&lt;/script&gt;에 대한 투영계수 또한 식\eqref{eq:1}로부터 계산 될 수 있으며 다음과 같다:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{Y}_{n}^{\top}\mathrm{u}_{i} = \sigma_{1}\mathrm{v}_{in}
+\label{eq:6}
+\tag{6}&lt;/script&gt;
+
+&lt;p&gt;여기서, &lt;script type=&quot;math/tex&quot;&gt;v_{in}&lt;/script&gt;은 기저 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{v}_{i}&lt;/script&gt;의 &lt;script type=&quot;math/tex&quot;&gt;n&lt;/script&gt;번째 좌표이다.&lt;/p&gt;
+
+&lt;p&gt;성분 신호 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i}&lt;/script&gt;의 뒤쪽 세그먼트인 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{L}_{i, n}&lt;/script&gt; 및 행렬 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;의 마지막 열벡터에 대해, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;의 정의에 따라 다음과 같이 계산 될 수 있다:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{L}_{i,n}^{\top}=\sigma_{i}v_{in}\mathrm{u}_{i}^{\top}
+\label{eq:7}
+\tag{7}&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;L_{i, n}^{\top}&lt;/script&gt;는 기저 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{u}_{i}&lt;/script&gt;와 이 기저 벡터에 대한 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{Y}_{n}&lt;/script&gt;의 투영 계수의 곱이며, 투영 계수 &lt;script type=&quot;math/tex&quot;&gt;\sigma_{i}v_{in}&lt;/script&gt;은 &lt;script type=&quot;math/tex&quot;&gt;L_{i, n}^{\top}&lt;/script&gt;의 크기를 결정하고 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{u}_{i}&lt;/script&gt;는 &lt;script type=&quot;math/tex&quot;&gt;L_{i, n}^{\top}&lt;/script&gt;의 방향을 결정한다는 것을 알 수 있다. &lt;script type=&quot;math/tex&quot;&gt;\mathrm{Y}_{n}&lt;/script&gt;은 원 신호의 뒤쪽 세그먼트이기 때문에 &lt;script type=&quot;math/tex&quot;&gt;L_{i, n}^{\top}&lt;/script&gt;는 실제로 원래 신호의 뒤쪽 세그먼트를 벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{u}_{i}&lt;/script&gt;에 투영 한 것으로 &lt;script type=&quot;math/tex&quot;&gt;m&lt;/script&gt;차원 공간의 &lt;script type=&quot;math/tex&quot;&gt;i&lt;/script&gt;번째 기저 벡터이다.&lt;/p&gt;
+
+&lt;p&gt;따라서 위의 분석에서 Hankel 행렬 기반 SVD의 신호 분해의 본질은 신호를 두 공간 예를들면 &lt;script type=&quot;math/tex&quot;&gt;m&lt;/script&gt;차원 및 &lt;script type=&quot;math/tex&quot;&gt;n&lt;/script&gt;차원 공간으로 분해하는 것이고 실제로 성분 신호들이 반영하는 것은 이 두 가지의 직교하는 기저들에 원래 신호가 투영되었음을 알 수 있다, 즉 그 유사성은 원 신호와 이 두 직교 기저로 확장한다.&lt;/p&gt;
+
+&lt;p&gt;이러한 종류의 분해 특성을 더 자세히 분석해보자. &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}&lt;/script&gt;는 행벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{X}_{1}, \mathrm{X}_{2}, \cdots, \mathrm{X}_{m}, \mathrm{X}_{m}\in\mathrm{R}^{1\times n}&lt;/script&gt;에 의해 표현되는 반면, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;는 행벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i, 1}, \mathrm{P}_{i, 2}, \cdots, \mathrm{P}_{i, m}, \mathrm{P}_{i, m}\in\mathrm{R}^{1\times n}&lt;/script&gt;에 의해 표현된다고 가정한다. 식\eqref{eq:2}에서, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}&lt;/script&gt;의 각 행벡터는 모든 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i} (i, 1, 2, \cdots, q)&lt;/script&gt;에서 대응하는 행벡터의 합과 동일하므로, 다음과 같은 결과를 얻는다.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{X}_{1}=\mathrm{P}_{1,1}+\mathrm{P}_{2,1}+\cdots+\mathrm{P}_{q,1}
+\label{eq:8}
+\tag{8}&lt;/script&gt;
+
+&lt;p&gt;&lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i}&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{H}_{i,n}\in\mathrm{R}^{(m-1)\times 1}&lt;/script&gt;에있는 열벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{H}_{i, n}&lt;/script&gt;에 대해 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}&lt;/script&gt;의 해당 열벡터가 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{I}_{n}, \mathrm{I}_{n}\in\mathrm{R}^{(m-1)\times 1}&lt;/script&gt;이라고 가정하면 식\eqref{eq:2}에서, &lt;script type=&quot;math/tex&quot;&gt;\mathrm{I}_{n}&lt;/script&gt;은 또한 모든 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{A}_{i} (i, 1, 2, \cdots, q)&lt;/script&gt;에서 대응하는 열벡터 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{H}_{i, n}&lt;/script&gt;의 합과 같고 그들의 전치 또한 이 관계를 만족한다. 즉,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{I}_{n}^{\top} = \mathrm{H}_{1,n}^{\top} + \mathrm{H}_{2,n}^{\top} + \cdots + \mathrm{H}_{q,n}^{\top}
+\label{eq:9}
+\tag{9}&lt;/script&gt;
+
+&lt;p&gt;Hankel 행렬의 생성 원리에 따르면 원신호 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{X}&lt;/script&gt;는 벡터 형태 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{X}=\left(\mathrm{X}_{i}, \mathrm{I}_{n}^{\top}\right)&lt;/script&gt;로 표현 될 수 있고 성분 신호 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i}&lt;/script&gt;는 벡터형태 &lt;script type=&quot;math/tex&quot;&gt;\mathrm{P}_{i}=\left(\mathrm{P}_{i,1},\mathrm{H}_{i,n}^{\top}\right)&lt;/script&gt;이고, 이들 모든 성분 신호의 합은&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{P}_{1} + \mathrm{P}_{2} + \cdots + \mathrm{P}_{q} = \left(\mathrm{P}_{1,1} + \mathrm{P}_{2,1} + \cdots + \mathrm{P}_{q,1},\mathrm{H}_{1,n}^{\top} + \mathrm{H}_{2,n}^{\top} + \cdots + \mathrm{H}_{q,n}^{\top}\right)&lt;/script&gt;
+
+&lt;p&gt;식\eqref{eq:8}과 \eqref{eq:9}에서 위의 식의 오른쪽 부분은 &lt;script type=&quot;math/tex&quot;&gt;\left(\mathrm{X}_{1}, \mathrm{I}_{n}^{\top}\right)&lt;/script&gt;이므로&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\mathrm{P}_{1} + \mathrm{P}_{2} + \cdots + \mathrm{P}_{q} = \mathrm{X}
+\label{eq:10}
+\tag{10}&lt;/script&gt;
+
+&lt;p&gt;식\eqref{eq:10}에서 Hankel 행렬을 사용할 때, SVD에 의해 얻어진 성분 신호는 원신호에 대한 단순 선형 중첩을 형성 할 수 있음을 알 수 있다. 이 선형 중첩의 장점은 원신호에서 하나의 성분신호를 격리하면 원신호에서 이 성분신호를 단순히 빼게된다. 따라서 이 빼기 연산은 분리된 성분 신호가 원신호와 동일하게 유지되도록 한다, 즉 고립된 성분 신호에 위상 변화가 없다는 것을 의미한다. 식\eqref{eq:10}은 또한 Hankel 행렬 기반 SVD의 재구성 공식이며, 원래 신호의 특징 정보를 추출하기 위해 몇 가지 관심있는 성분 신호를 간단히 합할 수 있다는 점에서 그 특별함도 있다.&lt;/p&gt;
+
+&lt;p&gt;즉, Hankel 행렬을 구축하고 SVD를 수행하여 신호를 분리해낸 여러개의 신호의 경우 단순 선형중첩으로 원신호의 복원이 가능하다는 의미이며, 이러한 신호분리는 완변한 선형분리로 볼 수 있다. 따라서 다른 신호처리기법에서 발생하는 위상천이등의 현상이 발생하지 않는다. 그리고 Hankel 행렬의 행과 열의 크기를 정함으로 이론상으로 데이터개수(샘플개수)-1 만큼의 신호분리가 가능하다.&lt;/p&gt;
+
+&lt;p&gt;다음 포스트는 Hankel 행령 기반 SVD을 통해 얻은 성분 신호들의 직교성에 대해 고찰하고 프로그램으로 넘어가도록 한다.&lt;/p&gt;
+
+&lt;h2 id=&quot;referencese&quot;&gt;Referencese&lt;/h2&gt;
+&lt;ol class=&quot;bibliography&quot;&gt;&lt;/ol&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:golub2012matrix&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;golub2012matrix&quot;&gt;Golub, G. H., &amp;amp; Van Loan, C. F. (2012). &lt;i&gt;Matrix computations&lt;/i&gt; (Vol. 3). JHU Press.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:golub2012matrix&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&amp;nbsp;&lt;a href=&quot;#fnref:golub2012matrix:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:bangyan2007processing&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;bangyan2007processing&quot;&gt;Bangyan, Z. H. A. O. X. C. H. E. N. T. Y. E. (2007). PROCESSING OF MILLING FORCE SIGNAL AND ISOLATION OF STATE INFORMATION OF MILLING MACHINE BASED ON SINGULAR VALUE DECOMPOSITION [J]. &lt;i&gt;Chinese Journal of Mechanical Engineering&lt;/i&gt;, &lt;i&gt;6&lt;/i&gt;, 030.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:bangyan2007processing&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:cempel2003multidimensional&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;cempel2003multidimensional&quot;&gt;CEMPEL, C. (2003). Multidimensional condition monitoring of mechanical systems in operation. &lt;i&gt;Mechanical Systems and Signal Processing&lt;/i&gt;, &lt;i&gt;17&lt;/i&gt;(6), 1291–1303.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:cempel2003multidimensional&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:brenner2003non&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;brenner2003non&quot;&gt;Brenner, M. J. (2003). Non-stationary dynamics data analysis with wavelet-SVD filtering. &lt;i&gt;Mechanical Systems and Signal Processing&lt;/i&gt;, &lt;i&gt;17&lt;/i&gt;(4), 765–786.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:brenner2003non&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:wei2001ecg&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;wei2001ecg&quot;&gt;Wei, J.-J., Chang, C.-J., Chou, N.-K., &amp;amp; Jan, G.-J. (2001). ECG data compression using truncated singular value decomposition. &lt;i&gt;IEEE Transactions on Information Technology in Biomedicine&lt;/i&gt;, &lt;i&gt;5&lt;/i&gt;(4), 290–299.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:wei2001ecg&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:shin1999iterative&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;shin1999iterative&quot;&gt;Shin, K., Hammond, J. K., &amp;amp; White, P. R. (1999). Iterative SVD method for noise reduction of low-dimensional chaotic time series. &lt;i&gt;Mechanical Systems and Signal Processing&lt;/i&gt;, &lt;i&gt;13&lt;/i&gt;(1), 115–124.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:shin1999iterative&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:zhao2009similarity&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;zhao2009similarity&quot;&gt;Zhao, X., &amp;amp; Ye, B. (2009). Similarity of signal processing effect between Hankel matrix-based SVD and wavelet transform and its mechanism analysis. &lt;i&gt;Mechanical Systems and Signal Processing&lt;/i&gt;, &lt;i&gt;23&lt;/i&gt;(4), 1062–1075.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:zhao2009similarity&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&amp;nbsp;&lt;a href=&quot;#fnref:zhao2009similarity:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>오래된 DEMO곡</title>
+   <link href="http://localhost:4000/production/2018/01/17/38pf-interrogator/"/>
+   <updated>2018-01-17T17:21:10+09:00</updated>
+   <id>http://localhost:4000/production/2018/01/17/38pf-interrogator</id>
+   <content type="html">&lt;p&gt;개발중에 쓸데없이 오래된 사이트를 개편하면서 오래된 데모를 찾았다. 아 물론 38pF는 나였다. &lt;a href=&quot;https://soundcloud.com/38picofarad/38pf-myname-remix-model-b-an&quot;&gt;ABoAB 무단트리뷰트 My Name 리믹스&lt;/a&gt;를 38pF 이름으로 작업하고 버려두었는데, 그간 굳이 궁금해 하던 사람은 별로 없었고 하박국씨는 쉽게 난줄 알아채더라. 어찌됐든 오래전 녹음 누르고 아날로그 신스를 가지고 놀면서 만들었던 데모들은 다시 쓰일일이 없을꺼라 &lt;a href=&quot;https://soundcloud.com/38picofarad/&quot;&gt;38pF&lt;/a&gt;계정으로 배출해냈었다. 아 사실 ACID한 작업들을 이쪽으로 몰아서 작업할려고 했었다. (하지만 게으름) 그러다 간만에 38pF계정가서 들어보니 당시엔 맘이 아주 딥했었나보다. &lt;a href=&quot;https://eunchurn.com/runway/2013/01/24/yumi-katsura-x-ji-haye-haute-couture-2013/&quot;&gt;유미가츠라 지해 오뜨꾸뛰르 프리젠테이션&lt;/a&gt; 곡도 대충 만들어서 배출한거라 여기에 가있었고 &lt;a href=&quot;https://eunchurn.com/production/2012/01/24/paul-and-alice-fashion-film-2012/&quot;&gt;폴앤앨리스 패션필름&lt;/a&gt;음악도 여기에 배출되어 있었다. 그런데 누군가가 interrogator란곡에 sick이라고 달아놓았다. 아 요즘 영어공부를 좀 해서 sick이 아프다는 뜻이 아니란건 안다. 도대체 이곡이 왜? 그래서 다시 세밀하게 들어보았다.&lt;/p&gt;
+
+&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; allow=&quot;autoplay&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/89292183&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;대체 2013년 4월 24일에 무슨일이 있었던거지… 음악일기라도 쓴건가.. (정말 알 수 없다)&lt;/p&gt;
+
+&lt;p&gt;네이밍을 interrogator로 한걸보니, 당시에 회사에서 광섬유센서와 광컨버터기 데이터 분석 작업을 했던것 같다. 그런데 원래 뜻을 찾아보니 심문자, 전쟁포로의 심문관(?) … 이런뜻인지도 모르고 네이밍을 한듯.&lt;/p&gt;
+
+&lt;p&gt;다시 듣기엔 나쁘지 않다. 살려볼까 했지만 프로젝트 파일은 이미 유실되었을 것 같다. (찾아보기도 귀찮)&lt;/p&gt;
+</content>
+ </entry><entry>
+   <title>콘크리트 균열 분석 B-COSFIRE(MATLAB)</title>
+   <link href="http://localhost:4000/engineering/2017/12/30/concrete-cracks-detection-using-b-cosfire-filter/"/>
+   <updated>2017-12-30T17:21:10+09:00</updated>
+   <id>http://localhost:4000/engineering/2017/12/30/concrete-cracks-detection-using-b-cosfire-filter</id>
+   <content type="html">&lt;p&gt;콘크리트 균열을 탐지 하는 방법론은 여러가지가 있다. 특히 직접 이미지프로세싱을 통한 직접 추출하는 방식이 일반적이다. 그러나 알고리즘의 수행 능력은 둘째 치더라도 수행 성능은 담보하기 어렵다. B-COSFIRE 필터는 의료 영상에서 혈관을 탐색하는 알고리즘에서 착안한다. 특히 선구조를 식별하는 알고리즘으로써 균열에도 적용이 충분히 가능할꺼라는 시도로 몇몇 엔지니어가 최근 제시하였다. 이 연구자는 MATLAB 소스파일을 공개하였다. &lt;a href=&quot;https://kr.mathworks.com/matlabcentral/fileexchange/49172-trainable-cosfire-filters-for-curvilinear-structure-delineation-in-images?requestedDomain=true&quot;&gt;Trainable COSFIRE filters for curvilinear structure delineation in images&lt;/a&gt; 또한 &lt;a href=&quot;https://gitlab.com/nicstrisc/B-COSFIRE-MATLAB&quot;&gt;Gitlab Repository&lt;/a&gt; 에도 계속 업데이트 하고 있다. 자세하게 서술된 학술지 저널까지 공개되어 있다. &lt;a href=&quot;http://www.cs.rug.nl/~george/articles/MEDIA2015.pdf&quot;&gt;Azzopardi, G., Strisciuglio, N., Vento, M., Petkov, N.: Trainable COSFIRE  filters for vessel delineation with application to retinal images. Medical Image Analysis 19(1), 46 - 57, 2015&lt;/a&gt; 예제는 3가지로 소개되어 있다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ExampleBloodVesselSegmentation.m&lt;/code&gt; : 라인 검출기와 라인-엣지 검출기의 구성 및 망막 이미지에서의 혈관 분할에 대한 예제 코드.
+최종 응답은 두 필터의 응답 합계로 응용한다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PavementCrackDelineation.m&lt;/code&gt; (CAIP 2017) : CAIP17에서 제시된 도로 포장 이미지의 균열 감지를 위한 이미지 프로세싱 파이프 라인에 B-COSFIRE 필터 적용. 이 코드는 논문에서 보고 된 벤치 마크 결과를 제공한다.
+&lt;em&gt;Azzopardi, G. Petkov, N. “Detection of Curved Lines with B-COSFIRE Filters: A Case Study on Crack Delineation”, IWOBI 2017&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;INRIAImages.m&lt;/code&gt; (IWOBI 2017) : B-COSFIRE 필터를 사용하여 이미지의 가늘고 긴 선형구조를 감지한다.
+이 코드는 종이에 사용 된 INRIA 데이터의 이미지에 대한 벤치 마크 결과를 제공한다&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;저자는 소스를 공개하며 다음과 같이 소개하였다.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;B-COSFIRE filters are non-linear trainable filters for detection of elongated patterns in images.
+This is the code of the trainable non-linear B-COSFIRE filters for delineation of elongated patterns in images.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;하지만 학습이라기 보다는 파라미터 최적화를 통해 특정 도로에 적합하도록 개선하는 정도이다. 또한 미세균열을 찾기 위한 작업에서 고해상도 이미지를 한번에 처리하기엔 성능면에서 큰 효과를 거두지 못할 것 같다.&lt;/p&gt;
+
+&lt;p&gt;그러나 추후 딥러닝을 위한 ground truth 자료를 충분히 확보하기 위해 본 알고리즘을 써보는 것은 나쁘지 않을 것 같다. 딥러닝에서는 실측자료를 얼마나 많이 얻었냐에 따라 그 성능이 많이 달라지기 때문에 GT작업이 매우 중요하다. 모두 사람의 노동력을 빌릴 수 없기 때문에 최초로 걸러내는 작업에서 B-COSFIRE 알고리즘을 사용하는 방법은 나쁘지 않을 것 같다. 따라서 GT작업을 위한 프로그램을 개발해보았다. MATLAB이지만 MATLAB이 없어도 GUI로 빌드하여 MCR(MATLAB Runtime Compiler)를 통해 배포가 가능하다.&lt;/p&gt;
+
+&lt;p&gt;개발자의 논문에 서술된 B-COSFIRE 방법론에 대하여 간략히 소개하고 프로그램 사용법을 기술하였다. 근무하던 회사와 연관되어 있어 소스는 공개가 불가능하다. 하지만 위의 &lt;a href=&quot;https://gitlab.com/nicstrisc/B-COSFIRE-MATLAB&quot;&gt;Gitlab Repository&lt;/a&gt;에서 응용하여 관심있는 사람이라면 쉽게 개발이 가능할 것이다.&lt;/p&gt;
+
+&lt;h2 id=&quot;b-cosfire-방법론&quot;&gt;B-COSFIRE 방법론&lt;/h2&gt;
+&lt;p&gt;논문에서는 다른 균열 분석 알고리즘과 벤치마크를 수행하였다. 그러나 앞서 이야기한 것처럼 딥러닝을 위한 중간과정으로 채택하였기 때문에 알고리즘의 워크플로는 다음과 같다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;B-COSFIRE filtering&lt;/li&gt;
+  &lt;li&gt;binarization with nonmaximum suppression&lt;/li&gt;
+  &lt;li&gt;hysteresis thresholding (최적화 및 벤치마크를 위함)&lt;/li&gt;
+  &lt;li&gt;minimum enclosing rectangle&lt;/li&gt;
+  &lt;li&gt;making ground truth&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;configure-of-a-b-cosfire-filter&quot;&gt;Configure of a B-COSFIRE filter&lt;/h3&gt;
+&lt;p&gt;B-COSFIRE 필터는 Gaussian 함수의 그룹 $DoG_{\sigma}$로부터 입력을 받으며 외부 Gaussian 함수는 표준 편차 $\sigma $를 가진다.&lt;/p&gt;
+
+&lt;p&gt;\begin{equation}
+DoG_{\sigma}(x,y)= \frac{\textrm{exp}\left( -\frac{x^2 + y^2}{2(0.5\sigma)^2}\right)}{2\pi\left(0.5\sigma\right)^2} - \frac{\textrm{exp}\left( -\frac{x^2 + y^2}{2\sigma^2}\right)}{2\pi\sigma^2}
+\end{equation}&lt;/p&gt;
+
+&lt;p&gt;Petkov와 Vosser&lt;sup id=&quot;fnref:petkov2005modifications&quot;&gt;&lt;a href=&quot;#fn:petkov2005modifications&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;에서, 위의 함수에 대해 0.96 $\sigma$의 반경 또는 1.92 $\sigma$의 너비를 가진 라인에 대해 최대 응답이 추출 되었음이 나타났다. 이 결과를 바탕으로 외부 표준 편차 $\sigma = w/1.92$를 설정한다. 여기서 $w$는 관심있는 선의 너비이다.
+&lt;br /&gt;
+B-COSFIRE 필터의 구조, 즉 우리가 DoG 응답을 고려하는 위치는 주어진 프로토타입 패턴에 대한 자동 구성 프로세스에서 결정된다. 구성에 대한 자세한 내용은 Azzopardi et al.의 논문&lt;sup id=&quot;fnref:azzopardi2015trainable&quot;&gt;&lt;a href=&quot;#fn:azzopardi2015trainable&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;을 참조바람. 우리는 너비 $w$, 길이 $l$ 및 방향 $\phi$의 프로토타입 선 구조에 B-COSFIRE 필터를 구성한다. 구성 결과는 다음과 같이 설정된다. $B_{w, l, \phi}$ :&lt;/p&gt;
+
+&lt;p&gt;\begin{equation}
+B_{w,l,\phi} = \left[ (0,0),(\lambda,\phi),(\lambda, 2\pi-\phi)\right] \cup \left[ (\rho_{i},\phi) \right] \cup \left[ (\rho_{i},2\pi-\phi) \right]
+\end{equation}&lt;/p&gt;
+
+&lt;p&gt;여기서 $\lambda = \left[ (l-1)/2 \right]$ 와 $\rho_{i} = \eta i$ with $i=1,…,\left[(\lambda-1)/\eta \right] -1$. $\phi$ 은 선의 기본 방향이다. $B_{w,l,\phi}$ 집합에서 두개의 튜플은 B-COSFIRE 필터의 지지점에 대한 위치 (거리 및 극각)를 나타내며 center-on Gaussians (DoG) 필터의 응답을 나타낸다. 파라미터 $\eta \left(\textrm{with } 1\leq \eta \leq \lambda \right)$는 고려 된 DoG 응답 사이의 픽셀 간격을 나타낸다. $\eta=1$일때 우리는 원하는 너비 $w$, 길이 $l$, 그리고 방향 $\phi$, 그리고 $\eta=\left[(l-1)/2\right]$일때 (가능한 최대 값) 결과 필터는 세 개의 튜플로만 구성된다: 중앙에서 DoG 응답을 참조하는 튜플 $ (0,0 $ 및 두 개의 튜플 $\left(\left[(l-1)/2\right],\phi \right)$ 및 $\left(\left[(l-1)/2\right],2\pi-\phi\right)$는 B-COSFIRE 필터의 선택도는 지지체의 양쪽면에서 가장 먼 거리를 가리키는 값이다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;response-of-a-b-cosfire-filter&quot;&gt;Response of a B-COSFIRE filter&lt;/h3&gt;
+
+&lt;p&gt;B-COSFIRE 필터 $B_{w,l,\phi}(x,y)$의 응답은 &lt;em&gt;filter-blur-shift-combine&lt;/em&gt;의 네 단계로 계산된다.
+첫 번째 단계에서는 입력 이미지 $I$를 DoG 커널 $DoG_{\sigma=w/1.92}$로 &lt;em&gt;filter&lt;/em&gt;하고 $C$로 결과 이미지를 나타낸다:&lt;/p&gt;
+
+&lt;p&gt;\begin{equation}
+C(x,y)=\left| \sum_{x’=-3\sigma}^{3\sigma} \sum_{y’=-3\sigma}^{3\sigma} I(x,y)DoG_{\sigma}(x-x’,y-y’)\right|^{+}
+\end{equation}&lt;/p&gt;
+
+&lt;p&gt;여기서 연산자 $\left|.\right|^{+}$는 반파 정류를 나타내며 최근 정류 선형 유닛 (ReLU)으로 알려져 있다.&lt;/p&gt;
+
+&lt;p&gt;인공 신경망의 맥락에서, 정류기는 인수의 양의 부분으로 정의된 활성화 함수이다. $\left|x\right|^{+} = \max(0,x)$ 여기서 $x$는 뉴런에 대한 입력이다. 이 함수는 램프(ramp) 기능으로도 알려져 있으며 전기 공학의 반 파장 정류와 유사하다. 이 활성화 함수는 처음 Hahnloser R. H. et al.에 의해 강한 생물학적 동기와 수학적 정당성을 지닌 저널 Nature지의 2000년 논문&lt;sup id=&quot;fnref:hahnlose2000&quot;&gt;&lt;a href=&quot;#fn:hahnlose2000&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;에서 소개되었다.  이 함수는 널리 사용되는 로지스틱 시그모이드(확률론에 의해 영감을 얻은 것; 로지스틱 회귀분석 참조)보다 효과적으로 Convolution 네트워크&lt;sup id=&quot;fnref:azzopardi2013trainable&quot;&gt;&lt;a href=&quot;#fn:azzopardi2013trainable&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt;에 사용되게 되었다. 또한 &lt;sup id=&quot;fnref:azzopardi2015trainable:1&quot;&gt;&lt;a href=&quot;#fn:azzopardi2015trainable&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; 대응안인 쌍곡선 탄젠트(hyperbolic tangent) 보다 실용적이다. 2017년에 들어서 현재 이 정류기는 딥 뉴럴 네트워크에서 가장 널리 알려진 활성화 함수이다. &lt;sup id=&quot;fnref:bibiloni2016survey&quot;&gt;&lt;a href=&quot;#fn:bibiloni2016survey&quot; class=&quot;footnote&quot;&gt;5&lt;/a&gt;&lt;/sup&gt; &lt;sup id=&quot;fnref:chai2013recovering&quot;&gt;&lt;a href=&quot;#fn:chai2013recovering&quot; class=&quot;footnote&quot;&gt;6&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;그후 선호하는 위치와 관련하여 약간의 tolerance를 허용하기 위해 가중치가 최대인 비선형 blurring 연산으로 DoG 응답을 &lt;em&gt;blur&lt;/em&gt; 처리한다. 가중치는 표준 편차 $\sigma_{i}$’ 가 B-COSFIRE 필터의 지원 센터로부터의 거리가 증가함에 따라 선형적으로 증가하는 가우시안 함수에 의해 주어진다 : $\sigma_{i}$’$=\sigma_{0}$’$+\alpha\rho_{i}$. $\sigma_{0}$’ 와 $\alpha$ 값은 파라미터이며, 프로토타입 형태에서 변형에 대한 tolerance를 정규화한다.&lt;/p&gt;
+
+&lt;p&gt;세 번째 단계에서는 벡터 $(\rho_{i}, 2\pi-\phi_{i})$에 의해 $i$번째 &lt;em&gt;blur&lt;/em&gt; 처리한 DoG 응답을 &lt;em&gt;shift&lt;/em&gt; 변환한다. 이러한 방식으로 모든 관련 DoG 응답은 관련 위치, 즉 관련 B-COSFIRE 필터의 지지점에서 연결된다. $i$ 번째 튜플의 $(x, y)$ 위치에서 &lt;em&gt;blur&lt;/em&gt;처리되고 &lt;em&gt;shift&lt;/em&gt; 된 DoG 응답 $s_{\rho_{i},\phi_{i}}(x,y)$ 은:&lt;/p&gt;
+
+&lt;p&gt;\begin{equation}
+s_{\rho_{i},\phi_{i}}(x,y) = \max_{x’,y’} \left[ C(x-x’-\Delta x,y-y’-\Delta y) G_{\sigma’_{i}}(x’,y’)\right]
+\end{equation}&lt;/p&gt;
+
+&lt;p&gt;여기서 $\Delta x = -\rho_{i}\cos\phi_{i}$ 이고, $\Delta y = -\rho_{i}\sin\phi_{i}$ 이다.
+마지막 단계에서 B-COSFIRE필터의 응답 $r_{B_{w,l,\phi}}(x,y)$,의 기하평균은 다음과 같다.&lt;/p&gt;
+
+&lt;p&gt;\begin{equation}
+r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\phi_{i}}(x,y)\right)^{1/\left|B_{w,l}\right|}
+\end{equation}&lt;/p&gt;
+
+&lt;p&gt;논문에서 방법론 제시 이후의 작업은 타 알고리즘과 비교하기 위한 벤치마크를 수행하는 결과를 나타낸다. 나는 조금 다른 방식으로 이진화(binarization)을 수행했으며, 균열을 분류하기 위한 MER(Minimum enclosing rectangle)작업을 수행하였다. 이 방법은 직관적인 방법론이라서 이미지 프로세싱에 관심이 있다면, DoG 응답을 가지고 충분히 다른 여러방법으로도 추출해 낼 수 있다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;binarization&quot;&gt;Binarization&lt;/h3&gt;
+&lt;p&gt;이진화 방법은 1차적으로 &lt;code class=&quot;highlighter-rouge&quot;&gt;binarize()&lt;/code&gt;함수로 수행되며 2차적으로 pixel 연결성을 찾아 쓰레숄딩 한다. 이것은 MATLAB &lt;em&gt;Image Processing Toolbox&lt;/em&gt;에 있는 &lt;code class=&quot;highlighter-rouge&quot;&gt;bwconncomp()&lt;/code&gt; 함수를 사용한다. &lt;code class=&quot;highlighter-rouge&quot;&gt;binarize()&lt;/code&gt;함수는 아래와 같다.&lt;/p&gt;
+&lt;div class=&quot;language-matlab highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;binarymap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;binarize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rotoutput1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;highthresh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;orienslist&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewResult&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;oriensMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;calc_viewimage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rotoutput1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;...&lt;/span&gt;
+       &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;numel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;orienslist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;orienslist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;thinning&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;calc_thinning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;viewResult&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;oriensMatrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;binarymap&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;calc_hysteresis&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thinning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;...&lt;/span&gt;
+       &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;highthresh&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thinning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:)),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;highthresh&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thinning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:)));&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;2차 연결픽셀의 쓰레숄딩하는 방법은 아래와 같다. 연결 픽셀 수 &lt;code class=&quot;highlighter-rouge&quot;&gt;ccthreshold&lt;/code&gt;값을 지정해 주어야 한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-matlab highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;n&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bwconncomp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;binImg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;nograin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cellfun&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'length'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PixelIdxList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nograin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'descend'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;    
+&lt;span class=&quot;n&quot;&gt;ite&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;find&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ccthreshold&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'last'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;% thresholding cc&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;minimum-enclosing-rectangle&quot;&gt;Minimum Enclosing Rectangle&lt;/h3&gt;
+&lt;p&gt;MER 알고리즘은 &lt;a href=&quot;https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/31126/versions/2/previews/minBoundingBox.m/index.html?access_key=&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;minBoundingBox()&lt;/code&gt;&lt;/a&gt;을 응용하였다.&lt;/p&gt;
+&lt;div class=&quot;language-matlab highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;minEnclosingRectangle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;convhull&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,:),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,:));&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;CH&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;E&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;diff&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;atan2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,:),&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;E&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,:));&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;unique&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;reshape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;repmat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;...&lt;/span&gt;
+ &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;repmat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pi&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;pi&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;RCH&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bsize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RCH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,[],&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RCH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,[],&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;area&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;prod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;reshape&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bsize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bsize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],:);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bound&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bmin&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,[],&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bmax&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bound&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,[],&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Rf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;프로그램-ui&quot;&gt;프로그램 UI&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/public/images/2017/12/readme/screenshot.png&quot; alt=&quot;screnshot&quot; /&gt;
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;usages&quot;&gt;Usages&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;실행화면
+&lt;img src=&quot;/public/images/2017/12/readme/intro.png&quot; alt=&quot;intro&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;Image File Open : 이미지 열기 Open 버튼을 클릭하면 다음과 같은 파일탐색창이 나온다. 균열 이미지 파일을 선택한 후 열기를 선택한다.&lt;/li&gt;
+  &lt;li&gt;이미지 로딩 : 아래 그림과 같이 이미지 파일을 불러온다.
+&lt;img src=&quot;/public/images/2017/12/readme/loadimage.png&quot; alt=&quot;load image&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;파라미터 설정 : 논문을 참고하여 DoG (Difference of Gaussian)의 파라미터와, 이진화 임계값(threshold)과 픽셀 연결 임계값을 설정한다. 기본설정은 아래표와 같다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;sigma&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;length&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;sigma_0&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;alpha&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;no. of orientation&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;padding size&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;DoG threshold&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Connected pixels threshold&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;3.3&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;14&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;2&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;1&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;12&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;50&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;0.5&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;200&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;분석 시작 : Start Analysis 를 클릭하여 분석을 수행한다. (화면 하단에서 분석 진행상황이 표시 된다.)&lt;/li&gt;
+  &lt;li&gt;분석 완료 : 분석이 완료되면 이미지의 왼쪽은 DoG 응답 결과와 오른쪽 균열 분석결과가 표시 된다. 그리고 이미지의 아래쪽엔 균열 분석한 결과가 스프에드시트 형태로 표시된다.&lt;/li&gt;
+  &lt;li&gt;zoom tool &lt;img src=&quot;/public/images/2017/12/readme/zoomtool.png&quot; alt=&quot;&quot; /&gt; 을 이용하여 분석결과를 zoom-in zoom-out하여 결과를 확인할 수 있다. (확대툴을 사용하여 마우스를 이미지위에서 드래그하면, 관심 영역이 확대 됨, 마우스를 더블클릭하면 zoom out 됨)
+ &lt;img src=&quot;/public/images/2017/12/readme/zoomed.png&quot; alt=&quot;zoomed crack&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;좌측이미지 상단의 Radio버튼에서 original 과 DoG response를 선택하여 원본이미지와 DoG 응답결과를 함께 확인 할 수 있다. (단, 이미지 변경 후 마우스 더블클릭으로 zoom out이 되지 않으니 zoom reset 버튼을 사용)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;original image&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;DoG response image&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/zoomed.png&quot; alt=&quot;original&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/zoomed_dog.png&quot; alt=&quot;DoG response&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;균열 Result 테이블은 행방향으로 순서대로 검출된 균열의 크기가 큰 균열부터 정렬이 되어있다. 첫번째 열부터
+&lt;img src=&quot;/public/images/2017/12/readme/result.png&quot; alt=&quot;cracks result&quot; /&gt;
+    &lt;ol&gt;
+      &lt;li&gt;균열의 orientation : 진행방향을 기준으로 가로방향에서 균열의 방향을 각도(degree)로 표현한다.&lt;/li&gt;
+      &lt;li&gt;균열 위치 X : MER(Minimum Enclosing Rectangle)결과에서 균열의 중심좌표의 X축 좌표를 표시한다. (현재는 pixel 단위)&lt;/li&gt;
+      &lt;li&gt;균열 위치 Y : MER(Minimum Enclosing Rectangle)결과에서 균열의 중심좌표의 Y축 좌표를 표시한다. (현재는 pixel 단위)&lt;/li&gt;
+      &lt;li&gt;균열 길이 : MER(Minimum Enclosing Rectangle)결과에서 균열의 가장 긴변 축의 길이를 표시한다. (현재는 pixel 단위)&lt;/li&gt;
+      &lt;li&gt;균열 폭 : Thinning 결과와 이진화 결과를 비교하여 평균 균열 폭을 표시한다. (현재는 pixel 단위)&lt;/li&gt;
+      &lt;li&gt;실측 균열 : 이 균열이 육안으로 확인했을 때 실제로 균열으로 판단될 때 체크 (ground truth)&lt;/li&gt;
+      &lt;li&gt;실측 구조물 : 이 균열이 육안으로 확인했을 때 도상의 구조물을 판단될 때 체크 (ground truth)&lt;/li&gt;
+      &lt;li&gt;실측 노이즈 : 이 균열이 육안으로 확인했을 때 노이즈로 판단될 때 체크 (ground truth)&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;균열 검측 결과는 마우스로 셀을 선택할 때 마다 균열만 zoom in 해서 보여준다. 이를 해제 하기 위한 방법은 zoom reset 버튼을 클릭하면 전체 이미지 화면을 볼 수 있다. 차례대로 균열을 ground truth로 선택하며 실측과정을 수행한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/crack01.png&quot; alt=&quot;crack 1&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/crack02.png&quot; alt=&quot;crack 2&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/crack03.png&quot; alt=&quot;crack 3&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/crack04.png&quot; alt=&quot;crack 4&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/crack05.png&quot; alt=&quot;crack 5&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/crack06.png&quot; alt=&quot;crack 6&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/crack07.png&quot; alt=&quot;crack 7&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/crack08.png&quot; alt=&quot;crack 8&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;결과 저장 : 균열의 ground truth 결과는 csv(comma separated value)파일로 저장할 수 있다. 또한 DoG 응답 결과와 ground truth에서 균열만 탐색한 결과를 이미지 파일로 저장할 수 있다.
+&lt;br /&gt;&lt;br /&gt;
+    &lt;h3 id=&quot;ground-truth-result-example&quot;&gt;Ground Truth Result (example)&lt;/h3&gt;
+  &lt;/li&gt;
+  &lt;li&gt;테스트 이미지로 분석한 콘크리트 균열의 실측자료&lt;/li&gt;
+  &lt;li&gt;Ground truth (binary image 결과) : 추후 CNN을 위한 실측자료로 활용&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Original Image&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Ground Truth (Cracks)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/original.png&quot; alt=&quot;original&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2017/12/readme/ground_truth_cracks.png&quot; alt=&quot;ground truth&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;version-history&quot;&gt;Version History&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;v1.0&lt;/strong&gt; 한 개의 이미지를 분석함&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;v1.0.1&lt;/strong&gt; Parameter 오류 수정&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;v1.0.1&lt;/strong&gt; 균열 결과 default로 노이즈 선택 (효율적인 ground truth를 위함)
+&lt;br /&gt;&lt;br /&gt;
+    &lt;h3 id=&quot;추후-개발-사항&quot;&gt;추후 개발 사항&lt;/h3&gt;
+  &lt;/li&gt;
+  &lt;li&gt;[ ] 배치 프로세스 : ground truth 하기전에 분석시간이 조금 걸리기 때문에 배치 분석을 하고 결과 파일을 로딩하여 GT를 수행할 수 있도록 개선 필요&lt;/li&gt;
+  &lt;li&gt;[ ] GT결과를 바탕으로 crack, structure, noise를 blob을 다른 색상으로 표시할 수 있도록 개선&lt;/li&gt;
+  &lt;li&gt;[ ] 분석결과 서버 DB에 결과를 저장할 수 있도록 개선&lt;/li&gt;
+  &lt;li&gt;[ ] 다양한 UI 개선 등
+&lt;br /&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;references&quot;&gt;References&lt;/h3&gt;
+
+&lt;ol class=&quot;bibliography&quot;&gt;&lt;/ol&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:petkov2005modifications&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;petkov2005modifications&quot;&gt;Petkov, N., &amp;amp; Visser, W. T. (2005). Modifications of center-surround, spot detection and dot-pattern selective operators. &lt;i&gt;Institute of Mathematics and Computing Science, University of Groningen, The Netherlands (CS 2005-9-01)&lt;/i&gt;, 1–4.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:petkov2005modifications&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:azzopardi2015trainable&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;azzopardi2015trainable&quot;&gt;Azzopardi, G., Strisciuglio, N., Vento, M., &amp;amp; Petkov, N. (2015). Trainable COSFIRE filters for vessel delineation with application to retinal images. &lt;i&gt;Medical Image Analysis&lt;/i&gt;, &lt;i&gt;19&lt;/i&gt;(1), 46–57.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:azzopardi2015trainable&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&amp;nbsp;&lt;a href=&quot;#fnref:azzopardi2015trainable:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:hahnlose2000&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;hahnloser2000digital&quot;&gt;Hahnloser, R. H. R., Sarpeshkar, R., Mahowald, M. A., Douglas, R. J., &amp;amp; Seung, H. S. (2000). Digital selection and analogue amplification coexist in a cortex-inspired silicon circuit. &lt;i&gt;Nature&lt;/i&gt;, &lt;i&gt;405&lt;/i&gt;(6789), 947–951.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:hahnlose2000&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:azzopardi2013trainable&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;azzopardi2013trainable&quot;&gt;Azzopardi, G., &amp;amp; Azzopardi, N. (2013). Trainable COSFIRE filters for keypoint detection and pattern recognition. &lt;i&gt;IEEE Transactions on Pattern Analysis and Machine Intelligence&lt;/i&gt;, &lt;i&gt;35&lt;/i&gt;(2), 490–503.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:azzopardi2013trainable&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:bibiloni2016survey&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;bibiloni2016survey&quot;&gt;Bibiloni, P., González-Hidalgo, M., &amp;amp; Massanet, S. (2016). A survey on curvilinear object segmentation in multiple applications. &lt;i&gt;Pattern Recognition&lt;/i&gt;, &lt;i&gt;60&lt;/i&gt;, 949–970.&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:bibiloni2016survey&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:chai2013recovering&quot;&gt;
+      &lt;p&gt;&lt;span id=&quot;chai2013recovering&quot;&gt;Chai, D., Forstner, W., &amp;amp; Lafarge, F. (2013). Recovering line-networks in images by junction-point processes. In &lt;i&gt;Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition&lt;/i&gt; (pp. 1894–1901).&lt;/span&gt;&amp;nbsp;&lt;a href=&quot;#fnref:chai2013recovering&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>_Pale Blue Eyes (2016-2017 AW)</title>
+   <link href="http://localhost:4000/runway/2016/03/24/velvet-underground-x-eunchurn-pale-blue-eyes-heich-es-heich-aw-2016-2017/"/>
+   <updated>2016-03-24T17:21:10+09:00</updated>
+   <id>http://localhost:4000/runway/2016/03/24/velvet-underground-x-eunchurn-pale-blue-eyes-heich-es-heich-aw-2016-2017</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/254782383&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;01_ 어른이 되면 꼭 하고 싶었던 것 중 하나는 학교 같은 회사를 만드는 것이었다.
+&lt;br /&gt;&lt;br /&gt;
+몇 해 전 일본 출장을 갔을 때였다. 항상 그렇듯 편집샵을 조사하고
+몇몇의 옷에 ‘질투심’과 ‘존경심’을 느끼고, 저녁식사로 잘 숙성된 물고기와
+맥주 3병을 마셨다.
+그날 밤 신주쿠의 호텔로 걸어가면서 난 어른이 됐다는 것을 알게 됐다.
+옷장에는 제법 그럴듯한 수트와 타이들이 가득하고,
+지금까지 모아두었던 디자인 노트는 꽤 두툼했다.
+&lt;br /&gt;&lt;br /&gt;
+새로운 회사를 만들고 함께 일하는 동료들과 황당한 우하함에 대해 스스럼없이
+이야기하는 것과 유리문으로 된 투명한 냉장고에 예쁜 컬러의 탄산 음료와 맥주를
+진열하는 일이 토트넘 대 스완지의 축구경기를 보는 것 만큼 즐거웠다.
+&lt;br /&gt;&lt;br /&gt;
+처음 생각했던 데로 엉뚱하지만 규칙적이고, 친구가되고 소중해지고,
+상상하고 도모하는 사람들이 함께 하는 학교같은 회사가 되도록
+노력해야겠다는 생각이 드는 2016년 2월의 밤.
+&lt;br /&gt;&lt;br /&gt;
+02_ 이번 컬렉션 테마는 ‘소년, 학교, 폭동(BOYS, SCHOOL, RIOT)’입니다.
+1960년대 미국 서부가 사이키델릭 록으로 흥청거릴 때 동부에서 시작된
+지적이며 어둡고 실험적이며 퇴폐적인 음악을 하던 벨벳 언더그라운드의
+서정적이면서도 난폭하고 기괴한 정서로부터 시작되었습니다.
+&lt;br /&gt;&lt;br /&gt;
+03_ 3월24일 오후 4시 DDP S2에서 시작합니다.
+&lt;br /&gt;&lt;br /&gt;
+디자이너 한상혁
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;track--velvet-underground-x-eunchurn---pale-blue-eyes&quot;&gt;TRACK : VELVET UNDERGROUND x EUNCHURN - PALE BLUE EYES&lt;/h3&gt;
+&lt;p&gt;#CREDIT&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;original track by Velvet Underground - Pale Blue Eyes&lt;/li&gt;
+  &lt;li&gt;music rework produced by eunchurn&lt;/li&gt;
+  &lt;li&gt;executive producer by Haan Sang Hyuk&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2016/03/artworks-000153758231-23cqq0-t500x500.jpg&quot; alt=&quot;featured image&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/XlTF2bCQ4lQ?rel=0&amp;amp;showinfo=0&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>Feels Too Letter (2015) EP</title>
+   <link href="http://localhost:4000/production/2015/12/12/saram12saram-feels-too-letter/"/>
+   <updated>2015-12-12T17:21:10+09:00</updated>
+   <id>http://localhost:4000/production/2015/12/12/saram12saram-feels-too-letter</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2015/12/ftl.jpg&quot; alt=&quot;featured image&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;음반-소개&quot;&gt;음반 소개&lt;/h2&gt;
+&lt;p&gt;사람을 홀리듯 신비롭고 아름다운 목소리. 주변으로 흐르는 정교하게 설계된 사운드. 사람12사람은 이런 목소리를 가진 지음과 이런 사운드를 만드는 은천의 일렉트로 팝 혼성 듀오다. 지음이 만드는 멜로디는 좋은 팝의 범주 아래 있으나 전형적이지 않다. 은천이 만드는 사운드 역시 기성 일렉트로 팝의 어법을 따르기보다 잘 만든 디자인 제품을 보듯 세밀하게 짜여있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/production/2015/12/12/saram12saram-feels-too-letter/&quot;&gt;feels too letter&lt;/a&gt;는 2013년 12월 12일 &lt;a href=&quot;/production/2014/01/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release/&quot;&gt;빗물구름태풍태양&lt;/a&gt;을 발표한 사람12사람이 2년만에 발표하는 두 번째 EP다. 전작과 마찬가지로 지음이 가사를 쓰고 노래를 부른 후 은천이 감싸듯 사운드를 덧댔다. 전작과 다른 점은 사운드를 만드는 과정에 전보다 지음이 많은 참여를 한 것이다. 전작과 비슷한 구성을 하고 있지만 다른 공간감을 들려 준다. 노래는 모두 지음의 자전적인 내용을 바탕으로 하고 있다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/production/2015/12/12/saram12saram-feels-too-letter/&quot;&gt;feels too letter&lt;/a&gt;는 아티스트의 요청으로 &lt;a href=&quot;/production/2014/01/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release/&quot;&gt;빗물구름태풍태양&lt;/a&gt;과 마찬가지로 CD와 해외 디지털 음원 서비스를 통해서만 유통된다. 대신 동시에 발매되는 &lt;a href=&quot;/production/2015/12/12/saram12saram-raindrop-cloud-typhoon-and-the-sun-remixes/&quot;&gt;빗물구름태풍태양(Remixes)&lt;/a&gt;는 국내 디지털 음원 서비스에서도 들을 수 있다. 모든 곡은 지음이 만들고 은천이 프로듀스했다. “Fish Wish Kiss”에는 &lt;a href=&quot;http://peterpancomplex.com/&quot;&gt;피터팬 콤플렉스(Peterpan Complex)&lt;/a&gt;의 전지한이 어쿠스틱 기타로 참여했다.
+모든 아트워크는 지음이 만들었으며 CD로 제작할 수 있도록 S-F가 도움을 줬다. 앨범의 마스터링은 &lt;a href=&quot;https://www.boostknob.com/&quot;&gt;부스트놉(BoostKnob)&lt;/a&gt;의 박경선이 맡았다. 제작 및 유통은 &lt;a href=&quot;http://younggiftedwack.com/&quot;&gt;영기획(YOUNG,GIFTED&amp;amp;WACK)&lt;/a&gt;에서 담당한다.&lt;/p&gt;
+
+&lt;div class=&quot;message&quot;&gt;
+&lt;div id=&quot;backvinyl_250&quot; class=&quot;playoff&quot;&gt;&lt;div class=&quot;vinyl_250&quot; id=&quot;vinyl1&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/01-fish-wish-kiss-preview?in=saram12saram/sets/feels-too-letter-2015-preview&quot;&gt;t1&lt;/a&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/02-pitch-black-night-preview?in=saram12saram/sets/feels-too-letter-2015-preview&quot;&gt;t2&lt;/a&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/03-cripple-preview?in=saram12saram/sets/feels-too-letter-2015-preview&quot;&gt;t3&lt;/a&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/04-shatter-guy?in=saram12saram/sets/feels-too-letter-2015-preview&quot;&gt;t4&lt;/a&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/05-everything-feels-all-damn-too-tight-preview?in=saram12saram/sets/feels-too-letter-2015-preview&quot;&gt;t5&lt;/a&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;구매처&quot;&gt;구매처&lt;/h2&gt;
+&lt;h3 id=&quot;cd&quot;&gt;CD&lt;/h3&gt;
+&lt;ul class=&quot;actions&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;http://your-mind.com/product/detail.html?product_no=2808&amp;amp;cate_no=1&amp;amp;display_group=2&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;유어마인드&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://www.gimbabrecords.com/product/detail.html?product_no=2558&amp;amp;cate_no=1&amp;amp;display_group=3&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;김밥레코즈&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://blog.naver.com/studiozemi&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;재미공작소&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;https://www.facebook.com/caferuloorala/?fref=mentions&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;한잔의 룰루랄라&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;https://www.facebook.com/soundmindseoul/?fref=mentions&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;Sound Mind&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;digital&quot;&gt;DIGITAL&lt;/h3&gt;
+&lt;ul class=&quot;actions&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;https://younggiftedwack.bandcamp.com/album/feels-too-letter&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;bandcamp&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;https://itunes.apple.com/us/album/feels-too-letter-ep/id1061413903&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;iTunes&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;https://open.spotify.com/album/54CyxSIT5AN24xUfOPmJST&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;Spotify&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://www.deezer.com/album/11768350&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;Deezer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;credit&quot;&gt;CREDIT&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;all songs &amp;amp; lyrics written by zieum,&lt;/li&gt;
+  &lt;li&gt;all tracks arranged by eunchurn,&lt;/li&gt;
+  &lt;li&gt;acoustic guitar arranged &amp;amp; performed by zieum,&lt;/li&gt;
+  &lt;li&gt;additional acoustic guitar on ‘Fish Wish Kiss’ by Jihan-Jeon (Peterpan Complex),&lt;/li&gt;
+  &lt;li&gt;all vox and guitar recorded at Showmust Studio except ‘Pitch-black Night’,&lt;/li&gt;
+  &lt;li&gt;all tracks mixed and produced by eunchurn at SARAM12SARAM Studio,&lt;/li&gt;
+  &lt;li&gt;mastered by Kyung-Sun Park at Boost Knob,&lt;/li&gt;
+  &lt;li&gt;all artwork by zieum.&lt;/li&gt;
+  &lt;li&gt;Out on &lt;a href=&quot;http://younggiftedwack.com/&quot;&gt;YOUNG,GIFTED&amp;amp;WACK Records&lt;/a&gt;, 12 December 2015&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+ </entry><entry>
+   <title>빗물구름태풍태양 REMIXES (2015)</title>
+   <link href="http://localhost:4000/production/2015/11/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-remixes/"/>
+   <updated>2015-11-23T17:21:10+09:00</updated>
+   <id>http://localhost:4000/production/2015/11/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-remixes</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2015/12/rcts-remixes.jpg&quot; alt=&quot;featured image&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;빗물구름태풍태양 (Bacty Remix)&lt;/li&gt;
+  &lt;li&gt;Wind Blow (Kim Kate Rework)&lt;/li&gt;
+  &lt;li&gt;무덤 (커널스트립 - Kernelstrip Remix)&lt;/li&gt;
+  &lt;li&gt;더 많은 이야기 (Popular Computer Pop Remix)&lt;/li&gt;
+  &lt;li&gt;더 많은 이야기 (Popular Computer Lost Found Remix)&lt;/li&gt;
+  &lt;li&gt;더 많은 이야기 (키라라 Remix)&lt;/li&gt;
+  &lt;li&gt;그즈음 (feat. 이이언) (싱어송라이터 새벽 Remix)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Out on [YOUNG,GIFTED&amp;amp;WACK Records], 12 December 2015&lt;/strong&gt;&lt;/p&gt;
+
+&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/233447918&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;h2 id=&quot;음반-소개&quot;&gt;음반 소개&lt;/h2&gt;
+
+&lt;p&gt;11월 23일 사람12사람의 &lt;a href=&quot;/production/2014/01/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release/&quot;&gt;빗물구름태풍태양&lt;/a&gt;을 여섯 음악가가 일곱 트랙으로 리믹스한 &lt;a href=&quot;/production/2015/12/12/saram12saram-raindrop-cloud-typhoon-and-the-sun-remixes/&quot;&gt;빗물구름태풍태양(Remixes)&lt;/a&gt; 앨범이 디지털(국내/해외)로 새 앨범 &lt;a href=&quot;/production/2015/12/12/saram12saram-feels-too-letter/&quot;&gt;feels too letter&lt;/a&gt;가 디지털(해외), CD로 발매됩니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;구매처&quot;&gt;구매처&lt;/h2&gt;
+&lt;h3 id=&quot;digital&quot;&gt;DIGITAL&lt;/h3&gt;
+
+&lt;ul class=&quot;actions&quot;&gt;
+    &lt;li&gt;&lt;a href=&quot;http://www.melon.com/album/detail.htm?albumId=2652196&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;멜론&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://www.genie.co.kr/Detail/f_Album_Info.asp?axnm=80747286&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;지니&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://music.naver.com/album/index.nhn?albumId=599826&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;네이버&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://music.bugs.co.kr/album/20009017?wl_ref=list_tr_11&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;벅스뮤직&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://www.mnet.com/album/511206&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;엠넷&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;https://younggiftedwack.bandcamp.com/album/raindrop-cloud-typhoon-and-the-sun-remixes&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;bandcamp&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;https://itunes.apple.com/us/album/raindrop-cloud-typhoon-sun/id1061412929&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;iTunes&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;https://open.spotify.com/album/5nt2or2ebPMf7MITxmgu1x&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;Spotify&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;http://www.deezer.com/album/11769390&quot; target=&quot;_blank&quot; class=&quot;button&quot;&gt;Deezer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+</content>
+ </entry><entry>
+   <title>_오후만 있던 일요일 (2016 SS)</title>
+   <link href="http://localhost:4000/runway/2015/10/18/leebyungwoo-x-eunchurn-sunday-afternoon-heich-es-heich-collection/"/>
+   <updated>2015-10-18T17:21:10+09:00</updated>
+   <id>http://localhost:4000/runway/2015/10/18/leebyungwoo-x-eunchurn-sunday-afternoon-heich-es-heich-collection</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/228898786&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;01_	지난 토요일 밤은 친구들과 늦게까지 술자리가 이어졌다.
+여전히 우리는 웃고 떠들고 다짐을 했고, 아름다운 그날의 밤을 만끽했다.
+생각하는데로 이루어질 것 같은 찰나의 새벽이 지나고,
+토이 노래의 가사처럼 아무런 약속도 없는 일요일 오후 늦게 잠에서 깬 나는,
+이유도 없이 괜히 서글퍼졌다.
+지금까지 반복됐던 일상과 어젯밤의 용기가 충돌한다. 항상 그렇듯 일요일 오후는
+생각이 많아진다.
+&lt;br /&gt;&lt;br /&gt;
+02_	이번 컬렉션 테마는 ‘VS (versus)’ 입니다.
+&lt;br /&gt;&lt;br /&gt;
+03_	포멀과 캐주얼, 아이와 어른, 클래식과 모던, 남자와 여자라는
+상반되는 대상들의 대결과 충돌을 일요일 오후라는 나른한 시간속에 담아내고자 합니다.
+&lt;br /&gt;&lt;br /&gt;
+04_	10월18일 오후 4시 DDP S2에서 시작합니다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2015/10/artworks-000133177271-fc6nvv-t500x500.jpg&quot; alt=&quot;featured image&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;heich-es-heich-_-spring-summer-2016&quot;&gt;HEICH ES HEICH _ SPRING SUMMER 2016&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;SEOUL FASHION WEEK&lt;/li&gt;
+  &lt;li&gt;2015.10.18 16:00 at DDP S2 Seoul, Korea&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;track--lee-byung-woo-x-eunchurn---sunday-afternoon&quot;&gt;TRACK : LEE BYUNG-WOO x EUNCHURN - SUNDAY AFTERNOON&lt;/h3&gt;
+
+&lt;p&gt;#CREDIT&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;original track by 이병우 (track from 《어떤날 I, 1986》)&lt;/li&gt;
+  &lt;li&gt;rearranged and remix produced by eunchurn (SARAM12SARAM)&lt;/li&gt;
+  &lt;li&gt;electric bass by toby (LOVEXSTEREO)&lt;/li&gt;
+  &lt;li&gt;executive produced by Haan Sang-Hyuk (HEICH ES HEICH) heich.kr/&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/DhkkjakNuBY?rel=0&amp;amp;showinfo=0&quot; frameborder=&quot;0&quot; allow=&quot;autoplay; encrypted-media&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>_당신의 평화는 연약하다 (2015-2016 AW)</title>
+   <link href="http://localhost:4000/runway/2015/04/16/your-peace-is-fragile-remember0416-heich-es-heich/"/>
+   <updated>2015-04-16T17:21:10+09:00</updated>
+   <id>http://localhost:4000/runway/2015/04/16/your-peace-is-fragile-remember0416-heich-es-heich</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/201058305&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;original song written by Ju Yoonha _당신의 평화는 연약하다&lt;/li&gt;
+  &lt;li&gt;re-worked by eunchurn&lt;/li&gt;
+  &lt;li&gt;music for HEICH ES HEICH A/W 2015/2016 Collection &lt;strong&gt;_INVALID TAILORING&lt;/strong&gt; and music for &lt;a href=&quot;https://soundcloud.com/search?q=REMEMBER0416&quot;&gt;#REMEMBER0416&lt;/a&gt;
+&lt;img src=&quot;/public/images/2015/04/artworks-000113567028-0cz9p9-t500x500.jpg&quot; alt=&quot;featured image&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/RXh5Wxi2nB8?rel=0&amp;amp;showinfo=0&quot; frameborder=&quot;0&quot; allow=&quot;autoplay; encrypted-media&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>_JE T'AIME MOI NON PLUS (2014-2015 AW)</title>
+   <link href="http://localhost:4000/runway/2014/03/26/je-taime-moi-non-plus-heich-es-heich/"/>
+   <updated>2014-03-27T02:21:10+09:00</updated>
+   <id>http://localhost:4000/runway/2014/03/26/je-taime-moi-non-plus-heich-es-heich</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/141514159&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;h3 id=&quot;heich-es-heich-_-autumn-winter-2014---2015&quot;&gt;HEICH ES HEICH _ AUTUMN WINTER 2014 - 2015&lt;/h3&gt;
+&lt;h3 id=&quot;seoul-fashion-week&quot;&gt;SEOUL FASHION WEEK&lt;/h3&gt;
+&lt;h3 id=&quot;20140326-1330pm-at-ddp&quot;&gt;2014.03.26 13:30PM at DDP&lt;/h3&gt;
+&lt;p&gt;heich.kr/?p=644&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2014/03/artworks-000074662449-g07n65-t500x500.jpg&quot; alt=&quot;artworks-000074662449-g07n65-t500x500.jpg&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;track--saram12saram-_-je-taime-moi-non-plus-_-heich-es-heich-_-autumn-winter-2014---2015&quot;&gt;TRACK : SARAM12SARAM _ JE T’AIME MOI NON PLUS _ HEICH ES HEICH _ AUTUMN WINTER 2014 - 2015&lt;/h3&gt;
+&lt;p&gt;RELEASE EDITION&lt;/p&gt;
+
+&lt;h3 id=&quot;credit&quot;&gt;CREDIT&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;original track by &lt;em&gt;serge gainsbourg&lt;/em&gt; (track from the album &lt;strong&gt;‘Jane Birkin/Serge Gainsbourg’&lt;/strong&gt; (1969) 7’’ single)&lt;/li&gt;
+  &lt;li&gt;executive produced by &lt;em&gt;haan sanghyuk&lt;/em&gt; &lt;a href=&quot;http://heich.kr/&quot;&gt;HEICH ES HEICH&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;rearranged and remix produced by &lt;em&gt;eunchurn&lt;/em&gt; &lt;a href=&quot;https://saram12saram.kr&quot;&gt;SARAM12SARAM&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;rearranged song and featured vocal by &lt;em&gt;zieum&lt;/em&gt; &lt;a href=&quot;https://saram12saram.kr&quot;&gt;SARAM12SARAM&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;additional arrangement and pluck synthesizer by &lt;em&gt;cha hyosun&lt;/em&gt; &lt;a href=&quot;https://trampauline.wordpress.com/&quot;&gt;TRAMPAULINE&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;sound sampled from the album &lt;strong&gt;‘Jane Birkin/Serge Gainsbourg’&lt;/strong&gt; (1969) , &lt;strong&gt;‘Histoire de Melody Nelson’&lt;/strong&gt; (1971) and &lt;strong&gt;‘Symphony of The Planets’&lt;/strong&gt; (1992)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/MF40OFD6PGQ?rel=0&amp;amp;showinfo=0&quot; frameborder=&quot;0&quot; allow=&quot;autoplay; encrypted-media&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>빗물구름태풍태양 (2013) EP</title>
+   <link href="http://localhost:4000/production/2014/01/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release/"/>
+   <updated>2014-01-24T02:21:10+09:00</updated>
+   <id>http://localhost:4000/production/2014/01/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2012/12/COVER2_600x600.png&quot; alt=&quot;COVER2_600x600&quot; /&gt;
+Out on YOUNG,GIFTED&amp;amp;WACK Records, 12 December 2013&lt;/p&gt;
+&lt;p class=&quot;message&quot;&gt;
+시간을 소리로 채우는 일은 어쩌면 과거보다 쉬운 일이 되어버렸는지도 모른다. 그러나 ‘무엇으로 얼마나 잘 채우는가’와는 여전히 별개의 이야기이고 여전한 과제이기도 하다. 사람12사람의 EP는 근래 보기 드물게 ’잘 채워진’ 앨범이다. 음울함과 수수께끼같은 온기가 차갑고 영민한 프로그래밍과 빈틈없이 공명한다.&lt;/p&gt;
+&lt;p&gt;-&lt;strong&gt;이준오 (캐스커Casker)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p class=&quot;message&quot;&gt;
+사람12사람의 음악은 느리고 어둡고 매력적이다. 지음의 보컬 음색엔 귀를 잡아끄는 독특한 오리지널리티가 있고, 은천의 촘촘하고 섬세한 편곡엔 오래 공을 들인 작업에서만 느껴지는 우아한 견고함이 있다.&lt;/p&gt;
+&lt;p&gt;-&lt;strong&gt;이이언 (못MOT)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p class=&quot;message&quot;&gt;
+당대 일렉트로 팝의 지향점은 도발적인 멜로디와 전자악기의 과시적인 ‘댐핑’이 아니다. 덩어리진 질감과 또 다른 덩어리진 질감의 섬세한 만남에 가깝다. 퓨리티 링, 처치스, 그라임스, 멀게는 M83의 음악을 구분 짓는 건 보컬과 곡의 질감, 또는 악기와 악기의 질감이 만나는 방식이다. 이들의 음악이 멜로디가 중심이 아닌 채로 일렉트로 ‘팝’이라 불리는 것은 그래서 흥미롭다. 구닥다리 이름 안에서 꽤 새로운 흐름을 형성한 이 움직임이 음악 신을 한바탕 휩쓸고 난 뒤, 사람12사람은 그 느슨한 틀 안에서 예상치 못한 낯선 질감을 길어 올렸다. 꽁꽁 언 멜로디를 해동시키는 듯한 보컬은 입술이 떨어지는 찰나의 소리마저 악착같이 채집해 또렷한 제 공간을 형성한다. 그리고 좀 멀리 떨어진, 역시나 덩어리로 공고한 악기들과 절정부 즈음에서 조우했다 다시 멀어져 제 갈 길을 간다. 서로의 소리가 섞이고 떨어지는, 그리고 그 광경을 기다리는 지독하게 ‘간지러운’ 순간은 비할 데 없이 극적이라 귀를 곤두세우게 한다. ‘팝’이 청자의 집중력을 얼마나 이끌어내느냐를 가장 큰 미덕으로 삼는다면, 그런 특성이 가장 잘 드러난 ‘더 많은 이야기’를 비롯한 [빗물구름태풍태양EP]야 말로 지금의 가장 이상적인 팝 음반이 아닐는지. 즉, 사람12사람은 질감을 주조하는 데 그치지 않고 질감으로 드라마를 만들었다. 다음을 안보고는 못 배기는 식의 흐름이 한 곡 안에 있어 줄곧 물고기처럼 보컬의 뒤꽁무니를 따라가게 되는 것이다. 그 결을 그저 “침잠하는”, “공기 같은”, “부유하는”처럼 한 가지 표현으로 규정짓기엔 아쉽다. 살결처럼 야하게 들리다가, 때로 스산하게 외로우며, 도무지 서울을 떠올리기 어려워 어디에서 온 것인지 궁금해지는 음악. 그들의 노랫말처럼 빗물도, 구름도, 태풍도, 태양도 될 수 있을 것 같은 음악이라서다.&lt;/p&gt;
+&lt;p&gt;-&lt;strong&gt;유지성 ([GQ KOREA] 피처 에디터)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;음반-소개&quot;&gt;음반 소개&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;빗물구름태풍태양&amp;gt;&lt;/code&gt; EP는 사람12사람의 첫 음반이다. 2012년 처음 활동을 시작한 2인조 일렉트로닉 밴드 사람12사람은, DJ이자 프로듀서로 오래간 활동하며 유수의 리믹스 작업과 MVIO 컬렉션의 음악감독, 신스팝 밴드 트램폴린의 프로듀스 등을 담당해온 은천과, 보컬리스트이자 송라이터인 지음으로 구성돼 있다. 그간 라이브를 통해 깊은 인상을 남기며 많은 팬들의 기대를 모아온 이 듀오가, 기나긴 산고 끝에 여섯 곡의 스튜디오 레코딩을 처음으로 내놓게 되었다.
+추상적인 몰핑 효과와 같은 리듬이 인상적인 첫 트랙 ‘빗물구름태풍태양’과 이어지는 ‘Wind Blow’는 이 음반의 한 가지 특징을 잘 보여준다. 사운드의 변화 속에 긴 호흡으로 짜여진 이 두 곡은, 하염 없이 이야기하는 듯한 보컬 뒤에서 묵직한 저음이 서서히 긴장감을 쌓아 올린다. 하나하나의 소리가 결정적인 순간에 치고 들어오고, 다시 빠져나간 뒤에도 강한 존재감을 드러내며 듣는 이의 마음을 쥐고 흔든다.
+그 반대편에서 이 음반의 정서적인 특징을 대변한다고 할 만한 곡은 ‘무덤’이다. 담담한 마음과 무덤이란 두 가지의 심상을 엮은 이 곡은, 불안과 고독을 말하는 가사의 싸늘한 아이러니를 잘 보여준다. 애써 가라앉히려 해도 감출 수 없는 불안을 말하듯 금속성의 저음이 공간을 헤집는 동안, 부서질 듯 아슬아슬한 보컬은 “그저 담담해야지”라 노래한다. 거기에, 홀로 ‘무덤덤한’ 비트가 무심한 듯 흐르며 가슴 서늘함을 더한다.
+이 음반은 4번 트랙인 ‘더 많은 이야기’에 이르러서야 잠시 마음 놓고 비트를 즐길 수 있게 해준다. 어쩌면 은천의 기존 작업을 보아온 이들에게 가장 익숙한 사운드일지도 모를 이 곡은, 당당하게 흐르는 탄탄한 비트 위로 찬란한 신스가 한껏 펼쳐진다. 이어서, 매혹적으로 일그러진 불협음이 인상적인 ‘그 즈음’은 일렉트로닉 뮤지션 이이언이 보컬리스트 지음과 속삭임의 앙상블을 이루면서 여운을 남긴다.
+&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;빗물구름태풍태양&amp;gt;&lt;/code&gt;의 무겁고도 싸늘한 신스 사운드는 시종일관 어둡지만, 때로는 위협적으로, 때로는 찬란하게, 마치 날씨처럼 변화하고 꿈틀거리며 공간을 뒤덮는다. 시간의 흐름을 짚는 비트는 대지처럼 홀로 단단하지만, 때때로 빗물과 바람에 쓸리기도 하며 자리를 지킨다. 그 속에 녹아든 공기처럼 부유하는 보컬은 언제라도 스러질 듯 위태로운 목소리로 암울한 은유들을 노래하지만, 그럼에도 처연함을 잃지 않는다.
+이 음반의 정서적 미덕은 바로 그곳에 있다. 큰 규모의 어두운 사운드와 공기 같은 보컬이 이뤄내는 슬픈 음악이 강렬하게 흐르는데도, 여섯 트랙을 관통하며 어둡게 빛나는 것은 감정에 휩쓸려 곤두박질치거나 무너져내리지 않는 우아함이다. 오랜 시간 동안 세심하게 주조해 쌓아 올린 결과물이란 점에 수긍하게 되는 결과물이다. 또한 반짝이 천이란 인공적인 소재를 이용해 은하수 같은 모습을 만들어낸 지음의 아트웍과도 맞아 떨어진다. 두 명의 사람이 빚어낸 아름다운 소우주의 풍경은 빈틈 없는 설득력으로 청자를 사로잡는 것이다.
+크리스탈 캐슬스(Christal Castles), 투 도어 시네마 클럽(Two Door Cinema Club), 쉿 로봇(Shit Robot) 등과 작업해온 사이먼 데이비(Simon Davey)가 마스터링을 담당했으며, 바이닐(LP)에는 보너스 트랙이 수록된다. 공연 기획과 레이블, 미디어로 활발하게 활동하고 있는 영기획(YOUNG,GIFTED&amp;amp;WACK RECORDS)에서 유통과 홍보를 담당한다.&lt;/p&gt;
+
+&lt;p&gt;- &lt;strong&gt;미묘 (음악가, &lt;a href=&quot;http://idology.kr/&quot;&gt;IDOLOGY 에디터&lt;/a&gt;)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;message&quot;&gt;
+&lt;div id=&quot;backvinyl_250&quot; class=&quot;playoff&quot;&gt;&lt;div class=&quot;vinyl_250&quot; id=&quot;vinyl1&quot;&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/raincloudtyphoonandsun&quot;&gt;t1&lt;/a&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/wind_blow&quot;&gt;t2&lt;/a&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/the-grave&quot;&gt;t3&lt;/a&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/more-story&quot;&gt;t4&lt;/a&gt;&lt;/div&gt;
+
+&lt;div class=&quot;sc-player&quot;&gt;
+&lt;a href=&quot;https://soundcloud.com/saram12saram/those-days&quot;&gt;t5&lt;/a&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;all music and words written by &lt;strong&gt;zieum&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;vocal &amp;amp; acoustic guitar by &lt;strong&gt;zieum&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;all tracks arranged, recorded and mixed by &lt;strong&gt;eunchurn&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;featured vocal on Those Days by &lt;strong&gt;eAeon&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;electric bass guitar on Wind Blow and More Story by &lt;strong&gt;Toby (lovexstereo)&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;produced by &lt;strong&gt;eunchurn&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;mastered by &lt;strong&gt;Simon Davey&lt;/strong&gt; at the exchange mastering studios, London&lt;/li&gt;
+  &lt;li&gt;artwork, photography, design &amp;amp; art direction by &lt;strong&gt;zieum&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;manufactured by &lt;strong&gt;SARAM12SARAM&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;distributed by YOUNG,GIFTED&amp;amp;WACK&lt;/li&gt;
+  &lt;li&gt;YWGC-004&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p class=&quot;message&quot;&gt;
+ⓒ 2013 The copyright in this sound recording is owned by SARAM12SARAM
+This label copy information is the subject of copyright protection. All right reserved.
+ⓒ 2013 SARAM12SARAM&lt;/p&gt;
+
+&lt;h3 id=&quot;buy-vinyl&quot;&gt;BUY VINYL&lt;/h3&gt;
+&lt;h4 id=&quot;onoffline&quot;&gt;on&amp;amp;offline&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;http://saram12saram.audiolog.kr/raindrop-cloud-typhoon-and-the-sun&quot;&gt;AUDIOLOG.KR&lt;/a&gt; | &lt;a href=&quot;https://www.purplerecord.com/product.htm?mode=goods_view&amp;amp;goods_id=224516&quot;&gt;PURPLE RECORDS&lt;/a&gt; | &lt;a href=&quot;http://hyangmusic.com/View.php?cate_code=KINR&amp;amp;code=2995&quot;&gt;HYANG MUSIC&lt;/a&gt; | &lt;a href=&quot;http://your-mind.com/front/php/product.php?product_no=2181&amp;quot;&quot;&gt;YOURMIND&lt;/a&gt; | &lt;a href=&quot;http://mintshop.www156.freesell.co.kr/shop/shopdetail.html?branduid=188330&amp;amp;special=3&quot;&gt;MINT SHOP&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;offline-only&quot;&gt;offline only&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;http://gimbabrecords.blogspot.kr/&quot;&gt;김밥레코드&lt;/a&gt; | &lt;a href=&quot;https://plus.google.com/107184089479554206414/about?gl=kr&amp;amp;hl=ko&quot;&gt;한잔의 룰루랄라&lt;/a&gt; | &lt;a href=&quot;http://www.seterecords.com/shop/main/index.php&quot;&gt;SETE RECORDS&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;buy-cd&quot;&gt;BUY CD&lt;/h3&gt;
+&lt;h4 id=&quot;onoffline-1&quot;&gt;on&amp;amp;offline&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.purplerecord.com/product.htm?mode=goods_view&amp;amp;goods_id=222440&quot;&gt;PURPLE RECORDS&lt;/a&gt; | &lt;a href=&quot;http://hyangmusic.com/View.php?cate_code=KINR&amp;amp;code=2913&amp;amp;album_mode=music&quot;&gt;HYANG MUSIC&lt;/a&gt; | &lt;a href=&quot;http://your-mind.com/front/php/product.php?product_no=2039&amp;amp;main_cate_no=54&amp;amp;display_group=1&quot;&gt;YOURMIND&lt;/a&gt; | &lt;a href=&quot;http://mintshop.www156.freesell.co.kr/shop/shopdetail.html?branduid=184471&amp;amp;special=3&quot;&gt; MIND SHOP&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&quot;offline-only-1&quot;&gt;offline only&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://plus.google.com/107184089479554206414/about?gl=kr&amp;amp;hl=ko&quot;&gt;한잔의 룰루랄라&lt;/a&gt; | &lt;a href=&quot;https://maps.google.co.kr/maps?q=KT%26G%EC%83%81%EC%83%81%EB%A7%88%EB%8B%B9&amp;amp;ie=UTF8&amp;amp;ll=37.550925,126.921142&amp;amp;spn=0.024905,0.038881&amp;amp;fb=1&amp;amp;gl=kr&amp;amp;hq=%EC%83%81%EC%83%81%EB%A7%88%EB%8B%B9+%EB%A0%88%EC%9D%B4%EB%B8%94%EB%A7%88%EC%BC%93&amp;amp;cid=3935593571145011564&amp;amp;t=h&amp;amp;z=15&amp;amp;iwloc=A&quot;&gt;LABEL MARKET&lt;/a&gt; | &lt;a href=&quot;https://maps.google.co.kr/maps?q=%EC%84%9C%EA%B5%90%EB%8F%99+404-26,+Seoul,+Korea+121-210&amp;amp;hl=en&amp;amp;ie=UTF8&amp;amp;sll=35.81905,127.8733&amp;amp;sspn=13.028646,19.907227&amp;amp;t=h&amp;amp;hnear=404-26+Seogyo-dong,+Mapo-gu,+Seoul+(18+Eoulmadang-ro+5-gil)&amp;amp;z=15&quot;&gt;B-Hind&lt;/a&gt; | &lt;a href=&quot;https://maps.google.co.kr/maps?q=%EC%84%9C%EC%9A%B8%EC%8B%9C+%EA%B4%80%EC%95%85%EA%B5%AC+%EB%82%99%EC%84%B1%EB%8C%80%EB%A1%9C+14&amp;amp;hl=en&amp;amp;ie=UTF8&amp;amp;sll=37.549264,126.919647&amp;amp;sspn=0.024906,0.038881&amp;amp;t=h&amp;amp;hnear=14+Nakseongdae-ro,+Gwanak-gu,+Seoul+(1625-28+Bongcheon-dong)&amp;amp;z=15&quot;&gt;SOUNDMIND&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;buy-digital&quot;&gt;BUY DIGITAL&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://saram12saram.audiolog.kr/raindrop-cloud-typhoon-and-the-sun&quot;&gt;AUDIOLOG.KR&lt;/a&gt; | &lt;a href=&quot;http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewAlbum?id=776241409&quot;&gt;iTunes&lt;/a&gt; | &lt;a href=&quot;http://www.amazon.com/Raindrop-Cloud-Typhoon-Sun-Saram12saram/dp/B00H5VZBIS/ref=sr_1_1?s=dmusic&amp;amp;ie=UTF8&amp;amp;sr=1-1&amp;amp;keywords=saram12saram&quot;&gt;Amazon&lt;/a&gt; | &lt;a href=&quot;http://spoti.fi/IH1o6q&quot;&gt;Spotify&lt;/a&gt; | &lt;a href=&quot;http://www.deezer.com/album/7242140&quot;&gt;Deezer&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry><entry>
+   <title>Yumi Katsura x Ji Haye Haute Couture 2013</title>
+   <link href="http://localhost:4000/runway/2013/01/24/yumi-katsura-x-ji-haye-haute-couture-2013/"/>
+   <updated>2013-01-24T17:21:10+09:00</updated>
+   <id>http://localhost:4000/runway/2013/01/24/yumi-katsura-x-ji-haye-haute-couture-2013</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; allow=&quot;autoplay&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/79151342&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2013/01/ykjh01.png&quot; alt=&quot;1&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2013/01/ykjh02.png&quot; alt=&quot;2&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2013/01/ykjh03.png&quot; alt=&quot;3&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2013/01/ykjh04.png&quot; alt=&quot;4&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;‘Yumi Katsura x Ji Haye’ Haute Couture 2013&lt;br /&gt;
+music by eunchurn&lt;/p&gt;
+
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/148250574&quot; width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/148251096&quot; width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>Mimyo - Floating Ones EP (2012)</title>
+   <link href="http://localhost:4000/production/2012/06/24/mimyo-floating-ones-ep-2012/"/>
+   <updated>2012-06-24T09:41:52+09:00</updated>
+   <id>http://localhost:4000/production/2012/06/24/mimyo-floating-ones-ep-2012</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/49863669&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2012/06/cover500.jpg&quot; alt=&quot;cover500&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;mimyo---floating-ones&quot;&gt;Mimyo - Floating Ones&lt;/h3&gt;
+
+&lt;p&gt;2012.06.13, Curly Sol Records (CS-003)&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;The Way I Like to Picture You 4:14&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Left Words (feat. Big Baby Driver) 4:40&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Snapshots 4:26&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Idealized Memories 4:04&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Inavouable 1:58&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Synth Pop (feat. Kkobbi Kim) 5:54&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Left Words [Byul.org Remix] 4:09&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Synth Pop [Eunchurn Remix] 6:43&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;All music and words by Mimyo&lt;/li&gt;
+  &lt;li&gt;Guitars on &lt;em&gt;The Way I Like to Picture You&lt;/em&gt; by Mookou&lt;/li&gt;
+  &lt;li&gt;Vocals on &lt;em&gt;Left Words&lt;/em&gt; by Big Baby Driver, recorded by Mingyu Kim at Electric Muse Studio&lt;/li&gt;
+  &lt;li&gt;Voices on &lt;em&gt;Synth Pop&lt;/em&gt; by Kkobbi Kim&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Left Words [Byul.org Remix]&lt;/em&gt; remixed by Byul.org&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Synth Pop [Eunchurn Remix]&lt;/em&gt; remixed by Eunchurn&lt;/li&gt;
+  &lt;li&gt;Mastered by LOBOTOMY at Càmera di Silenci&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Artwork and design by Jinhee Cho&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;라이너노트&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;어딘가에 부유하는 기억과 소리.&lt;/strong&gt;&lt;/p&gt;
+&lt;p class=&quot;message&quot;&gt;
+
+미묘의 새 EP “Floating Ones”은 총 6 개의 트랙과 두 개의 리믹스 트랙으로 구성된 앨범입니다. 미묘 는 아티스트 김미주와 함께 작업한 “Le Devenir”, 여러 국제영화제에서 상영한 바 있는 Lu Sheng 의 “Here, There”의 사운드트랙, 2011 년 보아BoA 의 트리뷰트 프로젝트, 그리고 트램폴린Trampauline의 앨범에 리믹스로 참여하는 등 일렉트로닉 팬들에게는 낯설지 않은 이름이긴 하지만, 개인 작업으로서는 이번 앨범이 첫 결과물이 되는 셈입니다. 그렇기에 이 앨범에 이르러서야 미묘는 본격적으로 아티스트로서의 자기 자신을 드러내고 있다고 할 수 있지요.
+
+이 앨범은 가급적 처음부터 끝까지 한번에 감상하길 권하는데, 앨범 전체의 맥락을 미리 정해두고 전체적인 흐름을 염두에 두며 각각의 곡을 조합하는 특유의 작업 방식 때문입니다. 즉, 앨범에 수록된 여섯 곡이 유기적으로 연결되며 제 자리에서 역할하게끔 면밀하게 짜여진 채로 곡이 쓰여지고, 믹싱되었다는 말이지요. Pet Shop Boys 의 가사에서 제목을 따 온 첫 트랙, ‘The Way I Like to Picture You’이 지난 여러 작업보다 좀 더 미니멀하고 거친 소리를 들려주며 이 앨범의 성격을 규정한다면, 바로 다음에 이어지는 ‘Left Words’는 마치 가라앉은 기억을 부드럽게 환기시키듯, 앨범 전체의 중심을 잡습니다. 그리고 이어지는 세 트랙이 각자 제 위치에서 ‘소리’를 듣는 것에 대한 재미를 선보이다가, 마지막 트랙인 ‘Synth Pop’에 이르면, ‘pop’의 방법론을 통해 앞의 다섯 트랙을 통해 쌓아올린 것들을 훅하고 공중에 날려버리게 됩니다.
+
+25분에 달하는 이 한 편의 밀도있는 드라마가 다루고 있는 내용은 주로 기억과 기록에 대한 메타포입니다. 차마 내뱉지 못했던 말들이 어느 가상의 도서관에 차곡차곡 보관되어 있을 것이라는 공상을 소재로 한 ‘Left Words’를 중심으로 ‘The Way I Like to Picture You’와 ‘Snapshots’에서는 기록이라는 방법으로 남겨진 기억에 대한 관심을 드러내고, 이어지는 트랙에서는 ‘이상화된 기억Idealized Memories’과 ‘고백할 수 없는Inavouable’ 것 사이의 간극에 대해 풀어놓습니다. 그렇게 기억이라는 희미한 공간 속에서 ‘부유하는 것들Floating Ones’을 일련의 순서로 붙들어 놓아 마치 한 편의 개인적인 사운드트랙을 만들어 놓은 것이지요.
+
+일렉트로닉 팝음악의 최신 경향이 점점 자극적인 소리를 만들며 원초적인 감성을 건드리도록 흘러가고 있다면, 이 앨범은 그것과는 조금 동떨어진 곳에 위치하고 있습니다. 오히려 2000년대 초중반에 자주 들을 수 있었던 앰비언트와 IDM 계열의 전자음악에 가깝다고 할 수 있지요. 그러나 미묘는 계속 해서 일렉트로-어쿠스틱의 지적인 미니멀함을 조심스럽게 가져오거나, 딜레이가 아닌 방식으로 소리를 중첩시켜보려고 하는 시도를 계속하면서 대부분의 ‘느린’ IDM과는 다른 결과를 꾸준히 유도합니다. 거기에 ‘The Way I Like to Picture You’에서 반복되는 기타 리프를 연주하는 무코와 ‘Left Words’에서 빅베이비드라이버의 부유하는 목소리, 그리고 ‘Synth Pop’에서 장난을 걸듯 툭툭 내뱉는 김꽃비의 목소리를 결합시키며 자신의 결과물 속에 들어오는 이질적인 요소들을 실험하듯 흥미롭게 바라봅니다.
+
+EP 라고 하기에는 조금 길고 정규 앨범이라고 하기에는 조금 짧은 이 결과물은 미묘가 계속해서 기계를 조작하다가 특별한 어느 순간 멈춰버린 것입니다. 그 순간의 기준이 아티스트의 내밀한 기억이더라도, 그가 더 이상 옮기지 못한 소리와 기억은 아마 이 앨범을 듣게 될 리스너들의 도서관에서 천천히 부유하게 될 것입니다. 아스라한 기억에 대한 편안한 자유 연상을 가능하게 하면서, 미묘라는 아티스트가 현재 파리에서 접하고 있는 순간의 기억을 부드럽게 공유하는, 섬세하고 사려깊은 앨범입니다.
+&lt;/p&gt;
+
+&lt;p&gt;글 &lt;strong&gt;함영준&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;CD 구매처&lt;/strong&gt;  :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;향뮤직 : &lt;a href=&quot;http://hyangmusic.com/View.php?cate_code=KINR&amp;amp;code=2299&amp;amp;album_mode=music&quot;&gt;http://hyangmusic.com&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;유어마인드 : &lt;a href=&quot;http://your-mind.com/&quot;&gt;http://your-mind.com/&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;컬리솔 까페 : &lt;a href=&quot;http://curlysol.com/&quot;&gt;http://curlysol.com&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;음원 구매처&lt;/strong&gt; :&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;밴드캠프 :&lt;a href=&quot;http://mimyo.bandcamp.com/album/floating-ones&quot;&gt;http://mimyo.bandcamp.com&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Mimyo feat. Big Baby Driver - Left Words&lt;/p&gt;
+
+&lt;p&gt;특별히 제작된 Left Words 영상은 블로그(&lt;a href=&quot;http://mimyo.fr/?p=153&quot;&gt;http://mimyo.fr/?p=153&lt;/a&gt;) 참여를 통해 이루어졌습니다. 저도 참여를 할껄 하는 아쉬움이 있네요. 저 또한 삼킨말들은 어느 도서관에 보관되어 있을것 같습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://vimeo.com/43223298&quot;&gt;Mimyo - Left Words (feat. Big Baby Driver)&lt;/a&gt; from &lt;a href=&quot;http://vimeo.com/mimyo&quot;&gt;mimyo&lt;/a&gt; on &lt;a href=&quot;http://vimeo.com&quot;&gt;Vimeo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Mimyo feat. Kkobbi Kim - Synth Pop (eunchurn remix)&lt;/p&gt;
+
+&lt;p&gt;제가 참여한 Synth Pop 리믹스는 너무 순식간에 작업을 한것이라 약간 민망스럽기도 한 트랙입니다. 좋아하는 아티스트님의 EP수록이 되어서 영광일 뿐만 아니라 좋아하는 BBD(Big Baby Driver), 모임별, 그리고 김꽃비님이 참여한 음반이라서 더 의미가 있네요. 그리고 미묘, 꽃비, 은천은 서로 친합니다.&lt;/p&gt;
+</content>
+ </entry><entry>
+   <title>Paul & Alice (2013 SS)</title>
+   <link href="http://localhost:4000/production/2012/01/24/paul-and-alice-fashion-film-2012/"/>
+   <updated>2012-01-24T17:21:10+09:00</updated>
+   <id>http://localhost:4000/production/2012/01/24/paul-and-alice-fashion-film-2012</id>
+   <content type="html">&lt;p&gt;Paul &amp;amp; Alice (2013 SS)&lt;/p&gt;
+
+&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; allow=&quot;autoplay&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/79152428&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;music by eunchurn&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2012/01/paul001.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2012/01/paul002.jpg&quot; alt=&quot;2&quot; /&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2012/01/paul003.jpg&quot; alt=&quot;3&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2012/01/paul005.jpg&quot; alt=&quot;4&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2012/01/paul006.jpg&quot; alt=&quot;5&quot; /&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;&lt;img src=&quot;/public/images/2012/01/paul007.jpg&quot; alt=&quot;6&quot; /&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/237631363&quot; width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>_P L A S T I C M A N (2012 SS)</title>
+   <link href="http://localhost:4000/runway/2011/10/20/mvio_haan-sang-hyuk_-p-l-a-s-t-i-c-m-a-n-spring-summer-2012/"/>
+   <updated>2011-10-20T14:51:39+09:00</updated>
+   <id>http://localhost:4000/runway/2011/10/20/mvio_haan-sang-hyuk_-p-l-a-s-t-i-c-m-a-n-spring-summer-2012</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; allow=&quot;autoplay&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/26025120&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;MVIO_HAAN SANG HYUK_ ‘P L A S T I C M A N’&lt;br /&gt;
+SPRING SUMMER 2012&lt;br /&gt;
+MVIO INSTITUTE OF MEDICINE AND SCIENCE&lt;br /&gt;
+11am, Fri, October 21, 2011 at SETEC&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2011/10/MVIO_PLASTICMAN_SS2011_Collectiion.jpg&quot; alt=&quot;MVIO_PLASTICMAN_SS2011_Collectiion.jpg&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;original track by deli spice&lt;/li&gt;
+  &lt;li&gt;all track arrangement &amp;amp; remix produced by eunchurn&lt;/li&gt;
+  &lt;li&gt;additional synth by cha hyosun (trampauline)&lt;/li&gt;
+  &lt;li&gt;guitar by kim naeun (trampauline)&lt;/li&gt;
+  &lt;li&gt;piano arrangement by cho!ong&lt;/li&gt;
+  &lt;li&gt;soundscape recorded by oh yujin at KyungHee University Medical Center&lt;/li&gt;
+  &lt;li&gt;executively produced by haan sang hyuk&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/34571119&quot; width=&quot;640&quot; height=&quot;361&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>Bliss (Digital Single, 2011)</title>
+   <link href="http://localhost:4000/production/2011/08/15/leetzsche-bliss-digital-single-2011/"/>
+   <updated>2011-08-16T03:40:02+09:00</updated>
+   <id>http://localhost:4000/production/2011/08/15/leetzsche-bliss-digital-single-2011</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2011/08/bliss_cover_s.jpg&quot; alt=&quot;bliss_cover_s-300x300.jpg&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Bliss (Emerald Castle Remix)&lt;/strong&gt;
+&lt;em&gt;preview&lt;/em&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Bliss (Azian P Remix)&lt;/li&gt;
+  &lt;li&gt;Bliss (Original)&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;비밀의 화원 (Toy Garden Remix)&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;비밀의 화원 (Toy Garden Radio Edit)&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;비밀의 화원&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;message&quot;&gt;이 세상 모든 자유로운 영혼들을 위한 이상은의 스페셜 앨범 `Bliss`
+
+다시 한 번 날개를 움직이다, 이상은의 첫 디지털 앨범 [ Bliss ]
+
+이상은에게는 자유에너지로 펼쳐지는 날개가 있다.
+언제나 새로운 공간을 찾아 색을 뽑아내는 그녀가 일본, 영국에 이어 내딛은 곳은 뉴욕의 윌리엄스버그.
+구김 없는 영혼들의 에너지가 대기를 가득 채운 그곳은 더할 나위 없는 장소였을 것이다.
+
+그간 작업실 파트너로 여러 차례 손잡아 온 영화음악가 이병훈은 뉴욕에서도 함께였다.
+결과는 은빛 천체가 찰랑이는 우주의 조감도. 그 중에서도 유독 평화의 기가 감도는 트랙 `Bliss`는 이제 하나의 행성으로 독립해 여행을 시작하려 한다. 스테디셀러로 이상은을 대표하는 또 하나의 얼굴이 된 `비밀의 화원`도 재구성을 마치고 따라나섰다.
+
+음악만큼이나 패셔너블한 삶으로 대중들에게 긴 시간 부러움의 시선을 받아온 이상은에게 쇼는 어떤 의미일까.
+서울패션위크, 엠비오 콜렉션 같은 대형 이벤트와 클럽을 비롯한 다양한 무대에서 윤상, 루시드 폴과의 콜라보레이션으로 감각적인 연출음악을 선보이며 화제를 낳았던 DJ은천, 그리고 영화, 뮤지컬, TV 프로그램 로고송부터 인디밴드 프로듀싱까지 음악이 닿을 수 있는 모든 곳에서 재능을 발휘하고 있는 박과장(박정현)과의 만남에서 그녀의 취향을 엿볼 수 있다.
+멈춰있기보다는 움직이고 머물러있기 보다는 어느 곳이든 나아가고자 하는 이상은의 여행성본능은 패션쇼와도 닮은 듯하다.
+
+Bliss (eunchurn Emerald Castle Remix)
+어쿠스틱 기타의 선율이 들숨을 따라 들어가 온몸을 휘감을 때 쯤 무채색의 목소리가 차분히 흘러나온다. 느리지만 강하게 걷는 리듬 위에 현악의 물결이 수를 그려낸다. 보컬과 비트는 공간감을 불어넣고 신디사이저의 효과는 입체감을 만들어냈다. 굳이 보지 않아도 눈 속에 떠올릴 수 있는 그림처럼 생생하고 또렷하다.
+
+Secret Garden (eunchurn Toy Garden Remix)
+제목에 `장난감(Toy)`이 들어가 있는 것에서 예상할 수 있듯 키덜트적 요소를 곳곳에서 발견할 수 있는 곡이다. 재치와 유머의 경계를 오가는 사운드 디자인은 DJ은천을 말해주는 포인트이기도 하다. 장난스러운 게임 효과음이 익숙함에서 오는 습기를 흡수하고 산뜻한 양념이 되어주었으며 후렴구를 장식하는 반주의 유연한 변조는 일직선의 멜로디가 품고 있던 단조로운 발자국을 말끔히 지워냈다. 흐름을 따라 가다 보면 5분의 시간은 실감할 수 없을 듯.
+
+Bliss (박과장) -(Azian P Remix)
+순수 어쿠스틱의 정점이라 할 수 있는 현악기가 메인에 드러난 버전이다. 정반대의 성질을 가진 재료들이 얽혀 있지만 느껴지는 건 이질감이 아닌 수려한 무늬의 기교. 가사와 함께 꽃으로 피어난 것 마냥 비트의 몸부림에 향기가 폼폼 솟아난다. 공통점이라고 해야 할지도 모르겠다. 거꾸로 들고 털어보면 음표가 아니라 반짝이는 유리알을 닮은 무언가가 깨끗한 소리로 떨어질 것 같은 넘버들이다. 멜로디와 노랫말, 그리고 목소리를 따로 떼어두고 볼 필요 없도록 이상은은 스스로 악기가 되었다. 쏟아져 내리는 디지털 물빛 오로라 속을 유영해보자.
+&lt;/div&gt;
+&lt;hr /&gt;
+&lt;div class=&quot;message&quot;&gt;
+모든 음악계의 아티스트들은 특정 장르를 통해 대중들에게 소개가 된다.
+록(Rock) 음악으로 시작한 아티스트는 록 스타일로, 소울(Soul)로 시작한 아티스트는 소울 스타일로 그리고 댄스(Dance) 음악으로 시작한 아티스트는 댄스 스타일이 그 아티스트를 대표하는 음악적 이미지로 대중들에게 각인된다.
+그러나 가끔 세상에는 이런 일반적인 분류 기준에서 벗어나는 아티스트들도 존재한다.
+매 앨범 마다 수많은 변신을 추구하는 이상은은 바로 이런 일반적인 분류에서 벗어난 가수일 것이다. 1988년 강변가요제를 통해 데뷔한 이후 이상은이 보여준 변신은 일반적인 아티스트들의 음악 여정과는 분명하게 다른 자신만의 독특한 행보를 보여줘 왔다.
+음악과 미술 그리고 작가로 변신하며 다양한 예술가적 삶을 살아온 이상은이 엠비오 컬렉션에서 윤상의`사랑이란`곡을 리믹스하면서 새롭게 가요계에서 주목 받고 있는 DJ 은천과 영화 천하장사 마돈나 엔딩곡 및 한빛 소프트와 SEGA의 합작게임 `모크(Moak)`주제곡을 작곡한 박과장과 손잡고 자신의 14집 앨범에 수록된 `블리스(Bliss)`와 11집 앨범에 수록된 `비밀의 화원(Secret Garden)`을 새롭게 리믹스하여 화제가 되고 있다.
+일렉트로니카 사운드풍의 연주와 북유럽의 서정성이 물씬 풍기는 `블리스(Bliss)`와 80년대 컴퓨터 게임 사운드를 연상 시키는 연주가 매력적인 `비밀의 화원(Secret Garden)`을 담은 이상은의 스페셜 앨범은 2011년 8월 16일 발매 된다.&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;[Music Video] from 영화&lt;/strong&gt; &lt;strong&gt;[평범한 날들]&lt;/strong&gt;
+&lt;strong&gt;이상은(Leetzsche) - Bliss (Emerald Castle Remix)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Lee Sang Eun [leesangeunmusic.com]/&lt;/p&gt;
+
+&lt;p&gt;BREEZE MUSIC / SONY MUSIC&lt;/p&gt;
+
+&lt;h3 id=&quot;audio&quot;&gt;Audio&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Original Track written by Lee Sang Eun&lt;/li&gt;
+  &lt;li&gt;Lyrics written by Lee Sang Eun&lt;/li&gt;
+  &lt;li&gt;Remix produced by eunchurn&lt;/li&gt;
+  &lt;li&gt;Electric bass by Chi Jung-hoon [sultan of the disco]&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;video&quot;&gt;Video&lt;/h3&gt;
+
+&lt;h4 id=&quot;a-film-ordinary-days-2010&quot;&gt;A Film “Ordinary Days”, 2010&lt;/h4&gt;
+
+&lt;h4 id=&quot;director--editor--inan&quot;&gt;Director &amp;amp; Editor : INAN/&lt;/h4&gt;
+
+&lt;iframe src=&quot;https://player.vimeo.com/video/28105689&quot; width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;&lt;strong&gt;네이버뮤직&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://music.naver.com/album/index.nhn?albumId=204967&quot;&gt;http://music.naver.com/album/index.nhn?albumId=204967&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry><entry>
+   <title>This Is Why We're Falling For Each Other (2011)</title>
+   <link href="http://localhost:4000/production/2011/08/15/trampauline-this-is-why-were-falling-for-each-other-2011/"/>
+   <updated>2011-08-16T03:00:47+09:00</updated>
+   <id>http://localhost:4000/production/2011/08/15/trampauline-this-is-why-were-falling-for-each-other-2011</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; allow=&quot;autoplay&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/45263363&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2011/08/cover.png&quot; alt=&quot;cover-300x297.png&quot; /&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;01. LITTLE ANIMAL
+02. ANTHROPOLOGY
+03. BIKE
+04. LOVE ME LIKE NOTHING'S HAPPENED BEFORE
+05. A ROSE WITH THORNS
+06. D.B.R.
+07. HISTORY OF LOVE
+08. YOU ARE MY SUNSHINE
+09. BE MY MOM'S LOVER
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;message&quot;&gt;신스팝의 뉴웨이브 그 중심에 서 있는 트램폴린 정규2집 [This Is Why We Are Falling For Each Other] 유쾌하고도 섬세한 멜로디, 가벼운 춤을 이끌어 내는 해변 일몰 간지 사운드
+
+튀기는 테니스 공의 리듬 같은 음악
+
+지난 2008년 발매돼 세련되고도 이색적인 사운드를 선보였던 1집 [트램폴린] 이후 3년, 차효선은 역동적인 리듬감과 아름다운 멜로디 감각을 함께 지닌 기타리스트 김나은을 만나 듀오의 형태를 꾸리게 되었고, 김나은의 때로 글래머러스하고 때로 청명한 연주로 한층 매력을 더하게 되었다. 또한 서울 패션위크 Mvio 컬렉션의 음악 감독으로도 익히 알려진 DJ 은천이 프로듀서로 합류하면서 몽롱하고 은은하던 트램폴린의 음악은 더욱 탄탄한 비트와 섹시한 사운드로 힘을 얻었다. 또한 탄탄한 음악성을 지닌 다양한 뮤지션들이 가세, 트램폴린의 2집 앨범 수록곡들을 해석해내고 리믹스한 트랙들이 전무후무하게 아티스틱한 리믹스 앨범으로 만들어져 초도 한정으로 보여지게 된다.
+
+트램폴린의 두 번째 정규앨범 [This Is Why We Are Falling For Each Other]는 시작부터 통통 튀는 비트가 유쾌하게 흐르면서 아무렇지도 않게 가벼운 춤을 이끌어낸다. 그러나 무작정 밝기만 한 음악은 아니다. 트램폴린의 가사는 &quot;악마에게 심장을 가져가 달라고 빌어&quot;야 할 정도로 벼랑 끝에 몰린 마음에서 시작되거나 (&quot;Little Animal&quot;), 급작스러운 사랑이 시작하자마자 어긋나며 혼란스러워 하기도 하고 (&quot;D.B.R.&quot;), &quot;물러날 수 없는 복싱 링 위에 선&quot; 듯한 사랑의 후일담(&quot;History Of Love&quot;)을 노래하기도 한다. 팬들에겐 이미 라이브를 통해 익숙해진 &quot;Be My Mom's Lover&quot;도 연인이 아닌 가족이라면 사랑이 변하지 않을 것이라며 사랑의 허무함을 이야기한다. 멜로디와 연주도 앨범 전체에 걸쳐 미묘한 우수를 섬세하게 담고 있다.
+
+유쾌한 유머와 삶의 긍정이 담긴 신스팝
+
+그럼에도 불구하고 트램폴린의 음악은 즐겁다. &quot;네가 자전거를 훔쳐본 적이 있다는 걸 알지만 비밀로 해줄테니 오늘밤 나를 집에 데려다 달라&quot;는 유쾌한 유혹(&quot;Bike&quot;), 서로의 다름에 호기심을 느끼는 사랑을 문화인류학에 비유하여 &quot;나는 인류학을 진지하게 탐구하는 학생이라네, 너도 날 따라오렴!&quot;이라 외치는 &quot;Anthropology&quot; 등 곳곳에 위트가 넘친다. 자기 선언적인 첫 트랙 &quot;Little Animal&quot;에서 &quot;작은 동물이 거리를 걸어가며&quot; 바라보는 세상은 그런 유머의 창을 거치고 있다. 그런 삶에 대한 긍정이 안타까운 순간에도 트로피컬한 기타나 짓궂은 신스 등의 사운드를 양념으로 하여, 더없이 유려한 팝으로 정제돼 흘러나온다.
+
+신기한 일들이 잔뜩 일어나는 세상처럼 곡들을 둘러싸는 독특하고 다채로운 사운드의 신스. 그 속에서 차효선의 목소리는 우아하고 김나은의 기타는 침착하다. 차라리 중성적이라 해도 좋을 정도로 과장이 없고 담담하다. 그리고 그 속에 담긴 삶과 사랑, 갈망과 희망의 이야기는 일렉트로닉 사운드와 어우러진 기타와 보컬처럼 지극히 인간적인 색채로 반짝인다. 진실한 이야기를 과장되지 않게 긍정을 담아 할 수 있는 것이 트램폴린이 가진 쿨한 매력의 정체가 아닐까.
+&lt;/div&gt;
+
+&lt;p&gt;2009년 겨울이었던것 같습니다. Tuna attack 이라는 Club Bowie에서 Trampauline의 공연이 있었습니다. 이 만남 이후 공식적으로 프로듀싱을 맡아서 시작을 한 것 같습니다. Be My Mom’s Lover를 시작으로 풀랭스 앨범을 다하기 까지 많은 나날이 소요가 되었네요. 그동안의 우여곡절이라던지 프로듀싱에 필요했던 몇가지 사안들은 계속 블로그로 정리해나갈 예정입니다. 발매일은 8월 18일이니 꼭챙겨서 초도발매분량 400장인 보너스 리믹스시디까지 꼭 챙기길 바랍니다. 현재 예약을 받는 중인것 같습니다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://cd.melon.com/cd/detail.php?code=A0496079&quot;&gt;http://cd.melon.com/cd/detail.php?code=A0496079&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;리믹스트랙 공개중&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://trampaulinemusic.tumblr.com&quot;&gt; http://trampaulinemusic.tumblr.com&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry><entry>
+   <title>W Korea Mar. 2011 다양한 인물들의 '레어 인터뷰'. PART II</title>
+   <link href="http://localhost:4000/press/2011/04/26/w-korea-mar-2011-eb8ba4ec9691ed959c-ec9db8ebacbceb93a4ec9d98-eba088ec96b4-ec9db8ed84b0ebb7b0-part-ii/"/>
+   <updated>2011-04-27T05:36:20+09:00</updated>
+   <id>http://localhost:4000/press/2011/04/26/w-korea-mar-2011-eb8ba4ec9691ed959c-ec9db8ebacbceb93a4ec9d98-eba088ec96b4-ec9db8ed84b0ebb7b0-part-ii</id>
+   <content type="html">&lt;p&gt;&lt;strong&gt;다양한 인물들의 ‘레어 인터뷰’. PART II&lt;/strong&gt;
+패션 디자이너, 영화감독, 뮤지션, DJ, 타투이스트 등이 서로 만났고, 그 선택의 결과는 탁월했다. 뮤지션 이상은과 아이돌을, 디자이너 한상혁과 쎄시봉을, 그리고 영화감독 이해영과 영화 속 금자씨 의상을 논하는 새로운 인터뷰. 그래서‘ 드문, 비범한, 탁월한’이라는 뜻을 지닌 레어(Rare)인터뷰는 다양한 분야의 인물들을 모아보겠다는 소기의 목적, 아니 그 이상을 달성했다. 게스트 에디터인 엠비오의 크리에이티브 디렉터 한상혁이 진행한 이 흔치 않은 인터뷰를 통해 우린 새로운 시각으로 패션을 조금 더 이해할 수 있었으니까.마치 서로 다른 우리가 관계를 맺으며 각자의 벽을 깨어가듯이.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/public/images/2011/04/01100401000063901_1.jpg&quot;&gt;01100401000063901_1.jpg&lt;/a&gt;
+왼쪽부터 | 마스크를 쓴 디자이너 한상혁. 밴드 못(MOT)의 보컬인 이언. 포토그래퍼 윤석무. 작가, 라디오 진행자로 활약하는 뮤지션 이상은. 엠비오의 쇼 음악을 작업하는 DJ 은천. 스윗리벤지와 롤리앗의 디자이너 홍승완.&lt;/p&gt;
+
+&lt;h2 id=&quot;문화를-전하는-사람들&quot;&gt;문화를 전하는 사람들&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;시간&lt;/strong&gt;: 2월 8일 저녁 7시&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;장소&lt;/strong&gt;: 압구정 로데오거리의 바, 루팡&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;모인 이들&lt;/strong&gt;: 홍승완(패션 디자이너), 이상은(뮤지션), 윤석무(포토그래퍼), 은천(DJ), 이언(뮤지션)&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;은천&lt;/strong&gt;: 안녕하세요? 은천입니다.
+&lt;strong&gt;윤석무&lt;/strong&gt;: 은천, 이 친구 DJ인데 곡도 만들고 음악이 좋아요. 사람들이 엠비오 쇼가 끝나면 옷 얘기보다 음악 얘길 한다니까.
+&lt;strong&gt;이상은&lt;/strong&gt;: 아, 정말이에요?
+&lt;strong&gt;윤석무&lt;/strong&gt;: 대부분 쇼에서는 외국 음악을 하니까 한국 디자이너 쇼에서 한국 음악을 편곡한 게 신선했죠.
+&lt;strong&gt;윤석무&lt;/strong&gt;: 자, 뭐 마실까? 샴페인? 음… 좀 더 진한 걸로 피처 마시자. 못(MOT), 자넬 뭐라고 불러야 하지?
+&lt;strong&gt;이언&lt;/strong&gt;: 이-언-요.
+&lt;strong&gt;윤석무&lt;/strong&gt;: 내가 못의 음악을 이틀 전에 우연히 들었어. 요즘 꼬맹이들이 핸드폰으로 음악을 듣잖아. 그래서 들었는데 좋더라고. 얘가 누구니 했더니‘못’이라고 하더라고.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 참, 내가 이번 쇼엔 은천과 함께 이광조 씨의 노래를 사용하려고 하는데….
+&lt;strong&gt;홍승완&lt;/strong&gt;: 88년 올림픽 시대의 이광조?
+&lt;strong&gt;은천&lt;/strong&gt;: 일단 올드하기도 하고 느낌이 있어서요. 사실 이광조 선배님을 좋아해요.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 나도 너무 좋아요. 명절때 집에 갔다가 LP판 중에 묻혀있던 걸 발견하고 갖고 왔어. 멜로디가 참 좋아. 그 당시에 참 대단한 사람이었지.
+&lt;strong&gt;윤석무&lt;/strong&gt;: 그럼 앞서갔지.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 응. 이제 그 노래로 어떻게 하는 게 나을지 좀 생각을 해봐야겠어. 아, 너는 아직 011 이구나.
+&lt;strong&gt;윤석무&lt;/strong&gt;: 아, 이제 바꿀 수밖에 없는 상황이 되었어. 아니면 좀 더 버티다가 하나를 더 만들거나. 아까 얼리어답터 얘기를 하자고 하는데 전 사실 할 얘기가 없거든요.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 얼리어답터가 기계에 대한 얘기만은 아니잖아. 석무는 이미 10년 전에 지금 잡지계의 패러다임을 꿰고 있었거든요. 다른 사람이 하면 안 하는 스타일이라 아이폰도 안 쓰잖아.
+&lt;strong&gt;윤석무&lt;/strong&gt;: 그런데 중요한 건 그게 내가 즐거워야 하는 거잖아. 똑같은 일을 하는 게 별로 즐겁지 않은 거지. 사장님, 여기 피처 언제 나와요? 일단 술이 좀 와야 얘기가 될 것 같아.
+&lt;strong&gt;은천&lt;/strong&gt;: 형, 그거 봤어요. 북트레일러. 정말 멋있더라고요.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 그게 어떤 건데?
+&lt;strong&gt;이언&lt;/strong&gt;: 얼마 전 김영하 선생님의 새 소설 ‘무슨 일이 일어났는지는 그 아무도’ 가 나왔는데, 그때 북트레일러 작업을 해달라고 하시더라고요. 김영하 작가님이 낭송을 하고, 전 음악이랑 영상을 만들고.
+&lt;strong&gt;한상혁&lt;/strong&gt;:그랬구나. 흥미로운데? 사실 오늘 ‘얼리어답터’ 얘기를 할 건데, 사실 우리 모두가 무언가 새로운 문화를 빠르게 받아들이고 파는 사람일 수 있잖아요. 그리고 제가 볼 때는 이상은 씨도 아이돌 1세대인 것 같아요. ‘공무도하가’부터 새로운 음악을 만들고. 2002년인가 도쿄 아오야마에 있는 요지 야마모토 숍을 갔는데, 이상은 씨의 ‘공무도하가’가 나오는 거예요. 홍승완 실장님도 그때쯤 ‘스윗리벤지’를 시작하셨죠?
+&lt;strong&gt;홍승완&lt;/strong&gt;: 2001년도였지.
+&lt;strong&gt;윤석무&lt;/strong&gt;: 실장님도 음악을 좋아하시는 것 같아요. 저는 류이치 사카모토를 좋아하는데, 스윗리벤지도 거기서 따오신 거예요?
+&lt;strong&gt;홍승완&lt;/strong&gt;: 네, 맞아요.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 형은 예전에 아방가르드한 문화를 갖고 데뷔했잖아요. 스윗리벤지라는 남성복인데 네모반듯한 느낌이랄까. 지금 잘나가는 톰 브라운도 사실 그런 느낌이고. 그 당시 형이 먼저 치고 나갔죠.
+&lt;strong&gt;홍승완&lt;/strong&gt;: 아, 술 취해. 하하. 사실 한 5년 전쯤 밤에 자고 있는데 한 스타일리스트 친구한테 전화가 왔어, 뉴욕에서. 그러더니 여기 너랑 너무 스타일이 잘 맞는 신인 디자이너가 프레젠테이션을 해서 봤는데 옷이 정말 예쁘다는 거야.‘ 너랑 잘 맞을 거야. 통화해볼래?’ 이러기에 몇 마디 나눴는데, 나중에 이름 들어보니까 그 친구가 톰 브라운이었어.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 참, 최근에는 일본에서‘롤리앗’이란 브랜드를 새롭게 시작했잖아요. 그 이유라도?
+&lt;strong&gt;홍승완&lt;/strong&gt;: 뭔가 일본이나 뉴욕 쪽에서 새로운 걸 내놓아야 하는데, 기존에 스윗리벤지로는 할 수 없는 게 많았지.
+&lt;strong&gt;이상은&lt;/strong&gt;: 뉴욕이나 일본에 숍이 다 있으세요?
+&lt;strong&gt;홍승완&lt;/strong&gt;: 제가 직접 운영하는 숍은 아니고 셀렉트 숍에서 제 옷을 바잉해서 판매하는 거죠. 사실 일본이 디자이너들의 무덤이라고 할 만큼 온갖 브랜드들이 각축전을 벌이는 마켓이다 보니까 정말 남과 다르거나 고유의 테이스트가 없으면 생존할 수 없는 시장이기도 해요. 내가 뭘 잘할 수 있을까 스스로 찾아봤어요. 그래서 다 손으로 만들어보자는 생각으로 핸드메이드 개념의 옷을 만들었죠. 기계로 할 수 있는 봉제 부분도 한땀 한땀 일일이 손으로 만들고 그랬더니 일본에서도 신선하게 바라보더라고요.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;대량생산이나 소비에 초점을 안 맞추고 그 자체에 집중하다 보면 음악도 결국 본질로 가겠죠? 가다가 뒤로 갈 수는 없으니까. 음악도 대량생산 방식의 아이돌 문화를 지나서 가다 보면 결국엔 장인 정신으로 가게 돼 있어요.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;한상혁&lt;/strong&gt;: 이것도 어떻게 보면 또 한발 앞서가는 게 아닐까요. 결국엔 다시 아날로그적인 장인 정신으로 돌아가는 게… 음악적인 부분도 그런 게 있지 않아요?
+&lt;strong&gt;이상은&lt;/strong&gt;: 대량생산이나 소비에 초점을 안 맞추고 그 자체에 집중하다 보면 음악도 결국 본질로 가겠죠? 가다가 뒤로 갈 수는 없으니까. 음악도 대량생산 방식의 아이돌 문화를 지나서 가다보면 결국엔 장인 정신으로 가게 돼 있어요.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 처음에 제가 아이돌이라고 얘기했을 때 어떻게 받아들였을지 모르겠지만 그게 나쁘게 생각한 건 아니었거든요. ‘담다디’도 그렇고 새로운 시도가 있었잖아요.
+&lt;strong&gt;이상은&lt;/strong&gt;: 아이돌은 어떻게 보면 대량생산하는 의류 브랜드 같은 거죠. 전 음악을 하다가 운이 좋아서 외국에 나가 보고 느끼며 ‘아, 이게 아니구나’ 싶어서 방향을 바꾼 거죠. 대중적이면서도 나만의 것을 보여줄 수 있는… 패션으로 말하면 ‘프레타 포르테’를 시작했다고 할까.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 옷도 마찬가지지만 대량생산이면서 자신의 것을 하는 게 중요하고 어렵기도 하죠.
+&lt;strong&gt;이상은&lt;/strong&gt;: 1995년에‘공무도하가’만들 때 프로듀서가 일본 분이어서 오키나와에 갔는데, 당시는 일본 문화가 정점에 이르렀을 시기였어요. 저도 그때 음악 만드는 법을 새로 배우고 그전과 그후가 기억이 안 날 정도로 자아가 깨었는데 운이 좋았어요. 여러 가지 새로운 것들이 저를 벽에 패대기를 쳤죠. 그땐 젊었으니까 괜찮았어요. 지금 같으면 뼈도 못 추릴 텐데. 하하.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 요즘 아이돌 문화에 대해 어떻게 생각하세요?
+&lt;strong&gt;이상은&lt;/strong&gt;: 아까 윤석무 실장님과도 얘기했는데, 너무 좌뇌적이고 설명적인 문화랄까. 고도로 설명적이고 고도로 쉽죠. TV처럼 생각 안 해도 받아들일 수 있다는 점에서요.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 그럼 이 다음으로 생각하는 방식이 있으세요? 새로운 방식으로 이해하고 풀어내고 싶은 것들이요.
+&lt;strong&gt;이상은&lt;/strong&gt;: 전 다시 ‘원점’으로 돌아가고 싶어요. 프레타포르테 같은 음악도 겪어보고 대량생산도 해보고, 이런저런 일 다 겪어본 뒤에 장인 정신을 대중화해보고 싶어요.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 와, 좋다. 브라보! 그런데 음악에 비해 패션은 좀 더 힘든 것 같아요. 패션으로 인정받는다는 건, 대중들 앞에 희화화되어서 튀어나가던가 아니면 누구에게나 인정받을 수 있도록 작업을 완벽하게 하던가… 둘 중 하나예요.
+&lt;strong&gt;이상은&lt;/strong&gt;: 전 사실 요즘 유니클로가 너무 좋거든요. 아이돌 음악이 유니클로적인 거라면 저도 좋아할 수 있어요. 최근 나도 유니클로적인 음악을 해야 하는 게 아닐까 생각도 하죠. 암튼 유니클로한테는 여러모로 고맙죠.
+&lt;strong&gt;윤석무&lt;/strong&gt;: 하하. 빤스가 고맙죠.
+&lt;strong&gt;이상은&lt;/strong&gt;: 네, 속옷 라인 참 좋죠.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 은천은 우리나라에 소개시키고 싶은 브랜드가 있어?
+&lt;strong&gt;은천&lt;/strong&gt;: 글쎄요, 이미 많은 브랜드가 들어 와 있는 것 같은데…. 무엇보다 전 엠비오가 세계에 널리 소개되었으면 좋겠어요.
+&lt;strong&gt;윤석무&lt;/strong&gt;: 진심이 느껴지는데? 부럽다.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 아, 이거 편집 안 됐으면 좋겠네요. 하하. 참, 은천 씨나 이언 씨 트위터를 보면 굉장히 많은 정보가 있는 것 같아요. 그런데 저는 두 분보다 조금 나이가 있는 세대라 그런지 생활처럼 잘 안 되더라고요. 그런 세상을 보면 생각의 논리들이 너무 빨리빨리 지나가는 것 같아서….
+&lt;strong&gt;이언&lt;/strong&gt;: 전 하루 일과 중에 웹을 모니터링하는 시간을 둬요. 유튜브는 사람들이 좀 더 재미있어 하는 걸 올리고, 반면 ‘비메오’란 게 있는데 그건 영상을 하는 사람들이 자신의 새로운 작업물을 보여주는 그런 곳이에요. 제가 목이 안 좋아서 밴드를 좀 쉬는 동안 멀티미디어 아트를 해왔거든요. 그런데 세상에 너무 재밌는 게 많은 거예요. 우리가 늘 보고 있는 곳에만 시선을 두면 가끔 치고 들어오는 것을 보면서 그저 ‘아, 이런 것도 있었네’ 하게 되지만, 아방가르드한 세계에 가면 푹 빠져들만한 재미있는 일들이 마구 벌어지는 거죠. 사람들이 예술적인 측면에서건 기술적인 측면에서건 새로운 이슈를 계속 보여주거든요. 그리고 기술적인 측면도 참 큰 것 같아요. 아트와 테크놀로지가 동일화되는 경향도 있고, 기술이 전혀 경험해보지 못한 새로운 미적 세계를 제공해주죠. 재미있고, 놀랍고, 대단한….
+&lt;strong&gt;은천&lt;/strong&gt;: 예전엔 DJ가 문화의 전달자 역할을 해야 했거든요. 파리나 뉴욕에서 어떤 음악이 나왔다고 하면 그걸 먼저 소개해야 했죠. 그런데 이젠 집에서 컴퓨터를 이용해서 음악을 찾고 믹싱하면 되는 환경이니까… 훨씬 편해졌다고 할 수 있어요.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 아, 그렇구나. 그리고 아까 일본 문화 얘기가 나왔는데 그들이 우리보다 좀 더 앞서서 어떤 방향을 제시했던 건 사실이잖아요. 대중들이 받아들이는 속도에 대해서 힘든 적은 없었어요? 너무 선구자적이라서?
+&lt;strong&gt;홍승완&lt;/strong&gt;: 내가 알기로 일본 사회는 매우 보수적이예요. 사실 얼리어답터적인 부분은 우리가 더 발달했지. 그들은 새로운 걸 받아들일 때 우리보다 10번은 더 심사숙고하곤 하니까요.
+&lt;strong&gt;한상혁&lt;/strong&gt;: 어찌보면 얼리어답터적인 성향을 지닌 우리에게 큰 가능성이 있는 거죠. 새로운 방식에 대한 얘기나 고민들을 나누고, 이전과는 다른 방식들이 당대 문화에 미친 영향과 행보를 따라가다 보면 답이 나오겠죠. 결국 어떻게 만들어야 하나 하는… 그 자체에만 순수하게 집중하면서 말이예요.&lt;/p&gt;
+</content>
+ </entry><entry>
+   <title>ELLE KOREA Dec.2010 MAKING FASHIONWEEK</title>
+   <link href="http://localhost:4000/press/2011/04/26/elle-korea-dec-2010-making-fashionweek/"/>
+   <updated>2011-04-27T05:35:55+09:00</updated>
+   <id>http://localhost:4000/press/2011/04/26/elle-korea-dec-2010-making-fashionweek</id>
+   <content type="html">&lt;h2 id=&quot;elle-runway-report&quot;&gt;elle runway report&lt;/h2&gt;
+&lt;h3 id=&quot;making-fashionweek&quot;&gt;MAKING FASHIONWEEK&lt;/h3&gt;
+&lt;h4 id=&quot;패션쇼-속-숨은-주연과-조연-찾기&quot;&gt;패션쇼 속 숨은 주연과 조연 찾기&lt;/h4&gt;
+
+&lt;h3 id=&quot;get-on-the-show&quot;&gt;GET ON THE SHOW&lt;/h3&gt;
+&lt;p&gt;음악이 흐르고 객석이 어두워진다. 런웨이를 따라 모델들이 걷는다. 
+그리고 피날레. 관객들의 환호 속에 등장하는 디자이너! 
+그런데 잠깐, 이토록 화려한 패션쇼라는 ‘종합 예술’ 뒤에는 어떤 주연과 조연들이 숨어 있을까?&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;EDITOR : 김선민, 김지혜, 이경은, 백지연&lt;/li&gt;
+  &lt;li&gt;PHOTO : 안주영, 김정호&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;/public/images/2011/04/1.jpg&quot;&gt;&lt;img src=&quot;/public/images/2011/04/1.jpg&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;designer-지춘희&quot;&gt;DESIGNER 지춘희&lt;/h4&gt;
+
+&lt;p&gt;10주년을 맞은 서울 컬렉션의 대미를 장식한 디자이너 지춘희를 만났다. &lt;strong&gt;10년간 서울 컬렉션의 성장 과정을 가장 가까이서 지켜 본 디자이너다. 피날레를 장식한 기분이 어떤가.&lt;/strong&gt; 서울 컬렉션의 시작을 함께한 디자이너라 내가 장식하게 된 것 같다. 이번 쇼 자체가 흥겨운 축제 컨셉트다 보니 잘 어울렸던 것 같고. &lt;strong&gt;경쾌한 여운이 남은 쇼였다. 영감의 대상이 궁금하다.&lt;/strong&gt; 무료한 일상을 잊게 만드는 ‘반짝임’, 즉 빛에 대한 이야기다. 여자라면 누구나 마음속에 신데렐라 같은 공주를 꿈꾸는 빛나는 욕망이 조금은 존재하잖아. 그런 즐거운 반짝임을 전하고 싶었다. &lt;strong&gt;미스지 컬렉션을 볼 때면 늘 ‘공존’이란 단어가 생각난다. 남성성과 여성성, 부드러움과 강함의 공존. 지춘희의 ‘여자’는 어떤 존재인가?&lt;/strong&gt; 여자로서의 선 그리고 여리고 나긋나긋한 섬세함은 갖고 있지만 자존심이 있는 그런 여성. 요즘 많은 사람들이 공격적인 애티튜드와 강한 룩이 프로페셔널하다고 착각하곤 한다. 나는 여자들만의 부드러움이 여자의 강점이라고** 생각한다. 한국 여성의 체형에 잘 맞는 테일러링 역시 미스지 컬렉션의 강점이다.** 패턴사 오대경과 20년 넘게 호흡을 맞춰왔다. 영화와 비유하자면 내가 감독이고 그는 촬영감독이다. &lt;strong&gt;자신을 어떤 디자이너라고 생각하나.&lt;/strong&gt;  내가 어떤 디자이너라기보다 이 직업을 좋아하니까, ‘이 일을 할 수 있어서’ 좋다는 생각을 한다. 한 번도 후회해 본 적 없다. &lt;strong&gt;계속 서울컬렉션에 참여할 건가?&lt;/strong&gt; 한국 디자이너가 서울 컬렉션에 참여하는 건 당연한 일이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/public/images/2011/04/2.jpg&quot;&gt;2.jpg&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;model-오현웅&quot;&gt;MODEL 오현웅&lt;/h4&gt;
+
+&lt;p&gt;최근 여덟 시즌 동안 꾸준히 서울 컬렉션 런웨이를 걷고 있는 90년 생 모델 오현웅을 백스테이지에서 만났다. &lt;strong&gt;매번 쇼를 해도 긴장감은 여전한지.&lt;/strong&gt; 오히려 긴장감을 즐기는 편이다. 긴장하지 않으면 뭔가 허전한 느낌일 들 정도다. &lt;strong&gt;지금 준비하고 있는 레주렉션 쇼에선 언제나 쿵쾅쿵쾅 라이브 연주가 등장하는데 워킹할 때 집중하는 데 방해가 되진 않는지 궁금하다.&lt;/strong&gt; 크게 울리는 음악 덕분에 워킹이 더 잘 되고 멋있어지는 것 같다. 리허설을 하는 동안 ‘이 템포에선 이렇게 걸어야지.’라는 생각을 하며 음악을 몸에 익히려 한다. &lt;strong&gt;런웨이에서 들어와 다음 의상으로 갈아입을 때 빨리 갈아입는 노하우가 있다면?&lt;/strong&gt; 헬퍼가 벗겨주고 입혀주기를 마냥 기다리기보단 직접 벗고 입으며 최대한 시간을 줄인다. 동시에 빠진 액세서리가 없는지 빨리 체크하고. &lt;strong&gt;리허설 전이나 쇼 전에 늘 하는 버릇이 있다면?&lt;/strong&gt; 계속 워킹 자세를 다듬는다. 연습이 잘되면 런웨이 위에서 ‘아! 잘하고 있구나. 그래 이거야!’ 하는 걸 느낄 수 있지.&lt;/p&gt;
+
+&lt;h4 id=&quot;photographer-장진우&quot;&gt;PHOTOGRAPHER 장진우&lt;/h4&gt;
+
+&lt;p&gt;동그란 바가지머리에 클래식한 수트 차림으로 더 센토르(The Centaur) 쇼의 백스테이지를 동분서주하고 있던 ‘어린 실장님’ 장진우가 유난히 눈에 띄어 다가가 말을 걸었다. **&lt;더 센토르=&quot;&quot;&gt; 현장에서만 사진을 찍는다고?** 그렇다. 나는 오늘 더 센토르의 하우스 포토그래퍼 자격으로 촬영을 왔다. **그렇다면 디자이너 예란지와는 어떤 사이?** 한 동네에 사는 친한 사이. 또 내가 가장 좋아하는 디자이너다. **컬렉션 현장에서 촬영하기에 가장 흥미로운 찰나는?** 캣워크를 시작하기 직전의 모델 표정이 너무 재미있고 신비롭다. **오늘 카메라에 제일 많이 담을 내용은?** 아무래도 이 쇼의 주인공인 디자이너의 희로애락이 되지 않을까? **오늘 찍는 사진은 주로 어디에 쓸 건가?** 디자이너에게 보관용으로 선물할 거다.&lt;/더&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/public/images/2011/04/3.jpg&quot;&gt;3.jpg&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;pr-assistant-manager-김누리&quot;&gt;PR ASSISTANT MANAGER 김누리&lt;/h4&gt;
+
+&lt;p&gt;APR 에이전시 소속의 김누리. 그녀는 언제나 뛰어다녔다. 그것도 하이힐을 신고! &lt;strong&gt;당신의 역할은?&lt;/strong&gt; 쇼를 홍보하는 역할. 시간을 조정하고 프레스와 스타일리스트, 패션 피플, 셀러브리티 등 게스트를 초청한다. &lt;strong&gt;가장 긴장되는 순간은?&lt;/strong&gt; 쇼 시작 직전. 자리 배정은 꽤 민감한 부분이다. 자리는 늘 한정돼 있는 반면 초대받은 이들을  모두 만족시켜야  하기 때문이다. &lt;strong&gt;그렇다면 가장 즐거운 순간은?&lt;/strong&gt; 쇼 끝나고 “쇼 정말 좋았어!”라는 얘기를 들을 때. &lt;strong&gt;리허설 때 옷을 미리 본 뒤 쇼를 보면 좀 김샐 것 같기도 한데.&lt;/strong&gt; 오, 그렇지 않다(웃음). 모든 게 세팅되면, 봤던 옷도 다시 새롭게 느껴진다.&lt;/p&gt;
+
+&lt;h4 id=&quot;dj-은천&quot;&gt;DJ 은천&lt;/h4&gt;
+
+&lt;p&gt;네 시즌 동안 엠비오의 감성 넘치는 음악 믹싱을 담당해오고 있는 DJ 은천의 리허설 모습. &lt;strong&gt;리허설에서 체크하는 것들?&lt;/strong&gt; 주로 곡이 전환되고 감정의 흐름이 바뀌면서 상승하는 분위기에서 의상이 어떻게 바뀌는지 살핀다. &lt;strong&gt;평소 DJ로 활동할 때와 컬렉션 음악을 믹싱하는 건 어떻게 다른가.&lt;/strong&gt; 사실 클럽에서는 과격하고 좀 ‘센’ 스타일의 음악을 튼다. 엠비오 쇼는 감동적인 부분을 많이 살리려고 한다. &lt;strong&gt;그럼 이번 시즌의 감정 포인트는?&lt;/strong&gt; 중년 남자가 어린 여자를 만나러 가는 설렘이랄까.&lt;/p&gt;
+
+&lt;h4 id=&quot;tatoo-artist-노보&quot;&gt;TATOO ARTIST 노보&lt;/h4&gt;
+
+&lt;p&gt;디 자이너 예란지가 지휘하는 더 센토르. 동분서주 뛰어다니는 디자이너  곁에서 발견된 한 낯선 남자. 타투이스트 노보가 모델의 피부에 그림을 그리고 있었다. “타투를 접목시킨 건 몸에 남는 ‘메시지’이자 프린트의 연장이라고 생각했기 때문이에요. 눈동자, 말 등 제가 좋아하던 문양들에 노보 씨의 생각을 녹여서 완성했죠.” 디자이너 예란지의 말처럼, 다양한 프린트를 선보였던 예란지 의상들 사이에서 노보의 작품은 또 하나의 의상이나 다름없었다.&lt;/p&gt;
+
+&lt;h4 id=&quot;makeup-artist-고원혜&quot;&gt;MAKEUP ARTIST 고원혜&lt;/h4&gt;
+
+&lt;p&gt;뷰티 숍 고원(高媛)의 고원혜 원장은 얼굴을 캔버스 삼아 작품을 만드는 메이크업 아티스트로, 이번 서울 컬렉션에서 지춘희, 쟈뎅 드 슈에뜨, 두 쇼의 뷰티 스타일링을 책임졌다. &lt;strong&gt;몇 번째 서울 컬렉션인가.&lt;/strong&gt; 2000년부터 쭉 해왔다. &lt;strong&gt;쇼의 헤어와 메이크업을 결정하는 과정이 궁금하다.&lt;/strong&gt; 우선 디자이너와 컨셉트 미팅을 한다. 디자인 스케치를 놓고 의상과 쇼에 관련된 다양한 것들에 관해 이야기를 나누면서 헤어와 메이크업에 대해서도 서로 생각을 내놓는다.  거기서 절충안을 뽑아 1차 결정을 한 다음, 이를 모델에게 샘플 작업해 디자이너에게 보여주는 것이 2차 과정. 지속적인 의논과 수정이 이뤄진다. &lt;strong&gt;의견이 디자이너의 색깔과 충돌하는 경우도 있을 텐데.&lt;/strong&gt; 디자이너 의견을 일단 따른다. 디자이너의 감성이 옷으로 표현되는 것이기 때문에 그가 머릿속에 그린 헤어와 메이크업이 사실 가장 정확한 답이다. 내가 그것을 어떻게 뷰티적으로 풀어내느냐가 쇼 메이크업의 숙제다. &lt;strong&gt;쇼 메이크업에서 가장 중요하게 생각하는 것은.&lt;/strong&gt; ‘디자이너의 아이덴티티’를 표현하는 것. 메이크업 아티스트로서 그 아이덴티티와 색깔을 잘 살리기 위해 고심하고 노력한다. 또 쇼는 현장감이 중요하다. 살아 움직이는 모델이 오브제가 되는 거니까.&lt;/p&gt;
+
+&lt;h4 id=&quot;editor-in-chief-아사코-히다카&quot;&gt;EDITOR IN CHIEF 아사코 히다카&lt;/h4&gt;
+
+&lt;p&gt;유난히 일본인 손님이 많았던 홍승완의 로리앳(Roliat) 컬렉션. 백스테이지에 들른 &lt;멘즈 논노=&quot;&quot;&gt; 편집장, 아사코 히다카(Asako Hidaka)를 만났다. **서울 컬렉션은 처음인가?** 서울이란 도시 자체가 처음이다. **방금 전에 끝난 로리앳 쇼는 어땠나?** 클래식한 것을 바탕으로 한 몽환적인 느낌이 좋았다. 컬러와 소재 선택이 탁월하다고 느꼈다. **그가 만든 옷에는 어떤 힘이 있나?** 손맛이 있다. 정성을 다한 옷에 감동하게 된다. 어떤 쇼를 봤나? 도착한 지 얼마 안 돼 홍승완 쇼 말고는 못봤다. 기회가 된다면 많이 보고 싶다.&lt;/멘즈&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/public/images/2011/04/4.jpg&quot;&gt;4.jpg&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;cleaning-crew-이창희&quot;&gt;ClEANING crew 이창희&lt;/h4&gt;
+
+&lt;p&gt;쇼가 끝나기가 무섭게 빗자루를 들고 성큼성큼 쇼장으로 들어와 후다닥 청소를 마치시곤 사라지는 컬렉션장의 청소 도우미 이창희 씨와의 짧은 대화. &lt;strong&gt;서울 패션위크 때 가장 많이 버리는 쓰레기는?&lt;/strong&gt; 물이나 커피를 마시고 남은 종이컵이 대부분이다. &lt;strong&gt;가장 힘든 점은?&lt;/strong&gt; 보통 한 관당 두 명이 청소를 담당하는데 다음 쇼 준비에 맞춰서 전체를 다 청소해야 하니 시간에 쫓기기 일쑤다. 카펫에 끈적거리는 것이 묻어 있으면 빗질로도 충분히 제거되지 않아 많이 곤란하기도 하고. &lt;strong&gt;쇼장에 오는 사람들에게 특별히 부탁하고 싶은건 없나?&lt;/strong&gt; 그런 건 없고 빗자루말고 청소기가 있으면 정말 좋겠다!&lt;/p&gt;
+
+&lt;h4 id=&quot;stage-art-director-김영철&quot;&gt;STAGE ART DIRECTOR 김영철&lt;/h4&gt;
+
+&lt;p&gt;‘정글 캠프’라는 테마로 경쾌한 쇼를 선보인 스티브 J &amp;amp; 요니 P의 생동감 넘친 무대 세트를 완성해준 건 무무 스튜디오 김영철 실장이다. &lt;strong&gt;쇼 컨셉트를 위해 특별히 신경 쓴 부분이 있는지.&lt;/strong&gt; 재밌는 효과를 주기 위해 바닥에 이끼를 깔고 여기저기 거미줄을 연출했지. 중간 중간 새 모양 패턴의 의상들과 잘 어우러졌다. &lt;strong&gt;이끼 준비하는 게 힘들었을 것 같다.&lt;/strong&gt; 말끔히 이끼를 깔았는데 관객들이 입장하며 밟고 지나가서 당황했다. 나중에 보니 오히려 약간 흐트러진 모습이 더욱 자연스러워 보이더라. &lt;strong&gt;공간이 작아 무대 설치가 어렵진 않았나.&lt;/strong&gt; 작아서 더 좋았다. 마당놀이 분위기의 런웨이 연출을 예전부터 해보고 싶었는데 이번이 좋은 기회였던 것 같다.&lt;/p&gt;
+
+&lt;h4 id=&quot;helper-방신지&quot;&gt;HELPER 방신지&lt;/h4&gt;
+
+&lt;p&gt;청강문화산업대 패션디자인과 학생인 그녀는 헬퍼 팀장으로 백스테이지 구석구석을 누비고 있었다. &lt;strong&gt;헬퍼로 일하면 막상 쇼는 볼 수 없을 텐데?&lt;/strong&gt; 아쉽긴 하지만 디자이너와 직접 소통하고 쇼피스들의 고급 원단도 직접 만져 보며 느낄 수 있기 때문에 좋다. 다양한 패션 종사자들을 만날 수 있기도 하고. &lt;strong&gt;여자로서 남자 모델들을 도와줄 때 불편한 점은 없나?&lt;/strong&gt; 부끄러워 조심스러워하는 아이들도 있지. 모델이 마네킨이라고 생각하고 빨리빨리 꼼꼼히 챙겨주려고 노력한다. &lt;strong&gt;힘들 때 짬짬이 쉬는 요령은?&lt;/strong&gt; 일단 밥을 제대로 먹을 수 있는 시간이 없기 때문에 중간 중간 초콜릿으로 열량을 보충한다. 하지만 혹시라도 옷에 묻으면 안 되니까 젓가락으로 헬퍼들끼리 서로 초콜릿을 먹여 주기도 한다.&lt;/p&gt;
+
+&lt;h4 id=&quot;lighting-expert-심한기&quot;&gt;LIGHTING EXPERT 심한기&lt;/h4&gt;
+
+&lt;p&gt;아트 전기의 무대조명 설치기사 심한기는 천장에 닿을 듯 무시무시하게 높은 곳에 올라가 쇼 네온 사인을 달고 있었다. 쇼 시작 바로 전까지 레주렉션 네온사인 테이핑에 여념이 없던 그를 쫓아갔다. &lt;strong&gt;높은 곳에서 작업하면 무서울 것 같다.&lt;/strong&gt; 늘상 해오던 것이니 전혀 무섭지 않다. 준비 기간이 빠듯해 쇼 시작 전에 빨리 끝내야겠다는 생각뿐이지. &lt;strong&gt;쇼 전에 조명에 문제가 있어 걱정했던 적 있나?&lt;/strong&gt; 한 번은 쇼 시작 전에 네온이 깨져 속을 썩인 적 있다. 네온은 전문가들만 만지고 고치는 데도 시간이 걸려서 까다로운 종류지. 하지만 그런 일은 드문 편이다. &lt;strong&gt;오, 굉장히 완벽한가 본데.&lt;/strong&gt; 그렇다. 나는 프로니까!&lt;/p&gt;
+
+&lt;h4 id=&quot;security-guard-최승희&quot;&gt;SECURITY GUARD 최승희&lt;/h4&gt;
+
+&lt;p&gt;한올 흐트러짐 없이 빗어 넘긴 머리와 날카로운 눈초리. AI 시큐리티의 최승희에게 다가갔을 때 그녀는 의외로 천진한 웃음을 터뜨리며 물러섰다. &lt;strong&gt;바쁘겠지만 잠깐 인터뷰해도 되나?&lt;/strong&gt; 으악, 이런 거 쑥스러운데(웃음). &lt;strong&gt;빠르게 몇 가지만 묻겠다. 당신의 역할은?&lt;/strong&gt; 관객들의 입출입을 통제하고 안전을 책임진다. 연예인 경호도 맡고 있다. &lt;strong&gt;언제 기쁘다고 느끼나?&lt;/strong&gt; 행사가 원활하게 진행될 때. 즐겁게 하고 있다. 어릴 때부터 늘 원하던 일이었으니까(웃음).&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/public/images/2011/04/5.jpg&quot;&gt;5.jpg&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;musician-김경인&quot;&gt;MUSICIAN 김경인&lt;/h4&gt;
+
+&lt;p&gt;은빛 가발을 쓴 한 여인이 조니 해이츠 재즈 컬렉션 런웨이에 설치된 드럼 앞에 앉는다. 밴드 피터팬 콤플렉스의 드러머 김경인이었다. &lt;strong&gt;패션쇼에서의 연주는 처음인가?&lt;/strong&gt; 처음이다. &lt;strong&gt;어떤 계기로 최지형의 옷들 사이에 앉게 됐나?&lt;/strong&gt; 그녀와 예전부터 함께 작업한 DJ 테요가 이번 쇼 음악을 맡았는데 그가 제안해서 함께하게 됐다. &lt;strong&gt;해보니 어땠나?&lt;/strong&gt; 어려운 점은 없었나? 특별히 어려운 점은 없었다. 처음 해봐서 흥미로웠다. &lt;strong&gt;멤버들 없이 혼자였고, 또 관객 반응도 평소 공연과 달랐을 텐데.&lt;/strong&gt; 그런 면은 거의 신경 쓰지 않았다. 어차피 주인공은 옷이니까. 디자이너가 내 옷과 가발을 준비해줬다. 그리곤 ‘네가 아닌 것처럼 해보라’고 하더라. 그래서 그냥 마음 편하게 했다. &lt;strong&gt;이건 개인적으로 궁금한 질문. 다음 앨범은 도대체 언제 나오나?&lt;/strong&gt; 내년 상반기에 나올 예정이다. 아, 그리고 12월 30일에 카운트다운 판타지라는 페스티벌에 참가한다!&lt;/p&gt;
+
+&lt;h4 id=&quot;creative-director-박승건&quot;&gt;CREATIVE DIRECTOR 박승건&lt;/h4&gt;
+
+&lt;p&gt;2003 년 푸시 버튼을 시작한 후 7년 만에 첫 서울컬렉션 무대에 데뷔하는 크리에이티브 디렉터 박승건이 특유의 발랄한 모습으로 쇼장에 등장했다. &lt;strong&gt;오늘 첫 서울컬렉션 무대인데 많이 떨리겠다. 지금 기분은?&lt;/strong&gt;  사실 이곳 쇼장에 도착하기 전까지만 해도 많이 떨렸는데 솔직히 지금은 아~무 생각이 없다. 가장 힘들었던 부분은?  쇼에서 보여줄 옷의 순서를 정하는 게 너무 힘들었다. 매 시즌 방향과 컨셉트를 잡고, 옷을 만들어 소개하는 것은 늘 하던 일이지만 ‘쇼’라는 퍼포먼스를 통해 라이브로 옷을 보여주는 것이 처음이다 보니 순서를 짜는 일이 이렇게 힘들 줄은 생각도 못했다. &lt;strong&gt;이번 쇼의 관전 포인트가 있다면?&lt;/strong&gt; 지금까지는 푸시 버튼 하면 ‘투 머치 스타일링’이었다. 하지만 이번엔 지금까지 보여준 적 없는 푸시 버튼 식의 미니멀을 보여주기로 했다. 좀 더 많은 사람들을 만나고자 대중적인 접근을 생각했다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/public/images/2011/04/6.jpg&quot;&gt;6.jpg&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;show-director-김소연&quot;&gt;SHOW DIRECTOR 김소연&lt;/h4&gt;
+
+&lt;p&gt;미스지 컬렉션, 쟈뎅 드 슈에뜨 등 이번 시즌 많은 사람들이 몰렸던 쇼 뒤에는 언제나 그녀가 있었다. 16년 간 쇼 디렉터로 일해온 에스팀 대표 김소연이다. &lt;strong&gt;컬렉션 때면 어김없이 마이크를 들고 큰소리를 내며 카리스마 있는 모습을 목격할 수 있는데.&lt;/strong&gt; 쇼는 NG가 난다고 다시 할 수 있는 게 아니다. 모델과 스태프들에게 진행하는 쇼에 대한 긴장감을 줘야 하고 기억에 남게 해야 하다 보니 평소보다 목소리를 높이게 되지. 하지만 쇼 후엔 직원들과 농담을 주고받기도 한다. &lt;strong&gt;리허설 동안 가장 꼼꼼이 체크하는것?&lt;/strong&gt;  의상 컬러를 잘 표현해주는 조명을 선택하고 음악과 모델의 워킹이 조화를 이뤄 극적인 연출을 유도하는 게 가장 중요하기 때문에 그 모든 부분을 확인한다. &lt;strong&gt;지금 메고 있는 작은 가방 안에는 뭐가 들어 있나?&lt;/strong&gt; 필기 도구, 스타일링 맵, 휴대전화, 테이프 등 피팅, 리허설, 본 쇼까지 언제든 필요할지 모르는 물건들이 들어 있다. 이번 시즌 시작 전에 하나 마련했다.&lt;/p&gt;
+
+&lt;h4 id=&quot;blogger-채드-버튼&quot;&gt;BLOGGER 채드 버튼&lt;/h4&gt;
+
+&lt;p&gt;서울 패션위크 기간 동안 백스테이지에서 자주 발견된 훤칠한 젊은이, 채드 버튼(Chad Burton). 캐나다에서 왔다는 그는 여기서 대체 뭘하고 있는 걸까?  &lt;strong&gt;지금 뭐하고 있나?&lt;/strong&gt; 전체적인 풍경과 모델들을 찍고 있다. 내 블로그 ww.thexoxokids.com에 올릴 거다. 잠깐만 주소 적힌 스티커 줄게. &lt;strong&gt;서울컬렉션은 처음인가?&lt;/strong&gt; 세 시즌째 오고 있다. &lt;strong&gt;당신을 소개한다면?&lt;/strong&gt; 블로거. 포토그래퍼, 모델이자 스타일리스트다. &lt;strong&gt;아직 둘째 날이지만 그래도 지금까지 본 쇼 중 어떤 것이 가장 좋았나?&lt;/strong&gt; 한상혁의 엠비오! 테마가 분명하고 디테일 도 완벽에 가까웠다. 쇼를 보는 내내 미소지었다. 지난 시즌에도 좋았고, 이번에도 역시 좋다! &lt;strong&gt;서울 패션에 대한 당신의 생각은?&lt;/strong&gt; 명동이나 홍대 등의 길거리에서 익살스러운(Playful) 룩을 많이 봤다. 흥미롭다고 생각한다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/public/images/2011/04/7.jpg&quot;&gt;7.jpg&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;creative-director-홍승완&quot;&gt;CREATIVE DIRECTOR 홍승완&lt;/h4&gt;
+
+&lt;p&gt;새로운 브랜드 로리앳(Roliat)을 들고 돌아온 디자이너 홍승완과 나눈 대화. &lt;strong&gt;4년만의 서울 컬렉션이다. 돌아온 소감이 어떤가?&lt;/strong&gt; 새롭고 서먹하고. 고향에 돌아온 느낌도 든다. &lt;strong&gt;그동안 어떻게 지냈나?&lt;/strong&gt; 주로 해외 진출에 포커스를 두고 활동했다. 일본에서 브랜드를 론칭하기 위한 작업 때문이었다.  &lt;strong&gt;왜 일본이었나?&lt;/strong&gt; 우선 일본에서 공부했던 경험 그리고 유리한 네트워크가 있었기 때문이다. 또 굉장히 좋은 남성복 시장이라고 판단했다. &lt;strong&gt;일본의 여러 셀렉트 숍에 입점해 있는 것으로 안다. 어떤 점이 일본인들의 마음을 움직였을까?&lt;/strong&gt; 영국적인 테일러링을 베이스로 하고 거기에 위트를 가미했다는 점. &lt;strong&gt;이번 쇼에 대해 설명해달라.&lt;/strong&gt; 가상의 섬 몽지벨로(Mongibello)를 주제로 했다.이전에 카프리 섬을 여행했을 때의 느낌을 구체화했다. 오렌지 밭과 아름다운 정원, 빛바랜 컬러 등을 사용했다. &lt;strong&gt;한국에서도 홍승완 표 여성복을 만날 수 있나?&lt;/strong&gt; 청담동 쇼룸에서  먼저 만날 수 있고 내년쯤 백화점에서도 들어갈 예정이다.  &lt;strong&gt;쇼장 한 켠의 프런트로에는 서상영, 김석원, 최범석 등의 디자이너들이 앉아 있었다. 평소 의리파인가?&lt;/strong&gt; 부족한 형을 좋아해주는 착한 동생들이다(웃음).&lt;/p&gt;
+
+&lt;h4 id=&quot;stylist-김성일&quot;&gt;STYLIST 김성일&lt;/h4&gt;
+
+&lt;p&gt;로리앳의 백스테이지. 디자이너보다 더 바삐 움직이는 한 남자가 있었다. 그는 스타일리스트 김성일이었다. &lt;strong&gt;이번 쇼에서 맡은 역할은?&lt;/strong&gt; 전체적인 스타일링을 맡았다. &lt;strong&gt;패션쇼에서 스타일리스트의 역할은 어디부터 어디까지인가?&lt;/strong&gt; 기획 단계부터 함께하는 경우도 많은데 이번 쇼에서는 디자이너 홍승완이 기획을 마친 뒤에 합류했다. 그와 아이디어를 주고받으며 스타일을 완성했다. 디자이너와 스타일리스트는 각기 다른 시선을 갖고 있기 때문에 함께 일하면 시너지 효과가 생긴다. &lt;strong&gt;디자이너와 다정해 보인다. 개인적인 친분이 있나?&lt;/strong&gt; 친하다. 꽤 오래전부터. 그게 1994년이니까 오래됐지. &lt;strong&gt;머리에 두른 스카프와 가슴의 꽃이 인상적이다. 이번 쇼의 스타일링에서 중점을 둔 부분은?&lt;/strong&gt;  바닥을 걷는 플로 쇼라서 밋밋해 보일 수 있기 때문에 스커트에 페티코트를 넣었다. 스카프와 손에 쥔 손수건, 안경등이 쇼의 컨셉트를 설명하는 소품들이다.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/public/images/2011/04/8.jpg&quot;&gt;8.jpg&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;model-강승현&quot;&gt;MODEL 강승현&lt;/h4&gt;
+
+&lt;p&gt;‘효니’, 강승현. 미소가 사랑스러운 그녀를 미스지 컬렉션 백스테이지에서 만났다. &lt;strong&gt;오랜만이다. 뉴욕 컬렉션에 설 때와는 또 다른 기분이겠다.&lt;/strong&gt; 더 긴장된다. 뉴욕 컬렉션보다 경험이 적고, 매 시즌 서지 않으니까. 거기에다 일반 관객도 많고. 또 뉴욕에서는 하루에 네 개 쇼에 서는 일도 비일비재하지만 서울에선 그렇지 않으니까. 한 번 할 때 잘하는 모습을 보이고 싶은 마음이 커서 그렇다. &lt;strong&gt;쇼를 앞두고 신경이 날카로워질 만도 한데 즐거워 보인다.&lt;/strong&gt; 이번 미스지 컬렉션 분위기 자체가 밝아서 더 그렇게 느낀 걸 거다. 쇼 분위기에 따라 기분도 달라진다. 진지한 쇼인데 백스테이지에서 환하게 웃고 있는 것도 이상하잖아. 이번 쇼는 축제 같은 분위기니까 나도 기분이 업된 것 같다. &lt;strong&gt;캣워크에 나가기 전, 마인드 컨트롤 노하우가 있나.&lt;/strong&gt; 기도를 꼭 하고 나간다. 또 버릇이 있는데 쇼 분위기나 디자이너가 원하는 무드에 맞춰 두 가지 정도의 단어를 정해 계속 되뇐다. 나가기 전부터 워킹하고 돌아오는 순간까지 곱씹으며 워킹하는 거다. 이번 쇼 같은 경우 ‘발랄하게’와 ‘기쁘다’로 정했다. 런웨이라는 곳이 멋진 모델들이랑 함께 오르는 곳인데 그 짧은 시간에 빛나려면 자신을 컨트롤해야지. &lt;strong&gt;런웨이에서 빛나는 모델과 화보에서 빛나는 모델 중 어느 쪽이 더 욕심나나?&lt;/strong&gt; 물론 둘 다. 한국 모델 중 비교적 일상이 많이 노출이 된 편이다 보니 파격적인 변신을 하지 않는 이상 사람들이 선입견을 가지고 화보를 보는 것 같아 속상할 때가 있다. 더 노력해야지. 모델이니까 둘 다 욕심이 나는 건 당연하지 않겠나?&lt;/p&gt;
+</content>
+ </entry><entry>
+   <title>MOT x EUNCHURN - 매일 그대와 작업일기</title>
+   <link href="http://localhost:4000/runway/2011/04/02/production-note-of-music-for-mvio-aw-collection-20112012/"/>
+   <updated>2011-04-03T03:57:25+09:00</updated>
+   <id>http://localhost:4000/runway/2011/04/02/production-note-of-music-for-mvio-aw-collection-20112012</id>
+   <content type="html">&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/21705800&quot; width=&quot;640&quot; height=&quot;853&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;production-note-of-music-for-mvio-aw-collection-20112012&quot;&gt;production note of music for mvio A/W collection 2011/2012&lt;/h2&gt;
+
+&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/12767324&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;h2 id=&quot;construction-of-beatsbeats&quot;&gt;Construction of Beats(#beats)&lt;/h2&gt;
+&lt;h3 id=&quot;signal-decomposition&quot;&gt;Signal Decomposition&lt;/h3&gt;
+&lt;p&gt;비트작업은 꽤 복잡한 작업으로 이루어졌다. 깔끔하고 메탈릭한 텍스쳐를 가지는 그런 킥과 스네어 그리고 하이햇이 필요했다. 오래전부터 생각해오던 아이디어중에 음원을 N개의 소리로 분리해서 다시 합쳤을때 원음원의 소리가 나오게 할 수 없을까라는 고민에서 시작되었다. 여기서 부터는 공학적인 접근이 필요하다.
+&lt;br /&gt;&lt;br /&gt;
+음원이라함은 신호(signal)과 같다. 즉, 현재의 아웃보드라던지 이펙터는 &lt;a href=&quot;https://en.wikipedia.org/wiki/Signal_processing&quot;&gt;신호처리(signal processing)&lt;/a&gt;기법들의 조합이다. 예를들어 &lt;a href=&quot;https://en.wikipedia.org/wiki/Low-pass_filter&quot;&gt;LPF&lt;/a&gt;나 &lt;a href=&quot;https://en.wikipedia.org/wiki/High-pass_filter&quot;&gt;HPF&lt;/a&gt;는 &lt;a href=&quot;https://en.wikipedia.org/wiki/Infinite_impulse_response&quot;&gt;IIR필터&lt;/a&gt;와 &lt;a href=&quot;https://en.wikipedia.org/wiki/Finite_impulse_response&quot;&gt;FIR필터&lt;/a&gt; 방식으로 전달특성을 가지는 함수를 통과하는 것과 같다. 그리고 음원은 디지털신호로 변환이 되었기 때문에 &lt;a href=&quot;https://en.wikipedia.org/wiki/Sampling_(signal_processing)#Sampling_rate&quot;&gt;샘플링레이트(sampling rate)&lt;/a&gt;와 &lt;a href=&quot;https://en.wikipedia.org/wiki/Audio_bit_depth&quot;&gt;비트사이즈(bit-depth)&lt;/a&gt;를 가진다. 아날로그 신호를 &lt;a href=&quot;https://en.wikipedia.org/wiki/Quantization_(signal_processing)&quot;&gt;양자화(discretize)&lt;/a&gt;한다고 한다. AD과정만해도 많은 페이지를 차지하기 때문에 여기서는 거론하지 않고, &lt;a href=&quot;https://en.wikipedia.org/wiki/Harmonic&quot;&gt;고조파(harmonics)&lt;/a&gt;에 대해 생각해보고 신호분리하는 방법에 대해 말하고자 한다. &lt;a href=&quot;https://en.wikipedia.org/wiki/Joseph_Fourier&quot;&gt;퓨리에&lt;/a&gt;님 덕분에(?) 아니면 그후에도 발표했을 어떤 수학자 또는 과학자에 의해 sin과 cos이 가지는 주파수성분으로 모든 신호를 표현이 가능해진것인데. 여기서 sin과 cos에 주목할 필요가 있다. 우리가 흔히 쓰는 신디사이저에서 파형제조기인 오실레이터(oscillator)는 sin, sawtooth, square 그리고 noise등이 있지만 모든 파형의 근원은 sin파로 다른 파형들은 sin파형으로 조합이 가능하다는 이야기다. 여기서 중요한 사실은 퓨리에적분은 다 알다시피 음의 무한대에서 무한대까지의 적분이다. 수학적으로는 아날로그를 표현하기 때문에 컴퓨터계산을 위해 디지털화된 퓨리에변환이 필요하다 즉, &lt;a href=&quot;https://en.wikipedia.org/wiki/Discrete_Fourier_transform&quot;&gt;DFT&lt;/a&gt;와 &lt;a href=&quot;https://en.wikipedia.org/wiki/Fast_Fourier_transform&quot;&gt;FFT&lt;/a&gt;이 그 일종이다. 단 &lt;a href=&quot;https://en.wikipedia.org/wiki/Sampling_(signal_processing)#Sampling_rate&quot;&gt;sampling rate&lt;/a&gt;영역이내의 성분이고 그것도 &lt;a href=&quot;https://en.wikipedia.org/wiki/Nyquist_frequency&quot;&gt;Nyquist&lt;/a&gt;이론에 의해 샘플링레이트 Fs의 절반이 그 영역이 된다. 디지털신호에서 다른 파형의 조합은 나중에 생각하자. 예를들어 디지털에서의 square파형과 sawtooth파형은 완벽하지 않다. 가청주파수 이상에서의 고조파도 적분 대상이기 때문에 꺽이는 지점 즉 roll-off 위치의 형태에 따라 신디사이저의 음색이 달라진다. 물론 이를 보완하려는 노력에 의해(?)서도 음색이 달라지긴 한다. 자연계에서 퓨리에변환은 무한대에서 무한대까지의 적분해야한다. 따라서 디지털 세상에서는 square파나 sawtooth파는 무한대까지 가지 못하기 때문에 완벽하지 않다. 하지만 몇개의 고조파의 파형만 형성이 되어도 일반인은 큰차이를 느끼지 못한다. Live의 Operator 신스는 그 고조파의 개수를 정해줄 수 있다. 아주 멋진 녀석이긴 하다. 하지만 가청주파수 이상은 어쩔 수 없다. 따라서 디지털에선 약간의 디더를 통해 노이즈를 추가해 뭉개버리거나 보정은 해준다. (너무 멀리왔다. 고조파에 대한 설명이 왜 필요했었지?…)
+&lt;br /&gt;&lt;br /&gt;
+모든 변환은 역변환이 존재한다 따라서 자연계의 퓨리에변환도 역변환이 가능하다 그래서 신호의 원형대로의 조합이 가능하다는 것이다. 물론 FFT도 역변환으로 원래신호로 돌아올 수 있다. 그러나 오디오 믹스는 약간 요리에 비유할 수 있다. 물리적 결합과 화학적 결합이 동시에 일어나기 때문에 믹스된 음원을 원래 상태로 반환하는 일은 거의 불가능하다. 요리를 예를 들어 생각하면 요리에는 재료의 맛과 조미료의 맛(?)이 있다. 커피를 생각하더라도 중심인 바디감(브라질을 좋아함)과 다른향과 맛(신맛은 에티오피아)이 섞여 커피의 특성을 나타낸다. 하지만 요리된 음식을 원래 재료로 분리하거나, 블렌딩한 커피를 원래 생두로 반환하지 못하듯 물리적 화학적 결합의 특성은 이렇다. 마찬가지로 모든 악기(재료)에는 음색이라는 것이 있다. 기타, 베이스 그리고 타악기들 모두 음색이 존재한다. 이 음색이라는 재료 자체의 것도 바디감과 그 이외의 음색과 질감이 있다. 베이스나 킥의 경우는 바디감은 바로 메인주파수(fundamental frequency)에 있으며 소리의 질감을 결정하는 음색은 고조파(harmonics)에 존재한다. 엔지니어들은 보통 이들을 믹스할때 바디감이 적을땐 fundamental frequency를 부스트하거나 고조파 대역을 잡아 내리거나 음색이 선명하지 않을때 고조파 찾아 키우기 위해 바디의 레벨을 줄이거나 밴드패스필터를 적용하기도 한다. 주로 이퀄라이져(equalizer)를 사용하여 믹스의 균형을 잡아가지만, compressor도 동일한 역할을 할 때가 많다. 하지만 모든 주파수영역 컨트롤이 가능한 머신이나 이큐도 마찬가지로 IIR필터나 FIR필터 즉, 필터뱅크의 일종이다. 즉, 시간영역에서 필터를 통과하여 주파수대역을 조정하는 것이다. 여기서 필터의 내부구조를 파악하기 위해선 필터의 종류와 차수(order) 그리고 주파수 파라미터들이 있지만 한번 필터를 거친 음원을 원래대로 돌려주는 역변환 필터는 없다고 봐야한다. 왜냐하면 깍아내기 위한 필터의 zero를 인버스하면 pole이 되고 발산하기 때문이다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;내가 구현하려고 하는것은 신호를 N개로 분리하고 다시 합치는 일이다. 필터의 가장 큰 특징은 인버스 필터를 만들기도 힘들기도 하지만 위상(phase)를 의도하지 않은대로 바꾸는 특징이 있다. 따라서 필터를 사용해서 신호를 N개로 나누는것은 가능하나 원래의 파형으로 복원하는 일은 단순 더하기방식(mix)로 되지 않는다. 음 그렇다면 다른 선형분리기가 있지 않을까? 고민하면 또다른 변환이 있다는 것을 알 수 있다. 바로 &lt;a href=&quot;https://en.wikipedia.org/wiki/Wavelet#Continuous_wavelet_transforms_(continuous_shift_and_scale_parameters)&quot;&gt;웨이블릿변환(Wavelet Transform)&lt;/a&gt;이다. 이것도 어떤 천재분이 엄마웨이블릿(mother wavelet)을 만들고 그 mother wavelet파형을 늘이고 줄이는 방식으로 sin과 cos을 대신하는 형태의 변환이다. 퓨리에 변환의 확장이라고 볼 수 있다. 그렇지만 wavelet 변환의 문제는 window사이즈가 가변적인데 저주파에서는 어쩔 수 없이 길다는 점이다. 따라서 다른접근이 필요했다. 바로 &lt;a href=&quot;https://en.wikipedia.org/wiki/Hankel_matrix&quot;&gt;Hankel matrix&lt;/a&gt; 구성과 &lt;a href=&quot;https://en.wikipedia.org/wiki/Singular-value_decomposition&quot;&gt;특이치분해(singular value decomposition)&lt;/a&gt;이다 이것은 선형대수에서 많이 사용되는 방법으로 행렬은 좌고유벡터(left eigenvector)와 우고유벡터(right eignevector)로 나뉜다. &lt;a href=&quot;https://en.wikipedia.org/wiki/Hankel_matrix&quot;&gt;Hankel matrix&lt;/a&gt;는 단순하다. 벡터(여기선 신호)를 한샘플씩 밀면서 매트릭스를 구성한다. &lt;a href=&quot;https://en.wikipedia.org/wiki/Hankel_matrix&quot;&gt;Hankel matrix&lt;/a&gt;는 주로 &lt;a href=&quot;https://en.wikipedia.org/wiki/Autocorrelation&quot;&gt;자기상관함수(autocorrelation function)&lt;/a&gt;를 통해 모델기반 부공간(subspace)을 식별하기 위해 만들어진다. 이것을  적용하여 신호를 N개로 분리해 보았다. 즉, 행렬의 행의 개수를 제한하며 음원의 Hankel Matrix를 구성하고 특이치분해를 하면 고유벡터들이 나오고 다시 그 고유벡터들의 기저(basis)가 된 신호를 합쳐주면 N개의 신호로 분리가 된다. 당연히 그냥믹스만해도 원래신호로 복원이 된다. 쉽게 말하자면 신호를 N개로 선형분리하고 다시 선형조합을 하고 싶었던 것이다. 음원을 생각해보자. 예를들어 내가 좋아하는 킥사운드의 음색을 808킥이나 606킥 중심 음원에 입혀보는 것이 가능하다. 단 공통의 고유벡터를 가진상태여야 한다. 이렇게 조합이 되면 단순히 킥사운드 위에 레이어드된 느낌이 아니라 원래의 킥소리의 음색으로 드러나게 된다. 각 파형의 고유벡터가 다르기 때문에 즉, 고유벡터는 서로 직교하기 때문에(고유벡터는 쉽게 우리가 흔히 쓰는 데카르트 좌표계 즉, 직교하는 X,Y,Z 좌표계와 유사하다.) 겹치지 않고 서로에 대해 독립적이다라고 생각하면 쉽다. 다시말해 파형이 겹쳐서 상쇄되거나 위상차에 의해 가감쇠가 되지 않는다. 정확히 N개의 소리로 분리가 되고 다시 믹스하면 원래 음원이 된다. 결론은 이번 트랙작업에서는 예전에 행해졌던 킥소리만 5개를 가지고 겹침이 생기지 않게 컴프레서를 사용하거나 이큐를 작동시켜서 만든 사운드에 비해 좀더 음색이 드러나는 사운드를 만들고 싶었다. 이번 컬렉션 음악의 비트는 그런형식으로 빌드되었다. (지나고 보니 쓸데없는데 시간을 많이 소모한 듯)&lt;/p&gt;
+
+&lt;p&gt;이러한 방법을 응용한다면 주로쓰는 사운드에서 필요한 RANK부분의 소리를 제거하고 다른 소리를 채워 넣을 수도 있다. 중요한점은 교유벡터가 서료 직교하는 상태일때여야 한다. 참고로 사용된 프로그램은 MATLAB으로 만들었고 좀더 개발하고 쓸모가 있어지면 공개할 예정이다. (시간이 많이 지난 요즘, Python으로 다시 구현해보려고 한다.)&lt;/p&gt;
+
+&lt;p&gt;(&lt;a href=&quot;/engineering/2018/01/20/signal-decomposition-hmbsvd/&quot;&gt;헹켈행렬(Hankel matrix) 기반 신호분리 이론 고찰&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;stereo-delay--m-s-decoder&quot;&gt;Stereo Delay &amp;amp; M-S Decoder&lt;/h3&gt;
+&lt;p&gt;스테레오 딜레이는 과거 작업에서도 많이 사용되었다. 특히, 믹스할땐 소리가 겹쳐 선명하지 못하게되는 부분은 사이드로 벌려준다. 이것은 M-S Decoder도 마찬가지역할을 하지만 M-S Decoder는 위상기반으로 모도와 스테레오를 만들어주는 반면 스테레오딜레이는 단순 시간차만 둔다. 주로 보컬은 레이어드 되는 트랙은 5ms로 벌려주었다. M-S Decoder는 단순히 위상차를 두기 때문에 Sided된 사운드는 모노 믹스가 되었을때 무음의 상태가 된다. 비트의 경우는 바디음이 중앙에서 그리고 위에서 앞서 설명한 분리한 음색부분은 사이드에서 믹스된다. 스트링앙상블은 드라이한 톤은 중앙에서 릴리즈가 풍부한 사운드는 스테레오딜레이 10ms정도 차이를 두었다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;hi-hats&quot;&gt;Hi-Hats&lt;/h3&gt;
+&lt;p&gt;하이햇은 비트에서 가장 비트를 맛깔나게 해주며 킥소리에서도 킥의 음색을 결정해준다. 하지만 위에서 킥소리를 결정했기 때문에 다른 컬러로 하이햇 시퀀스가 있어주어야 했다. NI사의 Massive 신스를 사용하였다. Massive는 아주막강하게도 스텝시퀀서와 퍼포먼서를 모듈레이팅과 사이드체인방식으로 사용할 수 있다. 알아서 모듈레이터의 엔벨로프가 스텝으로 컨트롤되기때문에 사용하기 아주 편리하다. 하이햇시퀀스는 음색이 듣기 편한 Brown Noise에 컬러를 첫번째 퍼포먼서에 어싸인시키고 레벨은 두번째 퍼포먼서로 어싸인시켜서 시퀀스를 만들어냈다. 그리고 스테레오딜레이와 코러스를 약간 사용하였다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;kick--snare&quot;&gt;Kick &amp;amp; Snare&lt;/h3&gt;
+&lt;p&gt;킥은 앞서 말한대로 신호분리기법으로 4가지의 음색을 만들어서 여러부분에서 변주되고 있고 스네어는 킥소리와 대조하며 작업을 했지만 원래 소스의 어택을 많이 줄여주지 못했다. 컬렉션장에서 스네어소리 들을때 맘이 좀 아팠던것 같다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;synths&quot;&gt;Synths&lt;/h2&gt;
+&lt;h3 id=&quot;long-release&quot;&gt;Long-Release&lt;/h3&gt;
+&lt;p&gt;초반부터 끝까지 이어지는 노이즈릴리즈 레벨이 높은 신스는 후부에 배치하여 리버스피아노와 함께 음악전체의 감성을 지배하도록 만들었다. 그리고 중음역대의 바디감이 높은 부분은 상승기류에서 옥타브를 올려가며 고조파가 겹치도록 하였다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;pattern-synth&quot;&gt;Pattern Synth&lt;/h3&gt;
+&lt;p&gt;아르페지오가 전체적 감성에서 상승과정을 유발했다면, 패턴신스는 곡의 스타일링을 담당하도록 어택과 바디감이 강한 신스를 빌드해서 사용했으며, 패턴은 The Chemical Brothers의 &lt;a href=&quot;https://www.youtube.com/watch?v=fhzkeFiXfPI&quot;&gt;Another World&lt;/a&gt;에서 착안하였다. 그리고 배치는 이번 쇼 리허설에서 본 목이 없는 모델이 나오는 시점인 중후반부로 배치하였다. 그러기 위해 곡 구성은 전반부 원곡 에딧과 상승기류 그 이후로 설정하였다. 그리고 앤딩부분엔 실험하면서 새로구성된 스텝시퀀스드 신스가 등장한다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;noisy-synth&quot;&gt;Noisy Synth&lt;/h3&gt;
+&lt;p&gt;패턴신스가 나오기 이전에 디더(dither)의 역할처럼 믹스가 잘되지 않고 진행되고 있는 부분에 전체적 밸런스를 맞춰주고 상승되는 부분에 추가빌드적 요소로 사용하였다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;vocoder&quot;&gt;Vocoder&lt;/h2&gt;
+&lt;p&gt;사실 이언형의 목소리는 우울하다. 본인도 인정하셨다. 곡은 밝게 만들었어도 목소리가 들어가면 우울해진다고… 그리고 의상이 그레이톤등 색이 많이 사용되지 않은 관계로 밝게(?) 보코더를 사용해야했다. 의미는 들리게 그리고 캐리어는 폴리포니 신스를 사용하여 모든대역이 잘들리도록 하였다. 하이라이트부분은 ‘매일 그대와 얘기 하고파’가 두번 나오도록 했다. 의도된 그런 얘기를 하고싶었다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;bass&quot;&gt;Bass&lt;/h2&gt;
+&lt;p&gt;기존엔 신스기반의 시퀀스된 베이스였다면, 이번엔 일렉트릭베이스를 사용하고 싶었다. Vitalic과 같은 킥에 찰싹 달라붙어 가는 그런 베이스라인을 가지고 싶었다. Trilogy등을 사용해봤지만 솔직히 맛깔나는 일렉트릭베이스는 녹음밖에 방법이 없다. 그래서 요즘 자주 연락하는 Skrew Attack의 리더 황정익군에게 연락을 해서 녹음을 했다. 사실 녹음한 시간보다 잡담한 시간이 길었다. 마샬앰프에 최근 새로샀다는 Mouse로 마이킹을 했으며 바디는 그대로 엠비언스는 꽤 많이 높이고 떨어져서 받았다. 최근 제작했다는 퍼즈는 느낌이 너무 빗나가서 사용못하고 디스토션걸린 음은 약간 섞었다. 중간에 템포가 바뀌기 때문에 오랫동안 다운피킹하느라 힘들어했던 정익이한테 고맙다. 아주 만족할만한 정도는 아니었지만 60%정도 만족할만한 결과를 얻었다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;reverse-piano-additional-strings&quot;&gt;Reverse Piano, Additional Strings&lt;/h2&gt;
+&lt;p&gt;마지막날 아직도 전체곡의 본인만족도 수준 50%에도 미치지 못한 상태에서 80%이상으로 끌어올려준 사람은 바로 박꽃초롱(Cho!ong)양이었다. 더이상 감성을 자극할 만한 추가적인 라인이 나오지 않는 상태에서 변주를 맡겼는데 몇시간도 안되서 엄청난 결과를 주었다. 바로 모든 시련과 고통을 이겨내게 해준 곡 전체의 감성을 지배한 Reverse Piano였다(눈물). 리버스 피아노에 딜레이가 약간 걸려있어서 원소스로 다시 리버스하면 피아노를 여러번 치는 듯한 느낌을 준다. 쇼음악 엔딩에서야 비로소 원소스로 리버스 된다. 이런 방식은 예전 스네어롤이나 하이햇등을 그런방식으로 장난을 쳤던 기억이 있다. 정말 기발하고도 멋진 발상이었다. 초롱양이 작업해준 결과를 그대로 사용하기에는 템포가 바뀌는 부분에서는 80BPM에서 125BPM으로 바뀔때 비트는 125BPM이지만 원곡은 125BPM의 절반 즉 62.5BPM으로 바뀌기 때문에 어렌지 순서를 바꿔야했다. 뒷부분을 앞으로 올리고 앞을 뒤로 옮기며 음원을 바꿔주어 최종 트랙이 완성되었다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;additional-strings&quot;&gt;Additional Strings&lt;/h3&gt;
+&lt;p&gt;Additional strings 는 초반 인트로에 사용되고 어택이 거의 없는 스트링도 추가되었다.
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;marcel-duchamp---the-creative-act&quot;&gt;Marcel Duchamp - THE CREATIVE ACT&lt;/h2&gt;
+&lt;p&gt;도입부에 나오는 강연은 Marcel Duchamp의 THE CREATIVE ACT로 &lt;a href=&quot;https://www.amazon.com/Sound-unbound-excerpts-allegories-archives/dp/B001I51WR6&quot;&gt;Sound Unbound:Exerpts And Allegories From The Sub Rosa Audio Archives&lt;/a&gt; 앨범에 들어 있는 음원이다. 전문은 &lt;a href=&quot;/data/Duchamp_Creative_Act.pdf&quot;&gt;Duchamp_Creative_Act.pdf
+&lt;/a&gt; 참조. 
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h2 id=&quot;epilogue&quot;&gt;Epilogue&lt;/h2&gt;
+&lt;p&gt;마지막부분엔 이언형의 원래 목소리가 나온다. 이부분 정말로 너무 좋아하는 부분. 꼭 살리고 싶었지만 곡 중간에 넣기에는 너무 뜬금이 없어 엔딩에 넣었다. 그리고 한시디님과 연출가님에게 모델 워킹이 끝나도 곡은 마지막까지 나왔으면 했는데, 결국은 너무 일찍 끝나버렸다. 사람들은 3~4분정도 앉혀놓을 수 없었다. 그래서 포기할 수 밖에 없었지만 쇼음악 다시듣기(?) 뭐 이런방식으로 사람들이 듣는 다면 저를 이해해주실지도…
+&lt;br /&gt;&lt;br /&gt;
+엠비오쇼는 나에겐 항상 대형 프로젝트로써 모든 집중력과 에너지를 쏟아내게 만든다. 다른쇼와 차이점을 둔다면 디제이라고 해서 원곡에서 약간 수정하여 디제이믹스셋을 만드는 개념보다는 기존곡에서 새로운 리믹스 방식으로 진행하기 때문이다. 그것도 1곡을 15분 정도.. 리믹스 프로듀싱이라 하지만 이건 거의 재창조에 가깝다. 한상혁시디님은 이야기를 만들어간다. 사실 한시디님은 작업전에 원곡과 이야기를 해준다. 모 잡지 인터뷰에서도 거론했던 이야기지만 이야기가 숙제의 전부다. 그것을 받아들이고 다시 난 내이야기를 풀어야 한다. 단, 원곡의 느낌은 살리면서… 그렇게 한시디님의 이야기와 내이야기를 담아낸 쇼음악이 만들어지고 의상과 함께 연출을 생각한다. 최초 한상혁디자이너가 엠비오 크리에이티브 디렉터 자리를 맡게되면서 부터…
+&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;h4 id=&quot;참고문헌-similarity-of-signal-processing-effect-between-hankel-matrix-based-svd-and-wavelet-transform-and-its-mechanism-analysis-키워드로-문헌을-더-찾아보자-svd-wavelet-transform-hankel-matrix-orthonormal-basis-projection-similarity&quot;&gt;참고문헌 &lt;a href=&quot;/data/Similarity of signal processing effect between Hankel matrix-based SVD and wavelet transform and its mechanism analysis.pdf&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Similarity of signal processing effect between Hankel matrix-based SVD and wavelet transform and its mechanism analysis&lt;/code&gt;&lt;/a&gt; 키워드로 문헌을 더 찾아보자 &lt;code class=&quot;highlighter-rouge&quot;&gt;SVD&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Wavelet transform&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Hankel matrix&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Orthonormal basis&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Projection&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Similarity&lt;/code&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;br /&gt;&lt;br /&gt;
+&lt;img src=&quot;/public/images/2011/03/Poster-front.jpg&quot; alt=&quot;1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2011/03/Poster-back.jpg&quot; alt=&quot;2&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;01 _SEASON autumn winter 2011 _ 2012
+APRON COLLECTION&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;02 _THEME ‘C O M P L E X’&lt;/p&gt;
+
+&lt;p&gt;03 _INTRO 001 _ M.I.A.S. MVIO INSTITUTE OF ART AND SCIENCE
+자신이 정말 원하는 것을 배우고 만들고 있는
+사람들을 상상하였다.
+1919년에 설립된 WALTER GROUPIUS의 BAUHAUS가 생각했던
+현대적인 지금의 모습과 그곳에서 있었던 사람들,
+그것들을 배우고 만들고 상상한 사람들의 손, 호기심
+그리고 경쟁속에 존재하던 콤플렉스.&lt;/p&gt;
+
+&lt;p&gt;002 _ COMPLEX
+배우고 싶은 것을 배우게 되면서,
+정말 하고 싶은 것을 하게 되면서,
+잘하고 싶다는 생각이 들기 시작하면서,
+콤플렉스라는 것을 알게 되었다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2011 2012 Autumn Winter Collection ‘C.O.M.P.L.E.X’ _ A P R O N Collection&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;MOT x EUNCHURN – EVERYDAY WITH YOU&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;music for Seoul Fashion Week FW 2011 mvio by HANSANGHYUK&lt;/li&gt;
+  &lt;li&gt;excutively produced by HANSANGHYUK&lt;/li&gt;
+  &lt;li&gt;original track by 들국화&lt;/li&gt;
+  &lt;li&gt;rework by MOT(eaeon)&lt;/li&gt;
+  &lt;li&gt;remix produced by Eunchurn&lt;/li&gt;
+  &lt;li&gt;special thanks to Cho!ong(additional strings &amp;amp; reverse piano), Jung-Ik Hwang(electric bass)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/Wqv5Ni50tik?rel=0&amp;amp;showinfo=0&quot; frameborder=&quot;0&quot; allow=&quot;autoplay; encrypted-media&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>DAZED&CONFUSED KOREA : I LOVE 80's (MUSICIAN)</title>
+   <link href="http://localhost:4000/press/2010/12/25/dazedconfused-korea-i-love-80s-musician/"/>
+   <updated>2010-12-26T04:20:45+09:00</updated>
+   <id>http://localhost:4000/press/2010/12/25/dazedconfused-korea-i-love-80s-musician</id>
+   <content type="html">&lt;h2 id=&quot;i-love-80s&quot;&gt;I LOVE 80’s&lt;/h2&gt;
+
+&lt;p&gt;80년대를 사랑하는 뮤지션들을 한 공간에 모았다. 너무 비좁아 선 채로 대화를 하는 지경이었으나 이 멋쟁이들에게 80년대의 패션 아이템 하나 들게 하지 못할 정도는 아니었다. &lt;데이즈드&gt;가 아크릴판에 패션 아이템을 그리기 시작했다.&lt;/데이즈드&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/12/210.jpg&quot; alt=&quot;구남과여라이딩스텔라&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;구남과여라이딩스텔라&quot;&gt;구남과여라이딩스텔라&lt;/h3&gt;
+
+&lt;p&gt;가장 필요한 질문을 마지막에야 할 수 있었다. 잊고 있었다기보다, 80년대와 관계없는 질문들이 입을 간질여서 그랬다. 마침내, 80년대 음악이 그들에게 준 영향을 물었다. 가만히 답이 없었다. 그러나 답을 듣지 못하자 확실해졌다. 80년대는 이런 친구들을 내버려두지 않았다. 충실하게 제도권에서 살거나, 불만이 있으면 전사가 되어야 하는 게 한국의 80년대였다. 구남과여라이딩스텔라처럼 가만히 있으면 보통 바보라고 불렀다. 80년대는 한국에서 가장 바보가 많았던 연대다. 사람들은 ‘개팔자가 상팔자’라고 말하듯, 가볍게 그들을 다른 ‘개체’로 분리했다. 그들의 노래 ‘한국말’의 가사처럼 ‘왜 이렇게 됐나 왜 이렇게 됐나 생각해’봐도 알 수 없는 건 네가 바보여서 그렇다며 말을 잘랐다. 바보는 훌륭한 유머 소재였다. 죄의식 없이 모두가 즐거웠다. 지금 구남과여라이딩스텔라가 돋보이는 건 그다음에 치명적인 한마디 덕분이다. ‘한국말을 하고 있네.’ 답을 내지 못하는 게 아니라 답이 너무 많기 때문이었고, 그걸 다 말하기 전에 당신들이 말을 잘랐기 때문이었다. 그 누명과 함께 겪은 괴로움과 어려움이 ‘한국말을 하고 있네’라는 한마디를 만들었다. 물론 이 한마디는 가사에서 끝나지 않는 어떤 총체적인 것이다. 밴드는 포스트 펑크나 초기 인더스트리얼에서 나타난 날카로운 드럼 머신 사운드의 인공성, 그 음악처럼 음악사에서 희미한 사이키델릭 밴드들의 사운드 텍스처, 신스팝이 가지는 노래로서의 위상, 그 전체를 관통하는 펑크의 태도를 취했다. 하지만 그들은 지금 이곳이 유럽이나 미국이 아니고 한국임을 자각했다. 동시에 그들은 ‘한국적인’ 오리지널리티라고 이름 붙이는 것조차 원치 않았다. 건국 이래 한국은 다른 나라를 욕망하는 나라였으며, 한국적이라는 건 다른 나라의 인정을 욕망할 때만 찾아왔다. 한국적인 오리지널리티의 허약함을 그들은 잘 알았다. 그렇게 구남과여라이딩스텔라는 경계에 섰다. 누구도 왜 그래야 하는지 모른 채 ‘한국적인 것’ 혹은 ‘세계적인 것’을 말할 때, 차라리 바보라는 듯이 하고 싶은 말과 노래를 한다. 그 노래가 신기하게도 어딘가 깊은 곳을 건드린다. 비유하자면, 그곳에 무엇이 있는가도 보지 못했으면서 열심히 땅을 파는 강아지들의 노동을 조롱할 자격, 누구에게도 없다.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/12/39.jpg&quot; alt=&quot;nakion&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;nakion&quot;&gt;Nakion&lt;/h3&gt;
+
+&lt;p&gt;나키온은 80년대를, 그러니까 그녀의 10대를 한국에서 보내지 않았다. 그녀에게 전영록보다 프린스와 잭슨 파이브가 가까운 건 그런 이유다. 그녀는 80년대를 떠올리면, 아래와 위가 똑같은 색깔의 옷, 베네통 그리고 스와치가 생각난다고 했다. MTV가 개국하고, 현란한 뮤직 비디오를 보면서 떠오른 어떤 환상들이 이 소녀를 사로잡았을 것이다. 그리고 소녀에게는 장난감에 가까운 초창기 신시사이저 Casio Vl Tone이 있었다. 소녀는 747 Records 라는 이름의 가게에서 레코드도 사 모으기 시작했다. 이 소녀는 나중에 커서 회화 작가가 된다. 그리고 디제이이자 프로듀서가 된다. 나키온은 80년대와 밀접한 음악을 한다. 그녀의 노래들은 테크노처럼 공격적으로 달려드는가 하면, 뉴웨이브나 유로 팝의 비밀스러운 음색과 멜로디로 감정선을 건드리기도 하고, 이탈로 디스코의 장난스럽고도 미래적인 사운드를 내세우기도 한다. 하지만 그녀에게 80년대가 다는 아니다. 그녀는 말한다. “음악은 어느 시대를 툭 떨어뜨려 얘기할 수 없이 연결되어 있고, 쌓여 가는 것 같아요.” 그녀의 음악 경험은 한정 없는 축적 내지는 더하기라기보다, 소수점으로 나눠가는 과정에 가깝다. 그녀에게는 80년대의 댄스 음악과 연결되어 있는 포스트 펑크, 초기 전자음악, 초기 인더스트리얼에 대한 매우 구체적인 이해가 있다. 그런데도 그녀의 노래는 광범위한 취향의 다발로 수렴되지는 않는다. 노래에 필요한 소스들을 아주 많이 잘 알고 있는 사람만이 발휘할 수 있는 집중력, 곧 정확함 때문이다. 그녀가 80년대를 좋아하게 된 것은 하이테크놀로지의 음악에서 느낄 수 없는 순수한 감수성이 리듬과 멜로디에서 잘 드러나기 때문이라고 했다. 음악의 이미지를 전달하기 위해 아카이브 필름, 그 중에서도 다이얼로그가 좋은 영화을 매번 음악과 함께 편집해 상영하는 것도 그 감수성을 좀 더 섬세하게 전달하기 위한 방법이다. 그녀의 앨범은 3월경에 독자적인 배급으로 국내에, 그리고 Dischi Bellini를 통해 이탈리아에 발매될 예정이다. 많은 사람이 환영하지는 않겠지만, ‘소수점’의 열광적인 지지자들을 얻게 되리라.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/12/71.jpg&quot; alt=&quot;heo&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;해오&quot;&gt;해오&lt;/h3&gt;
+
+&lt;p&gt;80년대 후반 한국에는 유독 남자들이 미성으로 가녀리게 부르는 노래들이 많았다. 그래서 비록 성별이 남자라도, 노래에서만큼은 그렇게 해야 하는 줄 알았다. 그 노래들은 당시 한국의 정치 상황과 함께 만연했던 자조와 탄식의 가느다란 한숨 소리와도 잘 어울렸다. 좋은 음악을 즐기면서도 꺼림칙한 기분이 드는 건 그 때문이었다. 하지만 나중에야 알았다. 한국의 남성들은 대체로 시끄러웠고, 조용히 말하면서도 충분히 자기 언어를 구사할 수 있는 건 동아기획뿐이었다는 걸. 해오의 음악은 동아기획과 함께 설명할 수 있다. 김현철, 조동익, 박학기 같은 80년대의 싱어송라이터들 말이다. 해오는 이를 긍정했다. 하지만 전부 긍정한 건 아니다. “피아노 치는 사람이 만드는 노래와 기타 치는 사람이 만드는 노래는 달라요. 제가 기타를 치다보니, 기타 치는 사람이 만든 노래를 좋아하고요. 김현철이 아니라 조동익을 좋아하죠.” 그럼, 유재하 가요제의 장려상은 단지 입신을 위해 노력한 결과에 불과한 건가? “그게 2004년인데, 하나뮤직에서 주관하는 줄 알고 지원했어요. 하지만 콘테스트 당일에 알고 보니 하나뮤직은 유재하 가요제에서 손을 뗐다고 하더라고요.” 동아기획의 첫 번째 아티스트가 조동진이었고, 하나뮤직은 조동진이 만든 레이블이다. 해오는 조동진과 어떤 날로부터 하나뮤직으로 면면히 이어져 있는 그 감수성을 간직하고 있다. 그의 앨범에는 ‘기차가 지나는 육교’ ‘내 작은 방’ 같은 영락없는 하나뮤직의 적자처럼 느껴지는 노래가 있다. 그리고 ‘눈 덮인 밤’의 나일론 기타 솔로는 이병우를 생각하며 만들었다고 스스로 밝힌다. 그에게는 80년대가 참 각별하다. ‘작별’에서는 노골적으로 그 애정을 드러냈다. 신시사이저의 패드 사운드, 청승맞은 노랫말, 의도적으로 싸게 고른 신스 브라스 음색, 감상적인 기타 솔로가 결합해, ‘제대로’ 80년대의 무드를 재현했다. 그의 미성 역시 앨범 전반에 80년대 싱어송라이터를 각인시키는 데 주효했다. 하지만 해오가 ‘동시대’에 열광한 영웅은 뜻밖에 ‘커트 코베인’이었다. 이건 마치 커트 코베인처럼 쉰 목소리를 낼 때까지 노래하겠다는 뜻쯤 되려나.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/12/54.jpg&quot; alt=&quot;eunchurn&quot; /&gt;
+(DJ Eunchurn)
+&lt;img src=&quot;/public/images/2010/12/45.jpg&quot; alt=&quot;sonyeon&quot; /&gt;
+(DJ Sonyeon)&lt;/p&gt;
+
+&lt;h3 id=&quot;dj-eunchurndj-sonyeon&quot;&gt;DJ Eunchurn/DJ Sonyeon&lt;/h3&gt;
+
+&lt;p&gt;디제이 은천은 80년대가 ‘본의 아니게’ 음악의 패러다임이 바뀐 시대라고 했다. 초창기 신시사이저는 전문 연주자들을 위한 실제 악기의 대체물로서 개발되었다. 그러나 전문 연주자들 누구도 신시사이저를 실제 악기의 대용으로 쓰지 않았다. 신시사이저에 눈을 돌린 건 새로운 소리의 주파수를 감지한 ‘다른’ 연주자들이다. 조르지오 모로더나 크라프트베르크가 그랬다. 다만 처음에 그건 사람들에게 일종의 ‘도발’로 비쳤다. 정전 혹은 약한 지진일 뿐이었다. 도발이란 말을 지울 수 있게 된 건 80년대에 등장한 뉴웨이브 혹은 신스팝, 일렉트로 팝 밴드들이 광범위한 대중의 동의를 얻으면서부터다. 신시사이저로부터 80년대를 숨 쉬게 하고, 또 기침도 나게 하는 공기가 형성되었다. 이 소리에서 패션이 나왔고, 80년대의 태도라고 부를 수 있을만한 것들도 나왔다. 하지만 디제이 소년은, 80년대를 좋아하는 건 음악이나 패션 같은 특정 분야 때문이 아니라 어떤 전체로서의 ‘공기’ 때문일 거라고 말했다. 그리고 새로운 10년을 여는, 1980년에 릴리즈 된 조이디비전의 노래 ‘Atmosphere’는 디제이 소년이 좋아하는 곡이기도 했다. 은천과 소년은 80년대의 음악을 모티브로, 벌써 2004년부터 시작되어 꾸준히 이어진 ‘Dos A Dos’ 파티의 디제이다. 지금 둘은 조금 다른 길을 걷고 있지만, 80년대와 자신들의 음악이 맺는 관계를 바라보는 관점에는 일치하는 데가 있었다. 80년대보다는 80년대에서 영감을 받은 현재의 음악에 자극받고 있다는 점이었다. 그들의 디제이 백에 한가득 들어 있는 Ed Bangers나 Kitsune 그리고 호주의 Modular와 같은 레이블의 레코드들이 그 예증이었다. 80년대의 Cheap Sound를 좋아하지만, 거기에는 지금의 플로어와 다른 ‘공기’가 담겼다. 80년대만을 틀기에는 클러버들과의 공감대 형성에 있어 무리다. 그리고 80년대 음악에는 지금 생산되는 음악들만큼의 댄서블함이 부족하다. 그래서, 한 번의 필터로 걸러진 80년대를 그들은 플로어에 한가득 풀어놓는다. 그들은 80년대에 대해 알고 싶습니까?, 가 아니라 지금 춤을 추고 싶습니까?, 라고 묻고 싶은 거니까.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/12/61.jpg&quot; alt=&quot;jazzi ivy&quot; /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;jazzy-ivy&quot;&gt;Jazzy Ivy&lt;/h3&gt;
+
+&lt;p&gt;은 뉴욕 사우스 브롱스에 사는 동네 주민들이 실제의 자신을 연기한, 연기는 물론 연출, 촬영, 편집까지 모조리 엉망인 극영화다. 이 엉망의 영화가 1983년에 상영된 이래 27년 간, 무수한 이가 이 영화를 통해 디제이를, 엠시를, 비보이를, 그라피티를 꿈꿨다. 재지 아이비도 그 중 하나였다. 그 이름이 낯익지 않다면, 각나그네란 이름은 들어봤을지 모르겠다. 하지만 그는 각나그네 라는 이름을 죽였다. ‘그저 랩만 하는 엠시에 그치는 것 같아서’ 그랬다고 한다. “프로덕션에 소속돼 레코딩을 위해 혹은 라이브를 위해 준비하는 게 아니라, 프리 스타일과 랩 배틀을 통해서 자신의 명예를 위해 살아남고자 노력하는 과정이 나를 자극하고 진화시킬 수 있을 거라고 판단했죠.” 그는 이 남긴 최초의 영감에 더 충실해지고자 한 거다. 의 등장인물들은 하나같이 자기가 제일 잘났다고 거들먹거린다. 하지만 그 때문에 그들에게는 음모나 음해가 없다. 나이가 많은 사람이나 자기보다 힘이 센 사람 앞에 선다고 발언권은 달라지지 않기 때문이다. 누구를 의식함 없이 스스로 프라이드가 있기 때문이다. 80년대의 힙합에서 어느 신보다 흥미진진하고 획기적인 시도들이 나왔던 건, 조직적인 기획이나 마케팅이 없는 날 것의 거리 문화가 생존했기 때문에 가능했던 일이다. 재지 아이비는 지금 야심 차게 한국에서 그 시절의 신을 알리고, 당시와 같은 문화를 재건축할 계획을 세우고 있었다. 다만, 여기에서 다시 블록 파티를 열자는 게 아니라, 그것을 충분히 이해하고 섭취하되 규격과 형태를 한국에 맞추고자 한다. 아프리카 밤바타가 만든 범국제적인 커뮤니티 줄루 네이션의 한국인 멤버이기도 한 그가, 줄루 네이션과의 연계를 통해 펼쳐갈 ‘Seoul City Rockers’ 라는 독자적인 길거리 문화 운동은 그 구체적인 청사진이다. 미국과 동시 발매하는 영어 랩 앨범 역시 발매를 목전에 둔 상태. 하지만 재지 아이비는 들뜨기보다, 자못 진지하게 말했다. “한국의 정서에서 저는 그냥 잘난 척하는 사람으로 보이겠죠. 돌을 던지세요. 나는 맷집을 키울 거예요. 하지만 돌이 다 떨어졌을 때 난 당신들을 안을 거예요. 이 신은 나 혼자 만들 수 없으니까, 당신들이 필요하니까.”&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/12/111.jpg&quot; alt=&quot;ganas&quot; /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;ganas&quot;&gt;Ganas&lt;/h3&gt;
+
+&lt;p&gt;70년대 말과 80년대 초반에 걸쳐 캠퍼스는 대학 가요제에 한 번 나가보고자 하는 팀들로 넘쳐났다. 명문대 학생들이 연이어 ‘밴드’로 입상함에 따라 경음악단이나 그룹사운드에 대한 일반의 인식이 대전환을 맞았기 때문이다. 송골매, 산울림, 마그마, 라이너스처럼 멋진 팀들이 잔뜩 나타나서 사람들더러 밴드 한번 해보라고 부추기던 때였다. 가나스는 그 시절의 그룹사운드들에 매혹된 팀이다. 데이슬리퍼라는 전설적인 노이즈록 밴드를 거쳐 피들 밤비에서 활동했던 박진홍이 프런트맨인데, 가만있자, 피들 밤비라면 벌써 2006년에 복고적인 그룹사운드 음악을 선보인 바 있는 팀이다. “하지만 피들 밤비는 네 명이 하고 싶은 게 다 달랐죠. 누구는 위저, 누구는 아시안 개러지, 누구는 바셀린즈를 하고 싶어 했어요. 그 음악들의 여러 가지 요소들이 뭉친 게 피들 밤비였던 것 같아요.” 그런데 미안하지만, 가나스도 그 목록들과 크게 벗어난 음악 같진 않다. “가나스는 원래 팝 펑크를 해보려고 뭉친 거였죠. 그런데 잘 안되더라고요. 실패를 통해서 자연스럽게 우리가 좋아했던 80년대의 그룹사운드와 같은 소리가 만들어졌어요.” 하고 싶은 것과 할 수 있는 것의 간극이 메워진 과정을 이렇게 소탈하게 말할 수 있는 건 마치 이런 음악을 할 수 있는 능력에 포함되는 요소 같은 느낌이 든다. 가나스는 단출하고 어딘가 비어 있는 듯하면서도 힘 있는, 이상한 미니 앨범 &lt;너의 기쁨=&quot;&quot;&gt;을 2월에 발매할 예정에 있다. 그들은 ‘지금이 아니면 못할 것 같은’ 생각이 들어서 준비된 곡들만으로 녹음을 강행했다. 미리 들어본 바로는 ‘가네’와 ‘언덕 너머’처럼 그들이 좋아한다는 사월과 오월의 서정성이 떠오르는 곡이 있는가 하면, ‘네 기쁨 내 기쁨 되어’ ‘우리는 써핑을 못해’ ‘보고 싶어도’ 같은 그룹사운드의 저돌성과 팝 펑크의 발랄한 활력이 아주 잘 결합한 곡들도 있다. 그러므로 박진홍의 실패란 기준이 아주 높은 것이거나 엄살일 가능성이 크다는 점을 미리 밝혀둔다. 가나스는 지금의 ‘열린’ 대학가요제 말고, 78년 해변가요제(장남들 ‘바람과 구름’), 78년 대학가요제(활주로 ‘탈춤’) 쯤에서 함께 겨뤘어도 마땅히 입상했으리라.&lt;/너의&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;EDITOR 정우영 PHOTOGRAPHY 공양식 ILLUSTRATION 이장용&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;출처 : DAZED&amp;amp;CONFUSED KOREA &lt;a href=&quot;http://dazeddigital.co.kr/new/archive/musician_contents.php?board_idx=327&quot;&gt;http://dazeddigital.co.kr/new/archive/musician_contents.php?board_idx=327&lt;/a&gt;&lt;/p&gt;
+
+</content>
+ </entry><entry>
+   <title>Dusty Kid - America (2009)</title>
+   <link href="http://localhost:4000/blog/2010/12/02/dusty-kid-america-2009/"/>
+   <updated>2010-12-02T12:15:22+09:00</updated>
+   <id>http://localhost:4000/blog/2010/12/02/dusty-kid-america-2009</id>
+   <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2010/12/333.jpg&quot; alt=&quot;dusty kidz - america&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;지난 블로그(DB백업문제로 모두 날라간)에서 포스팅했던 음악입니다. mvio 오늘의 음악(?)으로 로드무비스러움을 연출이 어떨까해서 추천음악으로 다시 올립니다. 이번 컬렉션 음악도 RIDING과 SYMMETRY로 풀어냈었는데 여행과 설레임의 관점에서 America라는 곡과 유사하다고 볼 수 있겠습니다. 과거 Dusty Kid는 이런음악을 하지 않았고 뉴웨이브요소가 대부분인 음악이었습니다. 클럽음악으로는 메가히트를 했었죠. America란 EP를 발매하면서 처음듣고 놀랐습니다. 그리고 그 후속작들도 모두 상당히 미니멀하면서 모든 악기의 사운드의 질감표현이 대단해졌다고 볼 수 있습니다. 어쨌든 이곡은 마치 다듣고나면 로드무비를 본듯한 느낌이 듭니다. Extended Version은 17분에 달합니다. Director’s Cut은 좀더 짧고 컴팩트하지만 저는 Extended Version을 좋아합니다. 풀랭스로 이야기가 살아있는 서사곡 같아서 말이죠.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Dusty Kid - America (2009).&lt;/li&gt;
+  &lt;li&gt;Artist: Dusty Kid&lt;/li&gt;
+  &lt;li&gt;Title: America&lt;/li&gt;
+  &lt;li&gt;Label: Boxer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Tracklist:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Dusty Kid - America (Extended Version)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;iframe width=&quot;100%&quot; height=&quot;20&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/119322021&amp;amp;color=%23ff5500&amp;amp;inverse=false&amp;amp;auto_play=false&amp;amp;show_user=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Dusty Kid - Train No. 3&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Dusty Kid - America (The Director’s Cut)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Dusty Kid - The Underground Persistance (Part II)&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+</content>
+ </entry><entry>
+   <title>80KIDZ - WEEKEND WARRIOR (2010)</title>
+   <link href="http://localhost:4000/production/2010/12/01/80kidz-weekend-warrior-dropping-out/"/>
+   <updated>2010-12-01T12:16:17+09:00</updated>
+   <id>http://localhost:4000/production/2010/12/01/80kidz-weekend-warrior-dropping-out</id>
+   <content type="html">&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/12/1890154611_bdLNxQ2H_80kidz_weekend_warrior_page1_510.jpg&quot; alt=&quot;80kidz - weekend warrior&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt; &lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;일렉트로닉 뉴 키즈들의 위풍당당 행진곡&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt; 급진적이고 과감한 스타일로 일본 내 일렉트로닉 씬의 세대교체를 이루어낸 80kidz. 80년대 태생 세 명으로 시작, 현재는 Ali와 Jun의 듀오로 활동하고 있다. 2007년 몇 개의 싱글 곡이 마이 스페이스를 통해 인기를 얻고 승승장구, 1집 [THIS IS MY SHIT]은 별 다른 프로모션 없이 2만장 이상의 CD판매고를 올렸다. 그 이후에도 이들은 지속적으로 온라인을 기반으로 자신들의 음악을 알려 전 세계적으로 인기를 끄는 이른바, ‘블로그 하우스’중의 하나로 사랑을 받았다. (‘블로그 하우스’란, 신조어로 개인 블로그등에 배경음악으로 자주 링크되는 댄스음악을 뜻함.)&lt;/p&gt;
+
+&lt;p&gt; 1집으로 성공을 거둔 뮤지션의 2집 앨범을 들을 때 누구나 궁금해 하는 것은 소포모어 증후군을 이겨냈는지의 여부일 것이다. 80kidz의 정규 2집 [WEEKEND WARRIOR]은 어떠한가? 이들은 빠르게 변화하는 취향을 뒤쫓으며 스스로를 소모시키기보다는 본인들의 스타일로 정면 승부를 결정한 듯 보인다. 이 앨범에는 보컬 피처링이 들어간 곡이 하나도 없다. 그렇지만 춤추기에도 감상용으로도 썩 괜찮다. Shift와 Ctrl가 가사의 전부인’Private Beats’, 1집의 히트곡 ‘Miss Mars’의 뒤를 잇는 80KIDZ의 시그니처 같은 곡 ‘Red Star’, 피아노 연습곡 제목을 연상시키는 ‘Czerny 13’, 위풍 당당하게 광란의 주말을 보내는 클럽 키즈가 유추되는 ‘Weekend Warrior’ 등 모든 곡들이 언어를 통하지 않고도 음악만으로 구체적인 메시지와 스토리를 전달하고 있다. 이 모든 것들이 80KIDZ만의 스타일이며, 그들만의 커뮤니케이션 방식이다. 즉, 80KIDZ는 [WEEKEND WARRIOR]를 통해 자신들의 코어를 꺼내 보이며 시간이 지날수록 뮤지션이 보여줘야 하는 미덕이란 관록과 내공의 깊이라고 못을 박는다.&lt;/p&gt;
+
+&lt;p&gt; [WEEKEND WARRIOR]는 현재 일렉트로닉 음악계에서 가장 흥미로운 활동을 보여주는 락스미스 뮤직을 통해 국내 발매되며, 이 라이선스 반에서는 EUNCHURN과 DJ SILENT의 리믹스가 스페셜 보너스 트랙으로 실려 있다.&lt;/p&gt;
+
+&lt;p&gt;2010년 11월 30일 발매 &lt;a href=&quot;http://music.mnet.com/ArtistAlbum/AlbumInfo.asp?AlbumID=206683&quot;&gt;[바로듣기]&lt;/a&gt;
+&lt;strong&gt;TRACK LIST&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Nautilus&lt;/li&gt;
+  &lt;li&gt;Voice （Rework）&lt;/li&gt;
+  &lt;li&gt;Red Star&lt;/li&gt;
+  &lt;li&gt;Prisma&lt;/li&gt;
+  &lt;li&gt;Flow With It&lt;/li&gt;
+  &lt;li&gt;I Wish&lt;/li&gt;
+  &lt;li&gt;Agenda&lt;/li&gt;
+  &lt;li&gt;Czerny 13&lt;/li&gt;
+  &lt;li&gt;Weak Point&lt;/li&gt;
+  &lt;li&gt;Private Beats&lt;/li&gt;
+  &lt;li&gt;Spectacle&lt;/li&gt;
+  &lt;li&gt;When You See&lt;/li&gt;
+  &lt;li&gt;Two Pockets&lt;/li&gt;
+  &lt;li&gt;Faded Pink&lt;/li&gt;
+  &lt;li&gt;Weekend Warrior &lt;strong&gt;TITLE&lt;/strong&gt; (Korea Special Bonus Track)&lt;/li&gt;
+  &lt;li&gt;Flow With It (EUNCHURN Remix)&lt;/li&gt;
+&lt;/ol&gt;
+
+</content>
+ </entry><entry>
+   <title>_ r i d i n g (2011 SS)</title>
+   <link href="http://localhost:4000/runway/2010/10/23/yoonsang-x-eunchurn-love-is-music-for-mvio-by-hansanghyuk-2011-ss-collection/"/>
+   <updated>2010-10-23T19:50:31+09:00</updated>
+   <id>http://localhost:4000/runway/2010/10/23/yoonsang-x-eunchurn-love-is-music-for-mvio-by-hansanghyuk-2011-ss-collection</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/6339183&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;MVIO
+&lt;em&gt;__
+SEOUL FASHION WEEK
+__&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;SPRING SUMMER _ 2011&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/10/main.jpg&quot; alt=&quot;seoul fashion week&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;mvrc-seoul-_&quot;&gt;M.V.R.C SEOUL _&lt;/h3&gt;
+&lt;p&gt;엠비오 라이딩 클럽 서울은
+당신이 겪었던 혹은 겪고 있는 상처를 치유하는 것을 목적으로 운영되어집니다.
+우리가 궁극적으로 원하는 것은 사랑과 사람에 대한 상처를 가진 당신이
+고통없이 당신의 기억과 믿음을 조절할 수 있는 ‘그럴수도 있겠지 (ver. sang)’ 이라는 장치를 탈 수 있도록 도와드리는 것입니다.&lt;/p&gt;
+
+&lt;p&gt;우리의 삶에 정답이란 없습니다.
+이것을 타는 것은 어렵지도 고통스럽지도 않습니다.
+다만 당신이 결정해야 할 선택입니다.&lt;/p&gt;
+
+&lt;p&gt;DARE TO RIDE _ ON MY WAY TO YOU&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;@SETEC 2010.10.22 12:30PM Hall 1&lt;/li&gt;
+  &lt;li&gt;RUNWAY MUSIC : YOONSANG x EUNCHURN – LOVE IS&lt;/li&gt;
+  &lt;li&gt;excutively produced by &lt;em&gt;HAN SANGHYUK&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;original track by : &lt;em&gt;YOONSANG&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;remix produced by : &lt;em&gt;EUNCHURN&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/34570776&quot; width=&quot;640&quot; height=&quot;483&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+</content>
+ </entry><entry>
+   <title>_ m o u n t a i n e e r i n g (2010-2011 AW)</title>
+   <link href="http://localhost:4000/runway/2010/08/03/seoul-fashion-week-mvio-by-han-sang-hyuk-autumn-winter-2010-2011-mounteeneering-rope-collection/"/>
+   <updated>2010-08-04T05:07:33+09:00</updated>
+   <id>http://localhost:4000/runway/2010/08/03/seoul-fashion-week-mvio-by-han-sang-hyuk-autumn-winter-2010-2011-mounteeneering-rope-collection</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2157588&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2010-2011 AW Rope Collection ‘MOUNTAINEERING’&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/08/MOUNTAINEERING_ROPE_COLLECTION.jpg&quot; alt=&quot;seoul fashion week&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;autumn winter 2010 _ 2011 ‘_ MOUNTAINEERING’ collection&lt;/li&gt;
+  &lt;li&gt;friday _ 26th March _ 2010 _ 12pm _ SETEC&lt;/li&gt;
+  &lt;li&gt;music for Seoul Fashion Week FW 2010 2011 mvio by &lt;em&gt;HANSANGHYUK&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;excutively produced by &lt;em&gt;HANSANGHYUK&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;original track by &lt;em&gt;Lucid Fall&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;remix produced by &lt;em&gt;Eunchurn&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;full-video&quot;&gt;FULL VIDEO&lt;/h3&gt;
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/13863062&quot; width=&quot;640&quot; height=&quot;424&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>_ r e c h a r g i n g (2010 SS)</title>
+   <link href="http://localhost:4000/runway/2010/05/23/seoul-fashion-week-mvio-by-han-sang-hyuk-spring-summer-2010-re-charging/"/>
+   <updated>2010-05-23T09:53:31+09:00</updated>
+   <id>http://localhost:4000/runway/2010/05/23/seoul-fashion-week-mvio-by-han-sang-hyuk-spring-summer-2010-re-charging</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1260248&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;01_ ‘지난 3계절이 바뀌는 동안 벌써 나의 저택과 별장에서 일하던 젊은 남자가 넷이나 실종이 되었다네. 그들은 모두 17살에서 22살 사이의 청년들이었고, 모두들 건장한 사내들이었네. 자세한 것은 헨리 베스커빌씨가 도와줄 것이네 27. JUL&lt;/p&gt;
+
+&lt;p&gt;02_ 내가 폰디체리 경의 아름다운 별장에 도착한 시간은 오후5시가 넘는 시간이었다.
+폰디체리 경은 남쪽으로 여행을 간 후였으며, 나를 맞이한 사람은 헨리 베스커빌이라는 집사였다. 그는 귀윗쪽과 뒷머리에 새치가 많았으나, 나이가 무색할 정도의 탄탄한 피부와 근육을 가지고 있었으며, 신장은 6피트가 조금 넘었으나, 말랐기 때문에 실제로는 그보다 훨씬 커 보였다.&lt;/p&gt;
+
+&lt;p&gt;03_ 트리치노폴리 잎담배의 냄새와 민트잎 향이 교묘하게 섞인 향취가 났으며, 머리 위 선반의 촛불을 찾는 손끝은 매우 섬세했으며, 손을 뻗었을때 팔목까지 또렸하게 새겨져 있던 밧줄모양의 문신이 그의 정갈한 잿빛수트와 묘하게 어울렸다. 그는 마치 주기적으로 젊은사람의 에너지를 충전한것처럼 느껴졌고 우리와는 다른 사람 같았다. 11. AUG&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/05/RECHARGING_TATTO_COLLECTION_.jpg&quot; alt=&quot;seoul fashion week&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2010 SS TATTOO Collection ‘RE CHARGING’&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;FRIDAY, OCTOBER 16, 2009&lt;/li&gt;
+  &lt;li&gt;1:00 PM&lt;/li&gt;
+  &lt;li&gt;SETEC 514, Daechidong, Gangnamgu, Seoul, Korea’,’SEOUL FASHION WEEK MVIO by HAN SANGHYUK 2010 SS Collection ‘RE CHARGING&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;full-video&quot;&gt;FULL VIDEO&lt;/h3&gt;
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/10650004&quot; width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;mnet-trend-repor-tfeel-by-youweresleepingcom&quot;&gt;m.net ‘TREND REPOR TFEEL’ by youweresleeping.com&lt;/h3&gt;
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/11520075&quot; width=&quot;640&quot; height=&quot;424&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry><entry>
+   <title>_ g r a d a t i o n (2009-2010 AW)</title>
+   <link href="http://localhost:4000/runway/2010/05/23/mvio-by-han-sang-hyuk-autumn-winter-2009-2010-holmes-collection/"/>
+   <updated>2010-05-23T09:28:09+09:00</updated>
+   <id>http://localhost:4000/runway/2010/05/23/mvio-by-han-sang-hyuk-autumn-winter-2009-2010-holmes-collection</id>
+   <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1873758&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;MVIO by HAN SANG HYUK
+AUTUMN WINTER 2009-2010
+‘HOLMES COLLECTION’
+pm 12:00, Thursday 26th March 2009
+SETEC S14 Daechidong Gangnamgu Seoul Korea&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/public/images/2010/05/god_1_niji1002.jpg&quot; alt=&quot;seoul fashion week&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;synopsis&quot;&gt;SYNOPSIS&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;_ 01. The collection starts with an idea about the past experiences and future plans with the theme of _ g r a d a t i o n The footprints, tobacco ashes and handwriting scattered about the scene of the crime become a significant clue to Holmes. He solves a mystery by piecing together seemingly disjointed fragments step by step, he connects these cryptic puzzle pieces into a cohesive whole, either validating or disproving his initial hypothesis.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;_ 02. One morning, Henry Beskerville wakes up to darkness. He is faceless.
+He urgently sees Holmes, trying to maintain his composure but frantically, to uncover the fate of the sudden disappearance of his identity.
+Upon relating this bewildering tale, Holmes whisks away to the scene of the crime with his magnifying glass, carefully inspects every corner of Baskerville’s home.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;001 _ 컬렉션은 _ g r a d a t i o n 이 라는 주제로 그동안 경험되어진 흔적과 앞으로 해야 할 것에 대한 직관적 결론에 대한 생각으로부터 시작되었습니다. 홈즈는 아주 사소한 흔적들과 사소한 경험 그리고 개인적 관심에 의해 알게 된 통계적 지식을 통해서 사건을 풀어나갑니다. 발자국, 담뱃재, 필적 등 사건 현장에 널려있는 모든 것이 그에게는 단서가 됩니다. 하지만 홈즈는 경험과 관심에 의해 축적된 지식을 통해 내린 직관적 결론을 서두르지 않고 차근차근 관찰되어진 흔적을 통해 점층적으로 사실에 의거해 증명하고 설명해 나갑니다.&lt;/p&gt;
+
+&lt;p&gt;002 _ 헨리 베스커빌 경은 아침에 일어나보니 자신의 얼굴이 없어졌음을 알게 되었습니다. 그는 급박하게 홈즈를 만나 어젯밤 도난당한 자신의 얼굴에 대해 단호하지만 흥분된 어투로 이야기하기 시작했습니다. 홈즈는 마차를 타고 베스커빌 경의 저택으로 가서 그가 잠들었던 침실, 옷장, 계단, 그리고 창문 등에 남겨진 흔적을 돋보기로 천천히 살펴보기 시작합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;thanks-to-_&quot;&gt;thanks to _&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;original sound track by SANULLIM _ CHANGWANKIM (산울림, 김창완)&lt;/li&gt;
+  &lt;li&gt;sound recorded / remixed by DJEUNCHURN (DJ 은천)&lt;/li&gt;
+  &lt;li&gt;archive photographed by SUKWOOHONG (홍석우 a.k.a. yourboyhood,)&lt;/li&gt;
+  &lt;li&gt;campaign photographed by SUKKUHNOH (오석근)&lt;/li&gt;
+  &lt;li&gt;chocolate factory by GHIRARDELLI, USA (기라델리)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.mvio.co.kr&quot;&gt;www.mvio.co.kr&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;scraped from &lt;a href=&quot;http://www.yourboyhood.com&quot;&gt;www.yourboyhood.com&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;holmes-collection-_-mvio-by-han-sang-hyuk-autumn-winter-2009-2010-colletion&quot;&gt;‘HOLMES COLLECTION’ _ MVIO by HAN SANG HYUK, AUTUMN WINTER 2009-2010 colletion&lt;/h3&gt;
+
+&lt;p&gt;SANULLIM - MOREMOREMORE (DJ EUNCHURN REMIX)&lt;/p&gt;
+
+&lt;h3 id=&quot;credit&quot;&gt;CREDIT&lt;/h3&gt;
+&lt;blockquote&gt;
+
+  &lt;ul&gt;
+    &lt;li&gt;original sound track by SANULLIM&lt;/li&gt;
+    &lt;li&gt;original composed by CHANG WAN KIM&lt;/li&gt;
+    &lt;li&gt;lyrics by CHANG WAN KIM&lt;/li&gt;
+    &lt;li&gt;remix produced by EUNCHURN PARK (DJ EUNCHURN)&lt;/li&gt;
+    &lt;li&gt;mastered by EUNCHURN PARK&lt;/li&gt;
+    &lt;li&gt;music for MVIO by HAN SANG HYUK / AUTUMN WINTER 2009-2010 ‘HOLMES COLLECTION’ theme of _ g r a d a t i o n&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;full-video&quot;&gt;FULL VIDEO&lt;/h3&gt;
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/10495868&quot; width=&quot;640&quot; height=&quot;360&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;h3 id=&quot;mnet-trend-repor-tfeel-by-youweresleepingcom&quot;&gt;m.net ‘TREND REPOR TFEEL’ by youweresleeping.com&lt;/h3&gt;
+&lt;div class=&quot;videoWrapper&quot;&gt;
+&lt;iframe src=&quot;https://player.vimeo.com/video/11460314&quot; width=&quot;640&quot; height=&quot;424&quot; frameborder=&quot;0&quot; webkitallowfullscreen=&quot;&quot; mozallowfullscreen=&quot;&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</content>
+ </entry></feed>

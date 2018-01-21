@@ -1,0 +1,84 @@
+/*
+                                __      _ _                   _   
+                               / _|    | (_)                 | |  
+ _ __ ___   __ _ _ __ ___ ___ | |_ ___ | |_  ___   _ __   ___| |_ 
+| '_ ` _ \ / _` | '__/ __/ _ \|  _/ _ \| | |/ _ \ | '_ \ / _ \ __|
+| | | | | | (_| | | | (_| (_) | || (_) | | | (_) || | | |  __/ |_ 
+|_| |_| |_|\__,_|_|  \___\___/|_| \___/|_|_|\___(_)_| |_|\___|\__|
+                                                                  
+*/
+
+/* BASIC RESET */
+ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,body,html,p,blockquote,fieldset,input{margin:0; padding:0;}
+
+/* HTML ELEMENTS */
+
+#backvinyl_250 { width:380px;
+	               height:190px;
+	               background-repeat:no-repeat;
+	               background-position:center top;
+}
+.playon   { background-image:url("../images/background_250_on.png");
+}
+.playoff  { background-image:url("../images/background_250.png");
+}
+
+
+.backvinyl_100 { width:200px;
+	           height:100px;
+	           background-image:url("../images/background_100.png");
+	     background-repeat:no-repeat;
+	     background-position:center top;
+}
+/*.playon   { background-image:url("../images/background_100_on.png");
+}
+.playoff  { background-image:url("../images/background_100.png");
+}
+*/
+/* COMMON CLASSES */
+
+.vinyl_250 { 
+	width:190px; 
+	height:190px; 
+	display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.vinyl_100 { 
+	width:100px; 
+	height:100px; 
+	display: block;
+  margin-left: auto;
+  margin-right: auto;}
+  
+#vinyl1 {	background-image:url("../images/vinyls12s_250.png");
+		     background-repeat:no-repeat;
+	     background-position:center top;
+}
+#vinyl2 {	background-image:url("../images/vinyls12s_100.png");
+		     background-repeat:no-repeat;
+	     background-position:center top;
+}
+
+@media only screen and (max-width: 960px) {
+#backvinyl_250 { width:200px;
+	               height:100px;
+	               background-repeat:no-repeat;
+				   background-position:center top;
+}
+.playon   { background-image:url("../images/background_100_on.png");
+}
+.playoff  { background-image:url("../images/background_100.png");
+}
+.vinyl_250 { 
+	width:100px; 
+	height:100px; 
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	float: center;}
+#vinyl1 {	background-image:url("../images/vinyls12s_100.png");
+		     background-repeat:no-repeat;
+		 background-position:center top;
+}
+}
