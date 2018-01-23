@@ -85,5 +85,4 @@ BREEZE MUSIC / SONY MUSIC
 p.s.
 <div class="videoWrapper">
 <iframe src="https://player.vimeo.com/video/29243111" width="640" height="480" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-<p><a href="https://vimeo.com/29243111">To Paris @TGV</a> from <a href="https://vimeo.com/eunchurn">eunchurn</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 </div>
