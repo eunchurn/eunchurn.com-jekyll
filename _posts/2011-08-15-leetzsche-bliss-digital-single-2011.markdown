@@ -10,18 +10,17 @@ publish: true
 featured: /public/images/2011/08/bliss_cover_s.jpg
 category: production
 ---
+<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/20577628&amp;color=%23ff5500&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;show_teaser=true&amp;visual=true"></iframe>
 
-![bliss_cover_s-300x300.jpg]({{ site.baseurl }}/public/images/2011/08/bliss_cover_s.jpg)
 
 01. **Bliss (Emerald Castle Remix)**
-_preview_
-
 02. Bliss (Azian P Remix)
 03. Bliss (Original)
 04. **비밀의 화원 (Toy Garden Remix)**
 05. **비밀의 화원 (Toy Garden Radio Edit)**
 06. 비밀의 화원
 
+![bliss_cover_s-300x300.jpg]({{ site.baseurl }}/public/images/2011/08/bliss_cover_s.jpg)
 
 <div class='message'>이 세상 모든 자유로운 영혼들을 위한 이상은의 스페셜 앨범 `Bliss`
 
@@ -78,9 +77,17 @@ BREEZE MUSIC / SONY MUSIC
 
 #### Director & Editor : INAN/  
 
+<div class="videoWrapper">
 <iframe src="https://player.vimeo.com/video/28105689" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</div>
 
 
 **네이버뮤직**
 
 [http://music.naver.com/album/index.nhn?albumId=204967](http://music.naver.com/album/index.nhn?albumId=204967)
+
+p.s.
+<div class="videoWrapper">
+<iframe src="https://player.vimeo.com/video/29243111" width="640" height="480" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<p><a href="https://vimeo.com/29243111">To Paris @TGV</a> from <a href="https://vimeo.com/eunchurn">eunchurn</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
+</div>
