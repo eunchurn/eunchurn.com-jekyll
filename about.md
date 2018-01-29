@@ -37,7 +37,7 @@ Music Producer, Engineer Ph.D in Architectural Engineering
 ## Discography
 ### Full length (producing)
 
-![album]({{ site.baseurl }}/public/images/about/thisiswhywearefallingforeachother.jpg)
+![album]({{ site.baseurl }}/public/images/about/thisiswhywearefallingforeachother.jpg){: .album_img}
 Trampauline(트램폴린) - This Is Why We Are Falling For Each
     Other (2011) - CD/DIGITAL \[Pastel Music\]
     \[[](http://www.pastelmusic.com/pastelmusic_scrap.html?musicIdx=323)\]
@@ -45,28 +45,28 @@ Trampauline(트램폴린) - This Is Why We Are Falling For Each
 
 ### EP (producing, arrangement)
 
-![album]({{ site.baseurl }}/public/images/about/raindropcloudtyphoonandthesun.jpg)
+![album]({{ site.baseurl }}/public/images/about/raindropcloudtyphoonandthesun.jpg){: .album_img}
 SARAM12SARAM(사람12사람) - 빗물구름태풍태양(Raindrop Cloud Typhoon
     and the Sun) (2013) - VINYL/CD/DIGITAL \[YGWR\]\[[info](https://saram12saram.kr/discography/2013-raindrop-cloud-typhoon-and-the-sun.html), [listen](https://soundcloud.com/saram12saram/sets/raindrop-cloud-typhoon-and-the-sun)\] 2013.12.12
 
 
-![album]({{ site.baseurl }}/public/images/about/feelstooletter.jpg)
+![album]({{ site.baseurl }}/public/images/about/feelstooletter.jpg){: .album_img}
  SARAM12SARAM(사람12사람) - Feels Too Letter (2015) - CD/DIGITAL
     \[YGWR\]\[[info](https://saram12saram.kr/discography/2015-feels-too-letter.html),[listen](https://soundcloud.com/saram12saram/sets/feels-too-letter-2015-preview)\]
     2015.11.23
 
 ### SINGLE
 
-![album]({{ site.baseurl }}/public/images/about/wakeup.jpg)
+![album]({{ site.baseurl }}/public/images/about/wakeup.jpg){: .album_img}
 3OME 1st SINGLE ALBUM "WAKE UP" \[*WAKE UP* Photobook release
     project/digital single\]
     \[[info](http://music.naver.com/album/index.nhn?albumId=154369&trackId=1994587),[listen](http://soundcloud.com/eunchurn/eunchurn-and-superslut-feat-zisung-wake-up-re-edit)\]
     2009.03.18
 
-![album]({{ site.baseurl }}/public/images/about/mvio01.jpg)
+![album]({{ site.baseurl }}/public/images/about/mvio01.jpg){: .album_img}
  Seoul Fashion Week \_AUTUMN WINTER 2009/2010 **\_MVIO** *\_HOLMES COLLECTION* **\_G R A D A T I O N** \[Runway music\] : **SANULLIM x EUNCHURN** - MOREMOREMORE \[[info](https://eunchurn.com/runway/2010/05/23/mvio-by-han-sang-hyuk-autumn-winter-2009-2010-holmes-collection/)\]2009.03.26
 
-![album]({{ site.baseurl }}/public/images/about/mvio02.jpg)
+![album]({{ site.baseurl }}/public/images/about/mvio02.jpg){: .album_img}
 Seoul Fashion Week \_SPRING SUMMBER 2010 **\_MVIO**
     *\_TATTOO COLLECTION* **\_R E - C H A R G I N G** \[Runway
     music\]
@@ -74,7 +74,7 @@ Seoul Fashion Week \_SPRING SUMMBER 2010 **\_MVIO**
     \[[info](https://eunchurn.com/runway/2010/05/23/seoul-fashion-week-mvio-by-han-sang-hyuk-spring-summer-2010-re-charging/)\]
     2009.10.16
 
-![album]({{ site.baseurl }}/public/images/about/mvio03.jpg)
+![album]({{ site.baseurl }}/public/images/about/mvio03.jpg){: .album_img}
 Seoul Fashion Week \_AUTUMN WINTER 2010/2011 **\_MVIO**
     *\_ROPE COLLECTION* **\_M O U N T A I N E E R I N G** \[Runway
     music\]
@@ -82,14 +82,14 @@ Seoul Fashion Week \_AUTUMN WINTER 2010/2011 **\_MVIO**
     \[[info](https://eunchurn.com/runway/2010/08/03/seoul-fashion-week-mvio-by-han-sang-hyuk-autumn-winter-2010-2011-mounteeneering-rope-collection/)\]
     2010.03.26
 
-![album]({{ site.baseurl }}/public/images/about/mvio04.jpg)
+![album]({{ site.baseurl }}/public/images/about/mvio04.jpg){: .album_img}
 Seoul Fashion Week \_SPRING SUMMBER 2011 **\_MVIO**
     *\_SYMMETRY COLLECTION* **\_R I D I N G** \[Runway music\]
     : **YOONSANG x EUNCHURN -- LOVE IS**
     \[[info](https://eunchurn.com/runway/2010/10/23/yoonsang-x-eunchurn-love-is-music-for-mvio-by-hansanghyuk-2011-ss-collection/)\]
     2010.10.22
 
-![album]({{ site.baseurl }}/public/images/about/mvio05.jpg)
+![album]({{ site.baseurl }}/public/images/about/mvio05.jpg){: .album_img}
 Seoul Fashion Week \_AUTUMN WINTER 2011/2012 **\_MVIO**
     *\_APRON COLLECTION(M.I.A.S)* **\_C O M P L E X** \[Runway
     music\]
@@ -97,43 +97,43 @@ Seoul Fashion Week \_AUTUMN WINTER 2011/2012 **\_MVIO**
     \[[info](https://eunchurn.com/runway/2011/04/02/production-note-of-music-for-mvio-aw-collection-20112012/)\]
     2011.03.30
 
-![album]({{ site.baseurl }}/public/images/about/mvio06.jpg)
+![album]({{ site.baseurl }}/public/images/about/mvio06.jpg){: .album_img}
 Seoul Fashion Week \_SPRING SUMMBER 2012 **\_MVIO**
     *\_M.I.M.S* **\_P L A S T I C M A N** \[Runway music\]
     : **DELI SPICE x EUNCHURN -- CHOW CHOW**
     \[[info](https://eunchurn.com/runway/2011/10/20/mvio_haan-sang-hyuk_-p-l-a-s-t-i-c-m-a-n-spring-summer-2012/)\]2011.10.21
 
-![album]({{ site.baseurl }}/public/images/about/album_merry_lonely_christmas_cover.jpg)
+![album]({{ site.baseurl }}/public/images/about/album_merry_lonely_christmas_cover.jpg){: .album_img}
 Merry Lonely Christmas and Happy New Year \[2010, Pastel Music\]
     **Trampauline -- Dreaming of White Christmas (of Summer Days)**
     \[[info](http://music.naver.com/album/index.nhn?albumId=184204)\]
 
-![album]({{ site.baseurl }}/public/images/about/newwackmusic.jpg)
+![album]({{ site.baseurl }}/public/images/about/newwackmusic.jpg){: .album_img}
 2013 NEW WACK MUSIC \[2013, YOUNG, GIFTED&WACK\] **SARAM12SARAM - Wind Blow**
     \[[info](https://soundcloud.com/younggiftedwack/2013-new-wack-music-highlight)\]
 
-![album]({{ site.baseurl }}/public/images/about/hsh01.jpg)
+![album]({{ site.baseurl }}/public/images/about/hsh01.jpg){: .album_img}
 Seoul Fashion Week \_AUTUMN WINTER 2014/2015 **HEICH ES HEICH**
     **NEW ADULT** \[Runway music\]
     : **SARAM12SARAM - Je'Taime Moi Non Plus**
     \[[info](http://heich.kr/)\]\[[video](https://www.youtube.com/watch?v=MF40OFD6PGQ)\]
     2014.03.26
 
-![album]({{ site.baseurl }}/public/images/about/hsh02.jpg)
+![album]({{ site.baseurl }}/public/images/about/hsh02.jpg){: .album_img}
 Seoul Fashion Week \_AUTUMN WINTER 2015/2016 **HEICH ES HEICH**
     **INVALID TAILORING** \[Runway music\]
     : **JU YOONHA x EUNCHURN - YOUR PEACE IS FRAGILE**
     \[[listen](https://soundcloud.com/eunchurn/your-peace-is-fragile-remember0416?in=eunchurn/sets/heich-es-heich-collection)\]\[[video](https://www.youtube.com/watch?v=RXh5Wxi2nB8)\]
     2015.03.20
 
-![album]({{ site.baseurl }}/public/images/about/hsh03.jpg)
+![album]({{ site.baseurl }}/public/images/about/hsh03.jpg){: .album_img}
 Seoul Fashion Week \_SPRING SUMMBER 2016 **HEICH ES HEICH**
     **VS (versus)** \[Runway music\]
     : **LEE BYUNG-WOO x EUNCHURN - SUNDAY AFTERNOON**
     \[[listen](https://soundcloud.com/eunchurn/leebyungwoo-x-eunchurn-sunday-afternoon-heich-es-heich-collection?in=eunchurn/sets/heich-es-heich-collection)\]\[[video](https://www.youtube.com/watch?v=DhkkjakNuBY)\]
     2015.10.18
 
-![album]({{ site.baseurl }}/public/images/about/hsh04.jpg)
+![album]({{ site.baseurl }}/public/images/about/hsh04.jpg){: .album_img}
 Seoul Fashion Week \_AUTUMN WINTER 2016/2017 **HEICH ES HEICH**
     **VS (versus)** \[Runway music\]
     : **VELVET UNDERGROUND X EUNCHURN - PALE BLUE EYES**
@@ -142,16 +142,16 @@ Seoul Fashion Week \_AUTUMN WINTER 2016/2017 **HEICH ES HEICH**
 
 ### REMIX 프로듀스
 
-![album]({{ site.baseurl }}/public/images/about/weekendwarrior.jpg)
+![album]({{ site.baseurl }}/public/images/about/weekendwarrior.jpg){: .album_img}
 **80Kidz** -- Weekend Warrior (2010) \[Track 16.*Flow With It Eunchurn Remix*\]\[[info](https://eunchurn.com/production/2010/12/01/80kidz-weekend-warrior-dropping-out/)\]
 
-![album]({{ site.baseurl }}/public/images/about/everydayeverynight.JPG)
+![album]({{ site.baseurl }}/public/images/about/everydayeverynight.JPG){: .album_img}
 **SHEEAN** -- Everyday Every night (2010) \[*Every Night, Remix*\]\[[info](http://music.naver.com/album/index.nhn?albumId=186008&trackId=2348557)\]
 
-![album]({{ site.baseurl }}/public/images/about/bliss.jpg)
+![album]({{ site.baseurl }}/public/images/about/bliss.jpg){: .album_img}
 **이상은** - Bliss (2011) \[Track 1.*Bliss (Emerald Castle Remix)*, Track 4,5.*비밀의 화원 (Toy Garden Remix)*\] \[[info](https://eunchurn.com/production/2011/08/15/leetzsche-bliss-digital-single-2011/)\]
 
-![album]({{ site.baseurl }}/public/images/about/floatingones.jpg)
+![album]({{ site.baseurl }}/public/images/about/floatingones.jpg){: .album_img}
  **Mimyo** - Floating Ones EP (2012) \[Track 8. *Synth Pop Eunchurn Remix*\]\[[info](https://eunchurn.com/production/2012/06/24/mimyo-floating-ones-ep-2012/)\]
 
 
