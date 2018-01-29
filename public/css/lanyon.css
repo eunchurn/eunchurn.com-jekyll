@@ -650,7 +650,7 @@ a.pagination-item:hover {
     border: none;
 }
 
-.img[alt="album"] {
+img[alt="album"] {
    width: 70px;
    float: left;
    margin: 10px 10px;
