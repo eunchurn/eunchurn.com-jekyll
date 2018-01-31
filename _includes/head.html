@@ -31,8 +31,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@eunchurn">
   <meta name="twitter:title" content="{% if page.title %}{{page.title}}{% else %}EUNCHURN{% endif %}">
-  <meta name="twitter:description" content="{{ page_description | strip }}"> {%- if page.representing_image -%}
-  <meta name="twitter:image" content="{{ site.home_url }}{{ page.representing_image }}"> {%- else -%}
+  <meta name="twitter:description" content="{{ page_description | strip }}"> 
+  {%- if page.featured -%}
+  <meta name="twitter:image" content="{{ site.baserul }}{{ page.featured }}"> {%- else -%}
   <meta name="twitter:image" content="{{ site.home_url }}{{ site.twitter_image }}"> {%- endif -%}
   <!-- CSS -->
   <link rel="stylesheet" href="{{ site.baseurl }}/public/css/poole.css">
