@@ -8,17 +8,15 @@
   <title>{{ page.title }} - eunchurn</title>
   <meta name="description" content="{{ page.description }}">
   <meta name="generator" content="Jekyll v3.5.2" />
+  <!-- OpenGraph meta tags -->
   <meta property="og:title" content="eunchurn" />
   <meta name="author" content="eunchurn" />
   <meta property="og:locale" content="ko_KR" />
-  <meta property="og:description" content="all of works archive of Eunchurn Park - works diary, music, saram12saram, remixes, reworks, runway project, production note, magazzine press, interview archive, programming, engineering, web application, development and engineering research archive"/>
+  <meta property="og:description" content="all of works archive of Eunchurn Park - works diary, music, saram12saram, remixes, reworks, runway project, production note, magazzine press, interview archive, programming, engineering, web application, development and engineering research archive"
+  />
   <link rel="canonical" href="https://eunchurn.com//" />
   <meta property="og:url" content="https://eunchurn.com//" />
   <meta property="og:site_name" content="eunchurn" />
-  <script type="application/ld+json">
-  {"name":"eunchurn","description":"all of works archive of Eunchurn Park - works diary, music, saram12saram, remixes, reworks, runway project, production note, magazzine press, interview archive, programming, engineering, web application, development and engineering research archive","author":{"@type":"Person","name":"eunchurn"},"@type":"WebSite","url":"https://eunchurn.com//","headline":"Home","@context":"https://schema.org"}</script>
-  <link rel="canonical" href="{{ site.home_url}}{{ page.url }}">
-  <!-- OpenGraph meta tags -->
   {%- if page.title -%}
   <meta property="og:type" content="article"> {%- else -%}
   <meta property="og:type" content="blog"> {%- endif -%} 
@@ -35,6 +33,9 @@
   {%- if page.featured -%}
   <meta name="twitter:image" content="{{ site.baserul }}{{ page.featured }}"> {%- else -%}
   <meta name="twitter:image" content="{{ site.home_url }}{{ site.twitter_image }}"> {%- endif -%}
+  <script type="application/ld+json">
+      {"name":"eunchurn","description":"all of works archive of Eunchurn Park - works diary, music, saram12saram, remixes, reworks, runway project, production note, magazzine press, interview archive, programming, engineering, web application, development and engineering research archive","author":{"@type":"Person","name":"eunchurn"},"@type":"WebSite","url":"https://eunchurn.com//","headline":"Home","@context":"https://schema.org"}</script>
+  <link rel="canonical" href="{{ site.home_url}}{{ page.url }}">
   <!-- CSS -->
   <link rel="stylesheet" href="{{ site.baseurl }}/public/css/poole.css">
   <link rel="stylesheet" href="{{ site.baseurl }}/public/css/syntax.css">
