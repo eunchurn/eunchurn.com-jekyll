@@ -19,13 +19,11 @@
   {"name":"eunchurn","description":"all of works archive of Eunchurn Park, Ph. D (works diary, music, saram12saram, remixes, reworks, runway project, production note, magazzine press, interview archive, programming, engineering, web application, development and engineering research archive)","author":{"@type":"Person","name":"eunchurn"},"@type":"WebSite","url":"https://eunchurn.com//","headline":"Home","@context":"https://schema.org"}</script>
   <link rel="canonical" href="{{ site.home_url}}{{ page.url }}">
   <!-- OpenGraph meta tags -->
-  {%- if page.url contains 'jobs' -%}
-  <meta property="og:type" content="blog"> {%- elsif page.title -%}
+  {%- if page.title -%}
   <meta property="og:type" content="article"> {%- else -%}
   <meta property="og:type" content="blog"> {%- endif -%} {%- if page.representing_image -%}
   <meta property="og:image" content="{{ site.home_url }}{{ page.representing_image }}"> {%- else -%}
   <meta property="og:image" content="{{ site.home_url }}{{ site.representing_image }}"> {%- endif -%}
-  {%- if post.date -%}<meta property="article:published_time" content="{{ post.date }}"> {%- endif -%}
   <!-- Twitter card meta tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@eunchurn">
