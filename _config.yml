@@ -54,4 +54,3 @@ feed:
 scholar:
   source: _bibliography
   bibliography: bibliography.bib
-env: production
