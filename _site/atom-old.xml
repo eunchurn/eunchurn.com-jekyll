@@ -4,14 +4,14 @@
  <title>eunchurn</title>
  <link href="http://localhost:4000/atom.xml" rel="self"/>
  <link href="http://localhost:4000/"/>
- <updated>2018-02-03T00:47:22+09:00</updated>
+ <updated>2018-05-11T16:46:03+09:00</updated>
  <id>http://localhost:4000</id>
  <author>
    <name>eunchurn</name>
    <email>eunchurn.park@gmail.com</email>
  </author><entry>
    <title>헹켈행렬(Hankel matrix) 기반 신호분리 이론 고찰-1</title>
-   <link href="http://localhost:4000/engineering/2018/01/20/signal-decomposition-hmbsvd/"/>
+   <link href="http://localhost:4000/engineering/2018/01/20/signal-decomposition-hmbsvd.html"/>
    <updated>2018-01-20T17:21:10+09:00</updated>
    <id>http://localhost:4000/engineering/2018/01/20/signal-decomposition-hmbsvd</id>
    <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2018/01/hmbsvd.png&quot; alt=&quot;result&quot; /&gt;&lt;/p&gt;
@@ -161,7 +161,7 @@ SVD를 사용하여 신호를 격리시키는 과정을 이해하기 위하여 �
 </content>
  </entry><entry>
    <title>오래된 DEMO곡</title>
-   <link href="http://localhost:4000/production/2018/01/17/38pf-interrogator/"/>
+   <link href="http://localhost:4000/production/2018/01/17/38pf-interrogator.html"/>
    <updated>2018-01-17T17:21:10+09:00</updated>
    <id>http://localhost:4000/production/2018/01/17/38pf-interrogator</id>
    <content type="html">&lt;p&gt;개발중에 쓸데없이 오래된 사이트를 개편하면서 오래된 데모를 찾았다. 아 물론 38pF는 나였다. &lt;a href=&quot;https://soundcloud.com/38picofarad/38pf-myname-remix-model-b-an&quot;&gt;ABoAB 무단트리뷰트 My Name 리믹스&lt;/a&gt;를 38pF 이름으로 작업하고 버려두었는데, 그간 굳이 궁금해 하던 사람은 별로 없었고 하박국씨는 쉽게 난줄 알아채더라. 어찌됐든 오래전 녹음 누르고 아날로그 신스를 가지고 놀면서 만들었던 데모들은 다시 쓰일일이 없을꺼라 &lt;a href=&quot;https://soundcloud.com/38picofarad/&quot;&gt;38pF&lt;/a&gt;계정으로 배출해냈었다. 아 사실 ACID한 작업들을 이쪽으로 몰아서 작업할려고 했었다. (하지만 게으름) 그러다 간만에 38pF계정가서 들어보니 당시엔 맘이 아주 딥했었나보다. &lt;a href=&quot;https://eunchurn.com/runway/2013/01/24/yumi-katsura-x-ji-haye-haute-couture-2013/&quot;&gt;유미가츠라 지해 오뜨꾸뛰르 프리젠테이션&lt;/a&gt; 곡도 대충 만들어서 배출한거라 여기에 가있었고 &lt;a href=&quot;https://eunchurn.com/production/2012/01/24/paul-and-alice-fashion-film-2012/&quot;&gt;폴앤앨리스 패션필름&lt;/a&gt;음악도 여기에 배출되어 있었다. 그런데 누군가가 interrogator란곡에 sick이라고 달아놓았다. 아 요즘 영어공부를 좀 해서 sick이 아프다는 뜻이 아니란건 안다. 도대체 이곡이 왜? 그래서 다시 세밀하게 들어보았다.&lt;/p&gt;
@@ -176,7 +176,7 @@ SVD를 사용하여 신호를 격리시키는 과정을 이해하기 위하여 �
 </content>
  </entry><entry>
    <title>콘크리트 균열 분석 B-COSFIRE(MATLAB)</title>
-   <link href="http://localhost:4000/engineering/2017/12/30/concrete-cracks-detection-using-b-cosfire-filter/"/>
+   <link href="http://localhost:4000/engineering/2017/12/30/concrete-cracks-detection-using-b-cosfire-filter.html"/>
    <updated>2017-12-30T17:21:10+09:00</updated>
    <id>http://localhost:4000/engineering/2017/12/30/concrete-cracks-detection-using-b-cosfire-filter</id>
    <content type="html">&lt;p&gt;콘크리트 균열을 탐지 하는 방법론은 여러가지가 있다. 특히 직접 이미지프로세싱을 통한 직접 추출하는 방식이 일반적이다. 그러나 알고리즘의 수행 능력은 둘째 치더라도 수행 성능은 담보하기 어렵다. B-COSFIRE 필터는 의료 영상에서 혈관을 탐색하는 알고리즘에서 착안한다. 특히 선구조를 식별하는 알고리즘으로써 균열에도 적용이 충분히 가능할꺼라는 시도로 몇몇 엔지니어가 최근 제시하였다. 이 연구자는 MATLAB 소스파일을 공개하였다. &lt;a href=&quot;https://kr.mathworks.com/matlabcentral/fileexchange/49172-trainable-cosfire-filters-for-curvilinear-structure-delineation-in-images?requestedDomain=true&quot;&gt;Trainable COSFIRE filters for curvilinear structure delineation in images&lt;/a&gt; 또한 &lt;a href=&quot;https://gitlab.com/nicstrisc/B-COSFIRE-MATLAB&quot;&gt;Gitlab Repository&lt;/a&gt; 에도 계속 업데이트 하고 있다. 자세하게 서술된 학술지 저널까지 공개되어 있다. &lt;a href=&quot;http://www.cs.rug.nl/~george/articles/MEDIA2015.pdf&quot;&gt;Azzopardi, G., Strisciuglio, N., Vento, M., Petkov, N.: Trainable COSFIRE  filters for vessel delineation with application to retinal images. Medical Image Analysis 19(1), 46 - 57, 2015&lt;/a&gt; 예제는 3가지로 소개되어 있다.&lt;/p&gt;
@@ -509,7 +509,7 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 </content>
  </entry><entry>
    <title>_Pale Blue Eyes (2016-2017 AW)</title>
-   <link href="http://localhost:4000/runway/2016/03/24/velvet-underground-x-eunchurn-pale-blue-eyes-heich-es-heich-aw-2016-2017/"/>
+   <link href="http://localhost:4000/runway/2016/03/24/velvet-underground-x-eunchurn-pale-blue-eyes-heich-es-heich-aw-2016-2017.html"/>
    <updated>2016-03-24T17:21:10+09:00</updated>
    <id>http://localhost:4000/runway/2016/03/24/velvet-underground-x-eunchurn-pale-blue-eyes-heich-es-heich-aw-2016-2017</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/254782383&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -556,7 +556,7 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 </content>
  </entry><entry>
    <title>Feels Too Letter (2015) EP</title>
-   <link href="http://localhost:4000/production/2015/12/12/saram12saram-feels-too-letter/"/>
+   <link href="http://localhost:4000/production/2015/12/12/saram12saram-feels-too-letter.html"/>
    <updated>2015-12-12T17:21:10+09:00</updated>
    <id>http://localhost:4000/production/2015/12/12/saram12saram-feels-too-letter</id>
    <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2015/12/ftl.jpg&quot; alt=&quot;featured image&quot; /&gt;&lt;/p&gt;
@@ -622,7 +622,7 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 </content>
  </entry><entry>
    <title>빗물구름태풍태양 REMIXES (2015)</title>
-   <link href="http://localhost:4000/production/2015/11/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-remixes/"/>
+   <link href="http://localhost:4000/production/2015/11/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-remixes.html"/>
    <updated>2015-11-23T17:21:10+09:00</updated>
    <id>http://localhost:4000/production/2015/11/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-remixes</id>
    <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2015/12/rcts-remixes.jpg&quot; alt=&quot;featured image&quot; /&gt;&lt;/p&gt;
@@ -663,7 +663,7 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 </content>
  </entry><entry>
    <title>_오후만 있던 일요일 (2016 SS)</title>
-   <link href="http://localhost:4000/runway/2015/10/18/leebyungwoo-x-eunchurn-sunday-afternoon-heich-es-heich-collection/"/>
+   <link href="http://localhost:4000/runway/2015/10/18/leebyungwoo-x-eunchurn-sunday-afternoon-heich-es-heich-collection.html"/>
    <updated>2015-10-18T17:21:10+09:00</updated>
    <id>http://localhost:4000/runway/2015/10/18/leebyungwoo-x-eunchurn-sunday-afternoon-heich-es-heich-collection</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/228898786&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -708,7 +708,7 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 </content>
  </entry><entry>
    <title>_당신의 평화는 연약하다 (2015-2016 AW)</title>
-   <link href="http://localhost:4000/runway/2015/04/16/your-peace-is-fragile-remember0416-heich-es-heich/"/>
+   <link href="http://localhost:4000/runway/2015/04/16/your-peace-is-fragile-remember0416-heich-es-heich.html"/>
    <updated>2015-04-16T17:21:10+09:00</updated>
    <id>http://localhost:4000/runway/2015/04/16/your-peace-is-fragile-remember0416-heich-es-heich</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/201058305&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -726,7 +726,7 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 </content>
  </entry><entry>
    <title>_JE T'AIME MOI NON PLUS (2014-2015 AW)</title>
-   <link href="http://localhost:4000/runway/2014/03/26/je-taime-moi-non-plus-heich-es-heich/"/>
+   <link href="http://localhost:4000/runway/2014/03/26/je-taime-moi-non-plus-heich-es-heich.html"/>
    <updated>2014-03-27T02:21:10+09:00</updated>
    <id>http://localhost:4000/runway/2014/03/26/je-taime-moi-non-plus-heich-es-heich</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/141514159&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -757,7 +757,7 @@ r_{B_{w,l,\phi}}(x,y) = \left(\prod_{i=1}^{\left| B_{w,l}\right|} s_{\rho_{i},\p
 </content>
  </entry><entry>
    <title>빗물구름태풍태양 (2013) EP</title>
-   <link href="http://localhost:4000/production/2014/01/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release/"/>
+   <link href="http://localhost:4000/production/2014/01/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release.html"/>
    <updated>2014-01-24T02:21:10+09:00</updated>
    <id>http://localhost:4000/production/2014/01/23/saram12saram-raindrop-cloud-typhoon-and-the-sun-2013-ep-release</id>
    <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2012/12/COVER2_600x600.png&quot; alt=&quot;COVER2_600x600&quot; /&gt;
@@ -840,7 +840,7 @@ This label copy information is the subject of copyright protection. All right re
 </content>
  </entry><entry>
    <title>Yumi Katsura x Ji Haye Haute Couture 2013</title>
-   <link href="http://localhost:4000/runway/2013/01/24/yumi-katsura-x-ji-haye-haute-couture-2013/"/>
+   <link href="http://localhost:4000/runway/2013/01/24/yumi-katsura-x-ji-haye-haute-couture-2013.html"/>
    <updated>2013-01-24T17:21:10+09:00</updated>
    <id>http://localhost:4000/runway/2013/01/24/yumi-katsura-x-ji-haye-haute-couture-2013</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; allow=&quot;autoplay&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/79151342&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -872,7 +872,7 @@ music by eunchurn&lt;/p&gt;
 </content>
  </entry><entry>
    <title>Mimyo - Floating Ones EP (2012)</title>
-   <link href="http://localhost:4000/production/2012/06/24/mimyo-floating-ones-ep-2012/"/>
+   <link href="http://localhost:4000/production/2012/06/24/mimyo-floating-ones-ep-2012.html"/>
    <updated>2012-06-24T09:41:52+09:00</updated>
    <id>http://localhost:4000/production/2012/06/24/mimyo-floating-ones-ep-2012</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/49863669&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -972,7 +972,7 @@ EP 라고 하기에는 조금 길고 정규 앨범이라고 하기에는 조금 
 </content>
  </entry><entry>
    <title>Paul & Alice (2013 SS)</title>
-   <link href="http://localhost:4000/production/2012/01/24/paul-and-alice-fashion-film-2012/"/>
+   <link href="http://localhost:4000/production/2012/01/24/paul-and-alice-fashion-film-2012.html"/>
    <updated>2012-01-24T17:21:10+09:00</updated>
    <id>http://localhost:4000/production/2012/01/24/paul-and-alice-fashion-film-2012</id>
    <content type="html">&lt;p&gt;Paul &amp;amp; Alice (2013 SS)&lt;/p&gt;
@@ -1006,7 +1006,7 @@ EP 라고 하기에는 조금 길고 정규 앨범이라고 하기에는 조금 
 </content>
  </entry><entry>
    <title>_P L A S T I C M A N (2012 SS)</title>
-   <link href="http://localhost:4000/runway/2011/10/20/mvio_haan-sang-hyuk_-p-l-a-s-t-i-c-m-a-n-spring-summer-2012/"/>
+   <link href="http://localhost:4000/runway/2011/10/20/mvio_haan-sang-hyuk_-p-l-a-s-t-i-c-m-a-n-spring-summer-2012.html"/>
    <updated>2011-10-20T14:51:39+09:00</updated>
    <id>http://localhost:4000/runway/2011/10/20/mvio_haan-sang-hyuk_-p-l-a-s-t-i-c-m-a-n-spring-summer-2012</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; allow=&quot;autoplay&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/26025120&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -1034,7 +1034,7 @@ MVIO INSTITUTE OF MEDICINE AND SCIENCE&lt;br /&gt;
 </content>
  </entry><entry>
    <title>Bliss (Digital Single, 2011)</title>
-   <link href="http://localhost:4000/production/2011/08/15/leetzsche-bliss-digital-single-2011/"/>
+   <link href="http://localhost:4000/production/2011/08/15/leetzsche-bliss-digital-single-2011.html"/>
    <updated>2011-08-16T03:40:02+09:00</updated>
    <id>http://localhost:4000/production/2011/08/15/leetzsche-bliss-digital-single-2011</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; allow=&quot;autoplay&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/20577628&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -1125,7 +1125,7 @@ MVIO INSTITUTE OF MEDICINE AND SCIENCE&lt;br /&gt;
 </content>
  </entry><entry>
    <title>This Is Why We're Falling For Each Other (2011)</title>
-   <link href="http://localhost:4000/production/2011/08/15/trampauline-this-is-why-were-falling-for-each-other-2011/"/>
+   <link href="http://localhost:4000/production/2011/08/15/trampauline-this-is-why-were-falling-for-each-other-2011.html"/>
    <updated>2011-08-16T03:00:47+09:00</updated>
    <id>http://localhost:4000/production/2011/08/15/trampauline-this-is-why-were-falling-for-each-other-2011</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; allow=&quot;autoplay&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/45263363&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -1177,7 +1177,7 @@ MVIO INSTITUTE OF MEDICINE AND SCIENCE&lt;br /&gt;
 </content>
  </entry><entry>
    <title>W Korea Mar. 2011 다양한 인물들의 '레어 인터뷰'. PART II</title>
-   <link href="http://localhost:4000/press/2011/04/26/w-korea-mar-2011-eb8ba4ec9691ed959c-ec9db8ebacbceb93a4ec9d98-eba088ec96b4-ec9db8ed84b0ebb7b0-part-ii/"/>
+   <link href="http://localhost:4000/press/2011/04/26/w-korea-mar-2011-eb8ba4ec9691ed959c-ec9db8ebacbceb93a4ec9d98-eba088ec96b4-ec9db8ed84b0ebb7b0-part-ii.html"/>
    <updated>2011-04-27T05:36:20+09:00</updated>
    <id>http://localhost:4000/press/2011/04/26/w-korea-mar-2011-eb8ba4ec9691ed959c-ec9db8ebacbceb93a4ec9d98-eba088ec96b4-ec9db8ed84b0ebb7b0-part-ii</id>
    <content type="html">&lt;p&gt;&lt;strong&gt;다양한 인물들의 ‘레어 인터뷰’. PART II&lt;/strong&gt;
@@ -1254,7 +1254,7 @@ MVIO INSTITUTE OF MEDICINE AND SCIENCE&lt;br /&gt;
 </content>
  </entry><entry>
    <title>ELLE KOREA Dec.2010 MAKING FASHIONWEEK</title>
-   <link href="http://localhost:4000/press/2011/04/26/elle-korea-dec-2010-making-fashionweek/"/>
+   <link href="http://localhost:4000/press/2011/04/26/elle-korea-dec-2010-making-fashionweek.html"/>
    <updated>2011-04-27T05:35:55+09:00</updated>
    <id>http://localhost:4000/press/2011/04/26/elle-korea-dec-2010-making-fashionweek</id>
    <content type="html">&lt;h2 id=&quot;elle-runway-report&quot;&gt;elle runway report&lt;/h2&gt;
@@ -1369,7 +1369,7 @@ MVIO INSTITUTE OF MEDICINE AND SCIENCE&lt;br /&gt;
 </content>
  </entry><entry>
    <title>MOT x EUNCHURN - 매일 그대와 작업일기</title>
-   <link href="http://localhost:4000/runway/2011/04/02/production-note-of-music-for-mvio-aw-collection-20112012/"/>
+   <link href="http://localhost:4000/runway/2011/04/02/production-note-of-music-for-mvio-aw-collection-20112012.html"/>
    <updated>2011-04-03T03:57:25+09:00</updated>
    <id>http://localhost:4000/runway/2011/04/02/production-note-of-music-for-mvio-aw-collection-20112012</id>
    <content type="html">&lt;div class=&quot;videoWrapper&quot;&gt;
@@ -1482,7 +1482,7 @@ APRON COLLECTION&lt;/li&gt;
 </content>
  </entry><entry>
    <title>DAZED&CONFUSED KOREA : I LOVE 80's (MUSICIAN)</title>
-   <link href="http://localhost:4000/press/2010/12/25/dazedconfused-korea-i-love-80s-musician/"/>
+   <link href="http://localhost:4000/press/2010/12/25/dazedconfused-korea-i-love-80s-musician.html"/>
    <updated>2010-12-26T04:20:45+09:00</updated>
    <id>http://localhost:4000/press/2010/12/25/dazedconfused-korea-i-love-80s-musician</id>
    <content type="html">&lt;h2 id=&quot;i-love-80s&quot;&gt;I LOVE 80’s&lt;/h2&gt;
@@ -1533,7 +1533,7 @@ APRON COLLECTION&lt;/li&gt;
 </content>
  </entry><entry>
    <title>Dusty Kid - America (2009)</title>
-   <link href="http://localhost:4000/blog/2010/12/02/dusty-kid-america-2009/"/>
+   <link href="http://localhost:4000/blog/2010/12/02/dusty-kid-america-2009.html"/>
    <updated>2010-12-02T12:15:22+09:00</updated>
    <id>http://localhost:4000/blog/2010/12/02/dusty-kid-america-2009</id>
    <content type="html">&lt;p&gt;&lt;img src=&quot;/public/images/2010/12/333.jpg&quot; alt=&quot;dusty kidz - america&quot; /&gt;&lt;/p&gt;
@@ -1569,7 +1569,7 @@ APRON COLLECTION&lt;/li&gt;
 </content>
  </entry><entry>
    <title>80KIDZ - WEEKEND WARRIOR (2010)</title>
-   <link href="http://localhost:4000/production/2010/12/01/80kidz-weekend-warrior-dropping-out/"/>
+   <link href="http://localhost:4000/production/2010/12/01/80kidz-weekend-warrior-dropping-out.html"/>
    <updated>2010-12-01T12:16:17+09:00</updated>
    <id>http://localhost:4000/production/2010/12/01/80kidz-weekend-warrior-dropping-out</id>
    <content type="html">&lt;p&gt; &lt;/p&gt;
@@ -1610,7 +1610,7 @@ APRON COLLECTION&lt;/li&gt;
 </content>
  </entry><entry>
    <title>_ r i d i n g (2011 SS)</title>
-   <link href="http://localhost:4000/runway/2010/10/23/yoonsang-x-eunchurn-love-is-music-for-mvio-by-hansanghyuk-2011-ss-collection/"/>
+   <link href="http://localhost:4000/runway/2010/10/23/yoonsang-x-eunchurn-love-is-music-for-mvio-by-hansanghyuk-2011-ss-collection.html"/>
    <updated>2010-10-23T19:50:31+09:00</updated>
    <id>http://localhost:4000/runway/2010/10/23/yoonsang-x-eunchurn-love-is-music-for-mvio-by-hansanghyuk-2011-ss-collection</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/6339183&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -1651,7 +1651,7 @@ __&lt;/em&gt;&lt;/p&gt;
 </content>
  </entry><entry>
    <title>_ m o u n t a i n e e r i n g (2010-2011 AW)</title>
-   <link href="http://localhost:4000/runway/2010/08/03/seoul-fashion-week-mvio-by-han-sang-hyuk-autumn-winter-2010-2011-mounteeneering-rope-collection/"/>
+   <link href="http://localhost:4000/runway/2010/08/03/seoul-fashion-week-mvio-by-han-sang-hyuk-autumn-winter-2010-2011-mounteeneering-rope-collection.html"/>
    <updated>2010-08-04T05:07:33+09:00</updated>
    <id>http://localhost:4000/runway/2010/08/03/seoul-fashion-week-mvio-by-han-sang-hyuk-autumn-winter-2010-2011-mounteeneering-rope-collection</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2157588&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -1676,7 +1676,7 @@ __&lt;/em&gt;&lt;/p&gt;
 </content>
  </entry><entry>
    <title>_ r e c h a r g i n g (2010 SS)</title>
-   <link href="http://localhost:4000/runway/2010/05/23/seoul-fashion-week-mvio-by-han-sang-hyuk-spring-summer-2010-re-charging/"/>
+   <link href="http://localhost:4000/runway/2010/05/23/seoul-fashion-week-mvio-by-han-sang-hyuk-spring-summer-2010-re-charging.html"/>
    <updated>2010-05-23T09:53:31+09:00</updated>
    <id>http://localhost:4000/runway/2010/05/23/seoul-fashion-week-mvio-by-han-sang-hyuk-spring-summer-2010-re-charging</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1260248&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;
@@ -1709,7 +1709,7 @@ __&lt;/em&gt;&lt;/p&gt;
 </content>
  </entry><entry>
    <title>_ g r a d a t i o n (2009-2010 AW)</title>
-   <link href="http://localhost:4000/runway/2010/05/23/mvio-by-han-sang-hyuk-autumn-winter-2009-2010-holmes-collection/"/>
+   <link href="http://localhost:4000/runway/2010/05/23/mvio-by-han-sang-hyuk-autumn-winter-2009-2010-holmes-collection.html"/>
    <updated>2010-05-23T09:28:09+09:00</updated>
    <id>http://localhost:4000/runway/2010/05/23/mvio-by-han-sang-hyuk-autumn-winter-2009-2010-holmes-collection</id>
    <content type="html">&lt;iframe width=&quot;100%&quot; height=&quot;300&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot; src=&quot;https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1873758&amp;amp;color=%23ff5500&amp;amp;auto_play=false&amp;amp;hide_related=false&amp;amp;show_comments=true&amp;amp;show_user=true&amp;amp;show_reposts=false&amp;amp;show_teaser=true&amp;amp;visual=true&quot;&gt;&lt;/iframe&gt;

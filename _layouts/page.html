@@ -5,3 +5,32 @@ layout: default
 <div class="page">
   {{ content }}
 </div>
+
+{% if paginator.total_pages > 1 %}
+<div class="pagination">
+  {% if paginator.previous_page %}
+    <p class="previous"><a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo;</a></p>
+  {% else %}
+    <p class="previous disabled">&laquo;</p>
+  {% endif %}
+
+  <ol class="pages">
+  {% for page in (1..paginator.total_pages) %}
+  
+    {% if page == paginator.page %}
+      <li class="page">
+      <span class="current-page">{{ page }}</span></li>
+    {% elsif page == 1 %}
+      <li class="page"><a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">{{ page }}</a></li>
+    {% else %}
+      <li class="page"><a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a></li>
+    {% endif %}
+  {% endfor %}
+  </ol>
+  {% if paginator.next_page %}
+    <p class="next"><a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">&raquo;</a></p>
+  {% else %}
+    <p class="next disabled">&raquo;</p>
+  {% endif %}
+</div>
+{% endif %}

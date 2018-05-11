@@ -1,10 +1,11 @@
 ---
 layout: default
-title: Engineering music
-representing_image: /public/images/7800413.jpeg
-description: all of works archive of Eunchurn Park - works diary, music, saram12saram, remixes, reworks, runway project, production note, interview archive, programming, engineering, web application, development and engineering research archive)
+title: Music production
+permalink: /production/
+description: Produced EP, Remixes, Reworks and full length recordings.
 pagination: 
   enabled: true
+  category: production
   per_page: 5
 ---
 <div class="posts">
@@ -49,6 +50,8 @@ pagination:
 </div>
 
 <!-- Pagination links -->
+
+
 {% if paginator.total_pages > 1 %}
 <div class="pagination">
   {% if paginator.previous_page %}
@@ -62,9 +65,9 @@ pagination:
       <li class="page">
       <span class="current-page">{{ page }}</span></li>
     {% elsif page == 1 %}
-      <li class="page"><a href="{{ paginator.previous_page_path }}">{{ page }}</a></li>
+      <li class="page"><a href="{{ '/production/' | prepend: site.baseurl }}">{{ page }}</a></li>
     {% else %}
-      <li class="page"><a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a></li>
+      <li class="page"><a href="{{ site.paginate_path | prepend: '/production/' | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a></li>
     {% endif %}
   {% endfor %}
   </ol>
