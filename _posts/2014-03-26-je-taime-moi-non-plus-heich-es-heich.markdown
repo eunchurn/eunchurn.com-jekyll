@@ -30,8 +30,8 @@ RELEASE EDITION
 ### CREDIT
 - original track by *serge gainsbourg* (track from the album **'Jane Birkin/Serge Gainsbourg'** (1969) 7'' single)
 - executive produced by *haan sanghyuk* [HEICH ES HEICH](http://heich.kr/)
-- rearranged and remix produced by *eunchurn* [SARAM12SARAM](https://saram12saram.kr)
-- rearranged song and featured vocal by *zieum* [SARAM12SARAM](https://saram12saram.kr)
+- rearranged and remix produced by *eunchurn* [SARAM12SARAM](https://saram12saram.github.io)
+- rearranged song and featured vocal by *zieum* [SARAM12SARAM](https://saram12saram.github.io)
 - additional arrangement and pluck synthesizer by *cha hyosun* [TRAMPAULINE](https://trampauline.wordpress.com/)
 - sound sampled from the album **'Jane Birkin/Serge Gainsbourg'** (1969) , **'Histoire de Melody Nelson'** (1971) and **'Symphony of The Planets'** (1992)
 

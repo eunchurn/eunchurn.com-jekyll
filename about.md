@@ -47,12 +47,12 @@ Trampauline(트램폴린) - This Is Why We Are Falling For Each
 
 ![album]({{ site.baseurl }}/public/images/about/raindropcloudtyphoonandthesun.jpg){: .album_img}
 SARAM12SARAM(사람12사람) - 빗물구름태풍태양(Raindrop Cloud Typhoon
-    and the Sun) (2013) - VINYL/CD/DIGITAL \[YGWR\] **ARRANGEMENT, PRODUCING** \[[info](https://saram12saram.kr/discography/2013-raindrop-cloud-typhoon-and-the-sun.html), [listen](https://soundcloud.com/saram12saram/sets/raindrop-cloud-typhoon-and-the-sun)\] 2013.12.12
+    and the Sun) (2013) - VINYL/CD/DIGITAL \[YGWR\] **ARRANGEMENT, PRODUCING** \[[info](https://saram12saram.github.io/discography/2013-raindrop-cloud-typhoon-and-the-sun.html), [listen](https://soundcloud.com/saram12saram/sets/raindrop-cloud-typhoon-and-the-sun)\] 2013.12.12
 
 
 ![album]({{ site.baseurl }}/public/images/about/feelstooletter.jpg){: .album_img}
  SARAM12SARAM(사람12사람) - Feels Too Letter (2015) - CD/DIGITAL
-    \[YGWR\] **ARRANGEMENT, PRODUCING** \[[info](https://saram12saram.kr/discography/2015-feels-too-letter.html),[listen](https://soundcloud.com/saram12saram/sets/feels-too-letter-2015-preview)\]
+    \[YGWR\] **ARRANGEMENT, PRODUCING** \[[info](https://saram12saram.github.io/discography/2015-feels-too-letter.html),[listen](https://soundcloud.com/saram12saram/sets/feels-too-letter-2015-preview)\]
     2015.11.23
 
 ### SINGLE
