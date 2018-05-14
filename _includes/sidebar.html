@@ -15,6 +15,7 @@
         {%- endif -%}
       {%- endif -%}
     {%- endfor -%} -->
+    <a class="sidebar-nav-item" href="{{ site.baseurl }}/about.html">About</a>
       {% assign categories_list = site.categories %}
         {% if categories_list.first[0] == null %}
           {% for category in categories_list %}
@@ -26,8 +27,8 @@
           {% endfor %}
         {% endif %}
       {% assign categories_list = nil %}
-    <a class="sidebar-nav-item" href="{{ site.saram12saram }}">SARAM12SARAM</a>
-    <a class="sidebar-nav-item" href="{{ site.github.repo }}">GitHub project</a>
+    <a class="sidebar-nav-item" href="{{ site.saram12saram }}" target='_blank'>SARAM12SARAM</a>
+    <a class="sidebar-nav-item" href="{{ site.github.repo }}" target='_blank'>GitHub project</a>
   </nav>
   <div class="sidebar-item">
     <p>

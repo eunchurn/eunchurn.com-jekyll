@@ -397,16 +397,17 @@ Seoul Fashion Week \_AUTUMN WINTER 2016/2017 **HEICH ES HEICH**
 
 ### Dissertation
 
--   **M. S.** 건축구조물의 동적하중 구현 및 실시간 하이브리드 실험을 위한
-    가진시스템 설계 (Design of Excitation Systems for Simulating Dynamic
-    Loads and Real-Time Hybrid Test Method of Building
-    Structures) [link](http://m.riss.kr/search/detail/DetailView.do?p_mat_type=be54d9b8bc7cdb09&control_no=6edb0a539213abf9ffe0bdc3ef48d419)
-
 -   **Ph. D** 비선형 감쇠장치가 설치된 건축구조물의 내진 및 내풍 성능 평가를 위한
     하이브리드 실험기법 및 가진시스템 설계 (Hybrid Testing Method and
     Excitation System Design for Seismic and Wind-resistant Performance
     Evaluation of Building Structures with Nonlinear
-    Dampers) [download](https://github.com/eunchurn/dissertation/raw/master/dissertation.pdf)
+    Dampers) [link](http://www.riss.kr/link?id=T14581943)
+
+-   **M. S.** 건축구조물의 동적하중 구현 및 실시간 하이브리드 실험을 위한
+    가진시스템 설계 (Design of Excitation Systems for Simulating Dynamic
+    Loads and Real-Time Hybrid Test Method of Building
+    Structures) [link](http://www.riss.kr/link?id=T10821868)
+
 
 ### International journals (SCI)
 
