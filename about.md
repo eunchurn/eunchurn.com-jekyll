@@ -151,7 +151,7 @@ Seoul Fashion Week \_AUTUMN WINTER 2016/2017 **HEICH ES HEICH**
 **80Kidz** -- Weekend Warrior (2010) \[Track 16.*Flow With It Eunchurn Remix*\]\[[info](https://eunchurn.com/production/2010/12/01/80kidz-weekend-warrior-dropping-out.html)\]
 
 ![album]({{ site.baseurl }}/public/images/about/everydayeverynight.JPG){: .album_img}
-**SHEEAN** -- Everyday Every night (2010) \[*Every Night, Remix*\]\[[info](http://music.naver.com/album/index.nhn?albumId=186008&trackId=2348557)\]
+**SHEEAN**(시언) - Everyday Every night (2010) LOCKSMITHMUSIC\[*Every Night, Remix*\]\[[info](http://music.naver.com/album/index.nhn?albumId=186008&trackId=2348557)\]
 
 
 ![album]({{ site.baseurl }}/public/images/about/bliss.jpg){: .album_img}
