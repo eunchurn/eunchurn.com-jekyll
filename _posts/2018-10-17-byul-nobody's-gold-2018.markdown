@@ -3,7 +3,7 @@ author: admin
 comments: true
 date: 2018-10-16 17:21:10+09:00
 layout: post
-title: 모임별 - 주인 없는 금 (Nobody's Gold) 2018
+title: 모임별(Byul.org) - 주인 없는 금 (Nobody's Gold) 2018
 publish: true
 description: 음반은 열네곡으로 이루어졌으며, ‘모임 별’의 여타 음반들이 그러하듯 밴드 구성원 및 친구, 동료들의 일상사/상념들을 담고 있다.
 featured: /public/images/2018/10/byul-nobodys-gold.jpg
