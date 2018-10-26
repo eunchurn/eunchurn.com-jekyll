@@ -55,19 +55,19 @@ Brian Eno/Peter Scmidt가 만든 카드 세트 ‘Oblique Strategies’는 예�
 
 밴드는 2018년 12월 중 '콩 이야기'의 리믹스 음반(CD) 발매를 계획하고 있다.
 
-> - All tracks written by TaeSang Cho
-> - except track 16 written by TaeSang Cho & Jowall.
-> - All tracks produced by TaeSang Cho
-> - except track 6 & track 14 produced by TaeSang Cho & Jowall.
-> - Additional voice on track 12 by YongSeok Jang. / Recorded by Byul.org in Seoul, South Korea.
-> - Released & distributed by Alien Transistor(München) & Club Bidanbaem(Seoul), 2018.
-> - Project direction by TaeSang Cho & Markus Acher.
-> - Mixed by EunChurn Park. 
-> - Mastered by Keith Tenniswood at Curvepusher.
-> - Cover artwork originally by Haegue Yang(Sonic Full Moon – Medium Ultralight #14, 2015 / Photo: Studio Haegue Yang).
-> - Designed by Byul.org. 
-> - Project management by Florian Steinleitner.
-> - Communication by Flow Zimmer.
+> * All tracks written by TaeSang Cho
+> * except track 16 written by TaeSang Cho & Jowall.
+> * All tracks produced by TaeSang Cho
+> * except track 6 & track 14 produced by TaeSang Cho & Jowall.
+> * Additional voice on track 12 by YongSeok Jang. / Recorded by Byul.org in Seoul, South Korea.
+> * Released & distributed by Alien Transistor(München) & Club Bidanbaem(Seoul), 2018.
+> * Project direction by TaeSang Cho & Markus Acher.
+> * Mixed by EunChurn Park. 
+> * Mastered by Keith Tenniswood at Curvepusher.
+> * Cover artwork originally by Haegue Yang(Sonic Full Moon – Medium Ultralight #14, 2015 / Photo: Studio Haegue Yang).
+> * Designed by Byul.org. 
+> * Project management by Florian Steinleitner.
+> * Communication by Flow Zimmer.
 
 <div class="videoWrapper">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/OxEChJuL2tY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
