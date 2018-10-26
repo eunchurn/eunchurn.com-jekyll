@@ -37,6 +37,11 @@ Music Producer, Engineer Ph.D in Architectural Engineering
 ## Discography
 ### Full length
 
+![album]({{ site.baseurl }}/public/images/about/byul-nobodys-gold.jpg){: .album_img}
+Byul.org(모임별) - Nobody's Gold (주인 없는 금) (2018) - CD/Vinyl \[클럽비단뱀\] **MIX PRODUCING**
+    \[[info](http://gimbabrecords.com/product/detail.html?product_no=12060&cate_no=29&display_group=1)\]
+    2018.10.20
+
 ![album]({{ site.baseurl }}/public/images/about/thisiswhywearefallingforeachother.jpg){: .album_img}
 Trampauline(트램폴린) - This Is Why We Are Falling For Each
     Other (2011) - CD/DIGITAL \[Pastel Music\] **PRODUCING**
