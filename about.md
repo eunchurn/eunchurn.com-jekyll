@@ -400,7 +400,7 @@ Seoul Fashion Week \_AUTUMN WINTER 2016/2017 **HEICH ES HEICH**
 -   Plan B. /A Tribute to BoA 2011.05.13
 -->
 
-## Publication
+<!-- ## Publication
 
 ### Dissertation
 
@@ -688,4 +688,4 @@ Seoul Fashion Week \_AUTUMN WINTER 2016/2017 **HEICH ES HEICH**
 
 -   이상현, 민경원, 이명규, **박은천**, "복합모드형 소형 MR감쇠장치
     성능에 관한 실험적 연구", *한국지진공학회 2005년도 학술발표회
-    논문집* 2005 Mar. 18, pp.461 - 468, 2005
+    논문집* 2005 Mar. 18, pp.461 - 468, 2005 -->
