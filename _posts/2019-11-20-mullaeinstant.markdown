@@ -24,9 +24,9 @@ tag:
 
 ## Web page
 
-![intro](/public/images/2019/11/_mullaeinstant1.png)
-![loading](/public/images/2019/11/_mullaeinstant2.png)
-![main](/public/images/2019/11/_mullaeinstant3.png)
+![intro](/public/images/2019/11/scmullaeinstant1.png)
+![loading](/public/images/2019/11/scmullaeinstant2.png)
+![main](/public/images/2019/11/scmullaeinstant3.png)
 
 [mullaeinstant.com](https://mullaeinstant.com/)
 
