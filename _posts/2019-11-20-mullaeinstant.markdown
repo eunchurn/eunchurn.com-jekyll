@@ -3,7 +3,7 @@ author: admin
 comments: true
 date: 2019-11-20 11:44:10+09:00
 layout: post
-title: #mullaeinstant
+title: #mullaeinstant web project
 publish: true
 description: #mullaeinstant project
 featured: /public/images/2019/11/mullaeinstant.png
@@ -12,9 +12,6 @@ tag:
 - development
 - project
 ---
-## Mullaeinstant Web Project
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/eunchurn/mullae-instant.svg)](https://greenkeeper.io/)[![Build Status](https://travis-ci.org/eunchurn/mullae-instant.svg?branch=master)](https://travis-ci.org/eunchurn/mullae-instant)
 
 ### Description
 
