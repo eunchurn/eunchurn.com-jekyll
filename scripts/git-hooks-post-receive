@@ -1,0 +1,35 @@
+#!/bin/bash -l
+
+# Install Ruby Gems to ~/gems
+
+export GEM_HOME=$HOME/.rvm/rubies/ruby-2.6.3
+export PATH=$GEM_HOME/bin:$PATH
+
+# Variables for sites
+GIT_REPO=$HOME/repositories/eunchurn.com.git
+TMP_GIT_CLONE=$HOME/tmp/eunchurn.com
+GEMFILE=$TMP_GIT_CLONE/Gemfile
+PUBLIC_WWW=$HOME/www/eunchurn.com
+
+git clone $GIT_REPO $TMP_GIT_CLONE
+BUNDLE_GEMFILE=$GEMFILE bundle install
+BUNDLE_GEMFILE=$GEMFILE bundle exec jekyll build -s $TMP_GIT_CLONE -d $PUBLIC_WWW
+rm -rf $TMP_GIT_CLONE
+echo "                                         "
+echo "                   |ZZzzz                "
+echo "                   |                     "
+echo "                   |                     "
+echo "      |ZZzzz      /^\            |ZZzzz  "
+echo "      |          |~~~|           |       "
+echo "      |        |-     -|        / \      "
+echo "     /^\       |[]+    |       |^^^|     "
+echo "  |^^^^^^^|    |    +[]|       |   |     "
+echo "  |    +[]|/\/\/\/\^/\/\/\/\/|^^^^^^^|   "
+echo "  |+[]+   |~~~~~~~~~~~~~~~~~~|    +[]|   "
+echo "  |       |  []   /^\   []   |+[]+   |   "
+echo "  |   +[]+|  []  || ||  []   |   +[]+|   "
+echo "  |[]+    |      || ||       |[]+    |   "
+echo "  |_______|------------------|_______|   "
+echo "                                         "
+echo "                                  done   "
+exit
